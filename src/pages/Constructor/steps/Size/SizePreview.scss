@@ -1,0 +1,32 @@
+.size__preview{
+    width: 100%;
+    height: calc(100vh - 100px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.size__default_book{
+    background: linear-gradient(89.68deg, rgb(244 246 247) 0.22%, rgb(220 220 222) 2.93%, rgb(231 233 235) 4.22%, rgb(231 233 235) 99.81%);
+    border-radius: 5px 3px 3px 5px;
+    box-shadow: 0px 6px 11px #d7dae1;
+    &--quadratic{
+        width: 60%;
+        &::after{
+            content: "";
+            display: block;
+            padding-bottom: 100%;
+          
+        }
+    }
+    &--landscape{
+        width: 80%;
+        &::after{
+            content: "";
+            display: block;
+            padding-bottom: 60%;
+          
+        }
+    }
+    
+}

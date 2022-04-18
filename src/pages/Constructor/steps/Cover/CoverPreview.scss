@@ -1,0 +1,52 @@
+/** @format */
+
+@font-face {
+  font-family: "Elisabethische";
+  src: local("Elisabethische"),
+    url(../../../../assets/fonts/Elisabethische.ttf) format("truetype");
+}
+@font-face {
+  font-family: "SnowCap";
+  src: local("SnowCap"),
+    url(../../../../assets/fonts/SnowCap.otf) format("truetype");
+}
+@font-face {
+    font-family: "PerspectiveC";
+    src: local("PerspectiveC"),
+      url(../../../../assets/fonts/PerspectiveC.otf) format("truetype");
+  }
+
+  @font-face {
+    font-family: "Carefree Cyrillic";
+    src: local("Carefree Cyrillic"),
+      url(../../../../assets/fonts/CarefreeCyrillic.ttf) format("truetype");
+  }
+  @font-face {
+    font-family: "Vivaldi script";
+    src: local("Vivaldi script"),
+      url(../../../../assets/fonts/VivaldiScript.ttf) format("truetype");
+  }
+
+@import url("https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap");
+
+.cover__preview {
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 100px);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.cover__size_title {
+  margin-top: 10px;
+  width: 250px;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 55px;
+  color: rgb(85, 85, 85);
+  font-size: 18px;
+  background-color: rgb(235, 231, 246);
+}

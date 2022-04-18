@@ -1,0 +1,595 @@
+/** @format */
+
+.cnsr__cover {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+.cnsr__cover_leftside {
+  flex: 0 0 110px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, rgb(90 102 133) 0%, rgb(43 60 85) 76.92%);
+}
+
+.cnsr__cover_types {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.cover__types_item {
+  width: 110px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0px;
+  cursor: pointer;
+  span {
+    font-size: 12px;
+    color: rgb(181 193 220);
+    font-family: "Raleway", sans-serif;
+  }
+  .cover__types_img {
+    svg {
+      fill: rgb(181 193 220);
+    }
+  }
+  &--active {
+    background-color: #ffffff;
+    pointer-events: none;
+    .cover__types_title {
+      span {
+        color: rgb(56 71 98);
+      }
+    }
+    .cover__types_img {
+      svg {
+        fill: rgb(56 71 98);
+      }
+    }
+  }
+}
+
+.cover__type_content {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+}
+.cover__eco_colors {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgb(196 196 196);
+}
+
+.eco__colors {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+.eco__colors_item {
+  flex: 0 0 calc(25% - 10px);
+  cursor: pointer;
+  img {
+    border-radius: 7px;
+  }
+  &--active {
+    pointer-events: none;
+    img {
+      border: 2px solid rgb(2, 141, 216);
+    }
+  }
+}
+
+.cover__eco_decor {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.eco__decors {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.eco__decor_item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  transition: ease all 0.3s;
+  cursor: pointer;
+  span {
+    font-size: 16px;
+    color: rgb(181 178 194);
+    font-weight: 500;
+    font-family: "Raleway", sans-serif;
+  }
+  .custom__checkbox {
+    width: 18px;
+    height: 18px;
+    border-radius: 100%;
+    border: solid 2px rgb(181 178 194);
+    cursor: pointer;
+    transition: ease all 0.3s;
+  }
+  &:hover {
+    .custom__checkbox {
+      transform: scale(0.9);
+    }
+  }
+  &--active {
+    pointer-events: none;
+    span {
+      color: rgb(56 71 98);
+    }
+    .custom__checkbox {
+      transition: none;
+
+      border: solid 5px rgb(2, 141, 216);
+    }
+  }
+}
+
+.cover__main_title {
+  font-size: 18px;
+  color: rgb(104 114 129);
+  font-weight: 700;
+}
+.cnsr__cover_rightside {
+  flex: 0 0 300px;
+  background: #ffffff;
+  height: 100vh;
+  padding: 15px;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    border-radius: 8px;
+    width: 6px;
+    background-color: rgb(228 232 240);
+    overflow: hidden;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgb(173 189 209);
+    border-radius: 8px;
+  }
+}
+
+.eco__lettering_content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.eco__lettering_title {
+  font-size: 16px;
+  color: rgb(104 114 129);
+  font-weight: 500;
+}
+
+.eco__lettering_colors {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.eco__lettering_colors--title {
+  font-family: "Raleway", sans-serif;
+  color: rgb(181 178 194);
+  margin-bottom: 5px;
+}
+
+.eco__lettering_colors_content {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+.eco__lettering_colors_item {
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  &--active {
+    border: 2px solid rgb(2, 141, 216);
+    pointer-events: none;
+  }
+}
+
+.eco__lettering_design {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.eco__lettering_design--title {
+  font-family: "Raleway", sans-serif;
+  color: rgb(181 178 194);
+  margin-bottom: 5px;
+}
+
+.eco__lettering_design_content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+.eco__lettering_designs_item {
+  height: 125px;
+  width: 125px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 7px;
+  img {
+    padding: 15px;
+  }
+  &--active {
+    pointer-events: none;
+    border: 2px solid rgb(2, 141, 216);
+  }
+}
+
+.eco__photoBid_content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.eco__photoBid_title {
+  margin-bottom: 5px;
+
+  font-size: 16px;
+  color: rgb(104 114 129);
+  font-weight: 500;
+}
+
+.eco__photoBid_atitle {
+  margin-bottom: 5px;
+
+  color: rgb(181 178 194);
+  font-family: "Raleway", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.eco__photoBid_sizes {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.eco__photoBid_sizes_item {
+  border-radius: 5px;
+  background-color: rgb(196 196 196);
+  border: 2px solid transparent;
+
+  cursor: pointer;
+
+  &--horizontal {
+    width: 55px;
+    height: 40px;
+  }
+  &--vertical {
+    width: 24px;
+    height: 40px;
+  }
+  &--quadratic {
+    width: 40px;
+    height: 40px;
+  }
+  &--active {
+    pointer-events: none;
+    border: 2px solid rgb(2, 141, 216);
+  }
+}
+
+.eco__metalPlate_content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.eco__metalPlate_title {
+  margin-bottom: 5px;
+
+  font-size: 16px;
+  color: rgb(104 114 129);
+  font-weight: 500;
+}
+
+.eco__metalPlate_colors {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.eco__metalPlate_colors--title {
+  font-family: "Raleway", sans-serif;
+  color: rgb(181 178 194);
+  margin-bottom: 5px;
+}
+
+.eco__metalPlate__colors_content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.eco__metalPlate_colors_item {
+  width: 50px;
+  height: 50px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  img {
+    border-radius: 7px;
+  }
+  &--active {
+    pointer-events: none;
+    img {
+      border: 2px solid rgb(2, 141, 216);
+    }
+  }
+}
+
+.eco__metalPlate_sizes {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.eco__metalPlate_sizes--title {
+  font-family: "Raleway", sans-serif;
+  color: rgb(181 178 194);
+  margin-bottom: 5px;
+}
+
+.eco__metalPlate_sizes_content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.eco__metalPlate_sizes_item {
+  border-radius: 7px;
+  background-color: rgb(196 196 196);
+  border: 2px solid transparent;
+
+  cursor: pointer;
+  &--quadratic {
+    width: 40px;
+    height: 40px;
+  }
+  &--rectangular {
+    width: 55px;
+    height: 40px;
+    border-radius: 3px;
+  }
+  &--active {
+    border: 2px solid rgb(2, 141, 216);
+  }
+}
+
+.eco__metalPlate_decorations {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.eco__metalPlate_decorations--title {
+  font-family: "Raleway", sans-serif;
+  color: rgb(181 178 194);
+  margin-bottom: 5px;
+}
+
+.eco__metalPlate_decs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+.eco__metalPlate_dec {
+  cursor: pointer;
+  height: 120px;
+  width: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid transparent;
+
+  img {
+    padding: 20px;
+  }
+  &--active {
+    border: 2px solid rgb(2, 141, 216);
+  }
+}
+
+.cover__type_eco_colors {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 5px;
+  margin-bottom: 20px;
+}
+
+.eco__colors_title {
+  font-size: 16px;
+  color: rgb(104 114 129);
+  font-weight: 500;
+}
+
+.cover__type_textile_colors {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.textile__colors_title {
+  font-size: 16px;
+  color: rgb(104 114 129);
+  font-weight: 500;
+}
+
+.photoBid__uploader {
+  label {
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(24, 231, 128);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    width: 150px;
+    height: 38px;
+    border-radius: 38px;
+
+  }
+}
+
+.photoCover__uploader{
+    label {
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      color: rgb(255, 255, 255);
+      background-color: rgb(24, 231, 128);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+      width: 150px;
+      height: 38px;
+      border-radius: 38px;
+  
+    }
+}
+
+.eco__metalPlate_text{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap:10px;
+}
+
+.eco__metalPlate_text-input{
+  textarea{    
+    font-weight: 700;
+    resize: none;
+  display: block; 
+  font-size: 14px; 
+  color: #444; 
+  line-height: 1.3; 
+  height: 100px;
+  width: 200px;
+  padding-left: 10px;
+  box-sizing: border-box; 
+  margin: 0; 
+  border: none;
+  border-radius: .5em;
+   -moz-appearance: none;
+   outline: solid 2px #444;
+
+   -webkit-appearance: none;
+   appearance: none;
+   background-color: #ffffff; 
+    &::placeholder{
+      color: #444; 
+    }
+    &:focus{
+      outline: solid 2px black;
+
+    }
+  }
+
+}
+.eco__metalPlate_text-sizes{
+
+}
+
+.eco__metalPlate_text-fonts{
+}
+
+
+.select__css { 
+  font-weight: 700;
+
+  display: block; 
+  font-size: 14px; 
+  color: #444; 
+  line-height: 1.3; 
+  height: 38px;
+  width: 200px;
+  padding-left: 10px;
+  box-sizing: border-box; 
+  margin: 0; 
+  border: none;
+  border-radius: .5em;
+   -moz-appearance: none;
+   -webkit-appearance: none;
+   appearance: none;
+   background-color: #ffffff; 
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'), linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%); 
+  background-repeat: no-repeat, repeat;
+  background-position: right .7em top 50%, 0 0;
+  background-size: .65em auto, 100%; 
+  } 
+   .select__css::-ms-expand { display: none; } 
+   .select__css:hover { border-color: #888; } 
+   .select__css:focus { border-color: #aaa; 
+   box-shadow: 0 0 0px 0px rgba(59, 153, 252, .7);
+   box-shadow: 0 0 0 3px -moz-mac-focusring; 
+  color: #222;
+   outline: none; 
+  } 
+   __select-css option { font-weight:normal; } 
+   *[dir="rtl"] .select-css, :root:lang(ar) .select-css, :root:lang(iw) .select-css { 
+  background-position: left .7em top 50%, 0 0; 
+  padding: .6em .8em .5em 1.4em; 
+  }
+
+  
