@@ -1,4 +1,3 @@
-/** @format */
 
 import { createSlice, current } from "@reduxjs/toolkit";
 
@@ -1836,6 +1835,9 @@ const constructorSlice = createSlice({
           {
             id: 0,
             selectedSide: "lrside", // lrside(leftside + rightside) | cside(centerside)
+            leftsideHex: "#FFFFFF",
+            rightsideHex: "#FFFFFF",
+
             templates: [
               //Левая страница
               { id: 0, title: "leftside", template: {} },
@@ -1848,6 +1850,9 @@ const constructorSlice = createSlice({
           {
             id: 1,
             selectedSide: "lrside", // centerside or leftside&rightside
+            
+            leftsideHex: "#FFFFFF",
+            rightsideHex: "#FFFFFF",
             templates: [
               //Левая страница
               { id: 0, title: "leftside", template: [] },
@@ -1860,6 +1865,9 @@ const constructorSlice = createSlice({
           {
             id: 2,
             selectedSide: "lrside", // centerside or leftside&rightside
+            
+            leftsideHex: "#FFFFFF",
+            rightsideHex: "#FFFFFF",
             templates: [
               //Левая страница
               { id: 0, title: "leftside", template: [] },
@@ -1872,6 +1880,9 @@ const constructorSlice = createSlice({
           {
             id: 3,
             selectedSide: "lrside", // centerside or leftside&rightside
+            
+            leftsideHex: "#FFFFFF",
+            rightsideHex: "#FFFFFF",
             templates: [
               //Левая страница
               { id: 0, title: "leftside", template: [] },
@@ -1884,6 +1895,9 @@ const constructorSlice = createSlice({
           {
             id: 4,
             selectedSide: "lrside", // centerside or leftside&rightside
+            
+            leftsideHex: "#FFFFFF",
+            rightsideHex: "#FFFFFF",
             templates: [
               //Левая страница
               { id: 0, title: "leftside", template: [] },
@@ -1896,6 +1910,8 @@ const constructorSlice = createSlice({
           {
             id: 5,
             selectedSide: "lrside", // centerside or leftside&rightside
+            leftsideHex: "#FFFFFF",
+            rightsideHex: "#FFFFFF",
             templates: [
               //Левая страница
               { id: 0, title: "leftside", template: [] },
@@ -1908,6 +1924,9 @@ const constructorSlice = createSlice({
           {
             id: 6,
             selectedSide: "lrside", // centerside or leftside&rightside
+            
+            leftsideHex: "#FFFFFF",
+            rightsideHex: "#FFFFFF",
             templates: [
               //Левая страница
               { id: 0, title: "leftside", template: [] },
@@ -1920,6 +1939,9 @@ const constructorSlice = createSlice({
           {
             id: 7,
             selectedSide: "lrside", // centerside or leftside&rightside
+            
+            leftsideHex: "#FFFFFF",
+            rightsideHex: "#FFFFFF",
             templates: [
               //Левая страница
               { id: 0, title: "leftside", template: [] },
@@ -1932,6 +1954,9 @@ const constructorSlice = createSlice({
           {
             id: 8,
             selectedSide: "lrside", // centerside or leftside&rightside
+            
+            leftsideHex: "#FFFFFF",
+            rightsideHex: "#FFFFFF",
             templates: [
               //Левая страница
               { id: 0, title: "leftside", template: [] },
@@ -1944,6 +1969,9 @@ const constructorSlice = createSlice({
           {
             id: 9,
             selectedSide: "lrside", // centerside or leftside&rightside
+            
+            leftsideHex: "#FFFFFF",
+            rightsideHex: "#FFFFFF",
             templates: [
               //Левая страница
               { id: 0, title: "leftside", template: [] },
@@ -1967,6 +1995,9 @@ const constructorSlice = createSlice({
         let page = {
           id: i,
           selectedSide: "lrside",
+          
+          leftsideHex: "#FFFFFF",
+          rightsideHex: "#FFFFFF",
           templates: [
             { id: 0, title: "leftside", template: [] },
             //Правая страница
@@ -2165,13 +2196,31 @@ const constructorSlice = createSlice({
     handleChangeSelectedPage(state, action) {
       state.pages.papers.selectedPage = action.payload;
     },
+    handleSetColorToSidePage(state,action){
+      const {colorHex,sideToChange}=action.payload;
+      let selectedPage = {
+        ...current(
+          state.pages.papers.pages[state.pages.papers.selectedPage]
+        )
+      }
+      if(sideToChange==="leftside"){
+        selectedPage.leftsideHex=colorHex;
+      }
+      else{
+        selectedPage.rightsideHex=colorHex;
+      }
+      state.pages.papers.pages[state.pages.papers.selectedPage]=selectedPage;
+    },
     //Добавить новую страницу
     handleAddPageToPages(state, action) {
       let currentId = action.payload;
       let prevPages = [...current(state.pages.papers.pages)];
       let newPage = {
         id: 0,
-        selectedSide: 0, // centerside or leftside&rightside
+        selectedSide: "lrside", // centerside or leftside&rightside
+        
+        leftsideHex: "#FFFFFF",
+        rightsideHex: "#FFFFFF",
         templates: [
           //Левая страница
           { id: 0, title: "leftside", template: [] },
@@ -2192,6 +2241,7 @@ const constructorSlice = createSlice({
       state.pages.papers.pages = sortedPages;
       state.pages.papers.selectedPage = currentId + 1;
     },
+    //Удалить страницу
     handleDeletePageFromPages(state, action) {
       let deleteId = action.payload;
       let prevPages = [...current(state.pages.papers.pages)];
@@ -2208,13 +2258,15 @@ const constructorSlice = createSlice({
         state.pages.papers.pages = sortedPages;
       }
     },
+    //добавить шаблон на страницу(на левую или правую, либо разворот)
     handleSetTemplateToPage(state, action) {
       const { sideToChange, tmplId, selectedSide, pageType } = action.payload;
-      console.log(sideToChange, tmplId, selectedSide, pageType);
       //выбранная страница
-      let selectedPage = {...current(
-        state.pages.papers.pages[state.pages.papers.selectedPage]
-      )}
+      let selectedPage = {
+        ...current(
+          state.pages.papers.pages[state.pages.papers.selectedPage]
+        )
+      }
       //нужный темплейт из стейта
       let neededTemplate;
       switch (sideToChange) {
@@ -2238,29 +2290,60 @@ const constructorSlice = createSlice({
         default:
           break;
       }
-      
-      selectedPage.selectedSide=selectedSide;
+
+      selectedPage.selectedSide = selectedSide;
       let templates = [...selectedPage.templates];
-      let newTemplates = [...templates].map((tmpl,idx)=>{
-        if(tmpl.title === sideToChange){
-          return {...tmpl,template:neededTemplate}
-        }
-        else {
-          return {...tmpl, template: {}}
-        }
+      let newTemplates = [];
+      if (sideToChange === "leftside") {
+        newTemplates = [...templates].map((tmpl) => {
+          if (tmpl.title === "leftside") {
+            return { ...tmpl, template: neededTemplate }
+          }
+          else if (tmpl.title === "rightside") {
+            return { ...tmpl }
+          }
+          else {
+            return { ...tmpl, template: {} }
+          }
+
         })
-      selectedPage.templates=newTemplates;
-      state.pages.papers.pages[state.pages.papers.selectedPage]=selectedPage;
-      
+      }
+      else if (sideToChange === "rightside") {
+        newTemplates = [...templates].map((tmpl) => {
+          if (tmpl.title === "rightside") {
+            return { ...tmpl, template: neededTemplate }
+          }
+          else if (tmpl.title === "leftside") {
+            return { ...tmpl }
+          }
+          else {
+            return { ...tmpl, template: {} }
+          }
+        })
+      }
+      else {
+        newTemplates = [...templates].map((tmpl) => {
+          if (tmpl.title === "centerside") {
+            return { ...tmpl, template: neededTemplate }
+          }
+          else {
+            return { ...tmpl, template: {} }
+          }
+        })
+      }
 
-      
+      selectedPage.templates = newTemplates;
+      state.pages.papers.pages[state.pages.papers.selectedPage] = selectedPage;
 
-      
 
-      
+
+
+
+
+
     }
-  
-  
+
+
   },
   extraReducers: {},
 });
@@ -2293,5 +2376,6 @@ export const {
   handleAddPageToPages,
   handleDeletePageFromPages,
   handleSetTemplateToPage,
+  handleSetColorToSidePage
 } = constructorSlice.actions;
 export default constructorSlice.reducer;

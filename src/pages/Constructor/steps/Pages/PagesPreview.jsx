@@ -1,4 +1,3 @@
-/** @format */
 
 import React from "react";
 import { useDispatch } from "react-redux";
@@ -9,18 +8,15 @@ import {
   handleAddPageToPages,
   handleDeletePageFromPages,
 } from "../../../../redux/reducers/constructor/constructorSlice";
+import DragImage from "./DragImage";
 import { Scrollbar, Autoplay, Grid, Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css/grid";
 import "swiper/css";
 import "./PagesPreview.scss";
-//   const uploadChecker = (file) => validFileTypes.includes(file.type.split("/")[1])
-//     const files = e.target.files;
-//     console.log(files);
-//   let typeCheck = uploadChecker(files.some(uploadChecker));
-//   console.log(typeCheck);
-const PagesPreview = ({ pages,size }) => {
+
+const PagesPreview = ({ pages, size }) => {
   const dispatch = useDispatch();
   const validFileTypes = [
     "jpg",
@@ -84,7 +80,7 @@ const PagesPreview = ({ pages,size }) => {
     dispatch(handleDeletePageFromPages(pageId));
   };
 
-  
+
 
   return (
     <div className="pages__preview">
@@ -92,7 +88,7 @@ const PagesPreview = ({ pages,size }) => {
         <Swiper
           modules={[Scrollbar, Autoplay, Grid, Navigation]}
           navigation={{
-            
+
           }}
           slidesPerView={"auto"}
           spaceBetween={20}
@@ -105,10 +101,9 @@ const PagesPreview = ({ pages,size }) => {
               key={`${page.id}:${idx}`}
             >
               <div
-                className={`pages__selector_page ${
-                  pages.papers.selectedPage === page.id &&
+                className={`pages__selector_page ${pages.papers.selectedPage === page.id &&
                   "pages__selector_page--active"
-                }`}
+                  }`}
               >
                 <span>{page.id + 1}</span>
                 <div
@@ -139,18 +134,66 @@ const PagesPreview = ({ pages,size }) => {
         </Swiper>
       </div>
       <div className="pages__paper">
-          {/* Квадратная */}
-          {size.selectedType === 0 && <div className="pages__paper_quadratic"> 
-          <div className="pages__paper_quadratic_leftside">
-              
+        {/* Квадратная */}
+
+        {pages.papers.pages[pages.papers.selectedPage]?.selectedSide === "lrside" && size?.selectedType === 0 && <div className="pages__paper_quadratic">
+          <div style={{backgroundColor:pages.papers.pages[pages.papers.selectedPage].leftsideHex}} className="pages__paper_quadratic_leftside">
+            <div className="pages__paper_quadratic_ls_elements">
+              {pages.papers.pages[pages.papers.selectedPage].templates[0].template.elements?.map((tmplElement, idx) =>
+                <div style={{
+                  width: tmplElement.position.w,
+                  height: tmplElement.position.h,
+                  left: tmplElement.position.l,
+                  top: tmplElement.position.t,
+                }} key={`${tmplElement.id}:${idx}`} className="pages__paper_quadratic_ls_element">
+
+                </div>
+              )}
+            </div>
           </div>
-          <div className="pages__paper_quadratic_rightside">
+          <div style={{backgroundColor:pages.papers.pages[pages.papers.selectedPage].rightsideHex}} className="pages__paper_quadratic_rightside">
+            <div  className="pages__paper_quadratic_ls_elements">
+              {pages.papers.pages[pages.papers.selectedPage].templates[1].template.elements?.map((tmplElement, idx) =>
+                <div style={{
+                  width: tmplElement.position.w,
+                  height: tmplElement.position.h,
+                  left: tmplElement.position.l,
+                  top: tmplElement.position.t,
+                }} key={`${tmplElement.id}:${idx}`} className="pages__paper_quadratic_ls_element">
+
+                </div>
+              )}
+            </div>
           </div>
-          </div>}
-          {/* Альбомная */}
-          {size.selectedType === 1 && <div className="pages__paper_landscape"> 
-                    landcape
-          </div>}
+        </div>}
+        {pages.papers.pages[pages.papers.selectedPage]?.selectedSide === "cside" && size?.selectedType === 0 && <div className="pages__paper_quadratic--full">
+          <div style={{backgroundColor:pages.papers.pages[pages.papers.selectedPage].leftsideHex}} className="pages__paper_quadratic--full_leftside">
+
+          </div>
+          <div style={{backgroundColor:pages.papers.pages[pages.papers.selectedPage].rightsideHex}} className="pages__paper_quadratic--full_rightside">
+
+          </div>
+          <div className="pages__paper_quadratic_centerside">
+            <div className="pages__paper_quadratic_ls_elements">
+              {pages.papers.pages[pages.papers.selectedPage].templates[2].template.elements?.map((tmplElement, idx) =>
+                <div style={{
+                  width: tmplElement.position.w,
+                  height: tmplElement.position.h,
+                  left: tmplElement.position.l,
+                  top: tmplElement.position.t,
+                }} key={`${tmplElement.id}:${idx}`} className="pages__paper_quadratic_cs_element">
+
+                </div>
+              )}
+            </div>
+          </div>
+        </div>}
+
+
+        {/* Альбомная */}
+        {/* {size.selectedType === 1 && <div className="pages__paper_landscape">
+          landcape
+        </div>} */}
       </div>
 
       <div className="pages__upload">
@@ -209,31 +252,15 @@ const PagesPreview = ({ pages,size }) => {
             grid={{ rows: 1, fill: "row" }}
             autoplay={{ delay: 2000 }}
           >
-            {pages.uploads.map((img, idx) => (
-              <SwiperSlide key={`${img.id}:${idx}`}>
-                <div className="pages__uploads_item">
-                  <img src={img.blob} alt={`uploaded_img ${img.id}`} />
-                  <div
-                    className="pages__uploads_item_delete"
-                    onClick={() => handleImageDelete(img.id)}
-                  >
-                    <svg
-                      width="6"
-                      height="6"
-                      viewBox="0 0 6 6"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M0.195034 5.15554L2.17546 3.05903L0.0585938 1.05937L0.750782 0.32661L2.86765 2.32626L4.84808 0.229752L5.60119 0.941167L3.62076 3.03768L5.73763 5.03733L5.04544 5.7701L2.92858 3.77044L0.94815 5.86695L0.195034 5.15554Z"></path>
-                    </svg>
-                  </div>
-                </div>
-              </SwiperSlide>
-            ))}
+            
           </Swiper>
+          {pages.uploads.map((img, idx) => (
+                <DragImage key={`${img.id}:${idx}`} imageName={img.name} handleImageDelete={handleImageDelete} img={img} />
+            ))}
         </div>
       </div>
     </div>
   );
 };
-
+// дочинить swiper и сделать dnd
 export default PagesPreview;

@@ -1,4 +1,7 @@
-/** @format */
+
+canvas{
+  padding:200px;
+}/** @format */
 
 @font-face {
   font-family: "Elisabethische";
@@ -36,6 +39,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding:30px;
 }
 
 .cover__size_title {

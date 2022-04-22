@@ -1,7 +1,7 @@
 /** @format */
 
 import React from "react";
-import { handleChangePagesType,handleSetTemplateToPage } from "../../../../redux/reducers/constructor/constructorSlice";
+import { handleChangePagesType,handleSetTemplateToPage,handleSetColorToSidePage } from "../../../../redux/reducers/constructor/constructorSlice";
 import { useDispatch } from "react-redux";
 import "./Pages.scss";
 const Pages = ({ selectedSize, pages }) => {
@@ -42,6 +42,9 @@ const Pages = ({ selectedSize, pages }) => {
 
   const handleSelectTemplate=(sideToChange,tmplId,selectedSide,pageType)=>{
     dispatch(handleSetTemplateToPage({sideToChange,tmplId,selectedSide,pageType}))
+  }
+  const handleChangeColor =(colorHex,sideToChange)=>{
+    dispatch(handleSetColorToSidePage({colorHex,sideToChange}))
   }
 
   function getTypeContent(typeId) {
@@ -257,7 +260,7 @@ const Pages = ({ selectedSize, pages }) => {
                     </div>
                     <div className="pages__colors">
                         {pages.colors.map((color,idx)=>
-                        <div style={{backgroundColor:color.hex}} key={`${color.id}:${idx}`} className="pages__colors_item">
+                        <div onClick={()=>handleChangeColor(color.hex,"leftside")} style={{backgroundColor:color.hex}} key={`${color.id}:${idx}`} className="pages__colors_item">
                             
                         </div>
                         )}
@@ -272,7 +275,7 @@ const Pages = ({ selectedSize, pages }) => {
                     </div>
                     <div className="pages__colors">
                         {pages.colors.map((color,idx)=>
-                        <div style={{backgroundColor:color.hex}} key={`${color.id}:${idx}`} className="pages__colors_item">
+                        <div onClick={()=>handleChangeColor(color.hex,"rightside")} style={{backgroundColor:color.hex}} key={`${color.id}:${idx}`} className="pages__colors_item">
                             
                         </div>
                         )}
