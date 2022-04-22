@@ -1966,7 +1966,7 @@ const constructorSlice = createSlice({
       for (let i = 0; i < 10; i++) {
         let page = {
           id: i,
-          selectedSide: 0,
+          selectedSide: "lrside",
           templates: [
             { id: 0, title: "leftside", template: [] },
             //Правая страница
@@ -2171,7 +2171,7 @@ const constructorSlice = createSlice({
       let prevPages = [...current(state.pages.papers.pages)];
       let newPage = {
         id: 0,
-        selectedSides: 0, // centerside or leftside&rightside
+        selectedSide: 0, // centerside or leftside&rightside
         templates: [
           //Левая страница
           { id: 0, title: "leftside", template: [] },
@@ -2212,9 +2212,9 @@ const constructorSlice = createSlice({
       const { sideToChange, tmplId, selectedSide, pageType } = action.payload;
       console.log(sideToChange, tmplId, selectedSide, pageType);
       //выбранная страница
-      let selectedPage = current(
+      let selectedPage = {...current(
         state.pages.papers.pages[state.pages.papers.selectedPage]
-      );
+      )}
       //нужный темплейт из стейта
       let neededTemplate;
       switch (sideToChange) {
@@ -2239,13 +2239,27 @@ const constructorSlice = createSlice({
           break;
       }
       
-      let cloneSelectedPage = Object.assign({}, selectedPage);
-      cloneSelectedPage.selectedSide=selectedSide;
+      selectedPage.selectedSide=selectedSide;
+      let templates = [...selectedPage.templates];
+      let newTemplates = [...templates].map((tmpl,idx)=>{
+        if(tmpl.title === sideToChange){
+          return {...tmpl,template:neededTemplate}
+        }
+        else {
+          return {...tmpl, template: {}}
+        }
+        })
+      selectedPage.templates=newTemplates;
+      state.pages.papers.pages[state.pages.papers.selectedPage]=selectedPage;
       
+
+      
+
       
 
       
     }
+  
   
   },
   extraReducers: {},
