@@ -9,6 +9,7 @@ import {
   handleDeletePageFromPages,
 } from "../../../../redux/reducers/constructor/constructorSlice";
 import DragImage from "./DragImage";
+import TmplElementBox from "./TmplElementBox";
 import { Scrollbar, Autoplay, Grid, Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -16,7 +17,7 @@ import "swiper/css/grid";
 import "swiper/css";
 import "./PagesPreview.scss";
 
-const PagesPreview = ({ pages, size }) => {
+const PagesPreview = ({ pages, size,justPreview }) => {
   const dispatch = useDispatch();
   const validFileTypes = [
     "jpg",
@@ -103,10 +104,10 @@ const PagesPreview = ({ pages, size }) => {
               <div
                 className={`pages__selector_page ${pages.papers.selectedPage === page.id &&
                   "pages__selector_page--active"
-                  }`}
+                  } ${justPreview && "pages__selector_page--justPreview"}`}
               >
                 <span>{page.id + 1}</span>
-                <div
+                {!justPreview && <div
                   onClick={(e) => handleDeletePage(e, page.id)}
                   className="pages__selector_page_delete"
                 >
@@ -119,49 +120,37 @@ const PagesPreview = ({ pages, size }) => {
                   >
                     <path d="M0.802495 5.08652L2.5 3.28951L0.685547 1.57552L1.27885 0.947439L3.09331 2.66143L4.79082 0.864418L5.43635 1.4742L3.73884 3.27121L5.55329 4.9852L4.95999 5.61328L3.14553 3.8993L1.44802 5.69631L0.802495 5.08652Z"></path>
                   </svg>
-                </div>
-                {pages.papers.selectedPage === page.id && (
+                </div>}
+                {!justPreview && <>{pages.papers.selectedPage === page.id && (
                   <div
                     onClick={(e) => handleAddPage(e, page.id)}
                     className="pages__selector_page_add"
                   >
                     +
                   </div>
-                )}
+                )} </>}
+                
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
       </div>
-      <div className="pages__paper">
+      <div className={`pages__paper pages__paper--${size.selectedType === 0 ? "quadratic" : "landscape"}`}>
         {/* Квадратная */}
 
         {pages.papers.pages[pages.papers.selectedPage]?.selectedSide === "lrside" && size?.selectedType === 0 && <div className="pages__paper_quadratic">
           <div style={{backgroundColor:pages.papers.pages[pages.papers.selectedPage].leftsideHex}} className="pages__paper_quadratic_leftside">
             <div className="pages__paper_quadratic_ls_elements">
               {pages.papers.pages[pages.papers.selectedPage].templates[0].template.elements?.map((tmplElement, idx) =>
-                <div style={{
-                  width: tmplElement.position.w,
-                  height: tmplElement.position.h,
-                  left: tmplElement.position.l,
-                  top: tmplElement.position.t,
-                }} key={`${tmplElement.id}:${idx}`} className="pages__paper_quadratic_ls_element">
-
-                </div>
+              <TmplElementBox image={tmplElement?.image} key={`${tmplElement.id}:${idx}`} sideToChange={"leftside"} tmplElement={tmplElement} cn="pages__paper_quadratic_ls_element" />
               )}
             </div>
           </div>
           <div style={{backgroundColor:pages.papers.pages[pages.papers.selectedPage].rightsideHex}} className="pages__paper_quadratic_rightside">
             <div  className="pages__paper_quadratic_ls_elements">
               {pages.papers.pages[pages.papers.selectedPage].templates[1].template.elements?.map((tmplElement, idx) =>
-                <div style={{
-                  width: tmplElement.position.w,
-                  height: tmplElement.position.h,
-                  left: tmplElement.position.l,
-                  top: tmplElement.position.t,
-                }} key={`${tmplElement.id}:${idx}`} className="pages__paper_quadratic_ls_element">
-
-                </div>
+              <TmplElementBox image={tmplElement?.image} key={`${tmplElement.id}:${idx}`} sideToChange={"rightside"} tmplElement={tmplElement} cn="pages__paper_quadratic_ls_element" />
+                
               )}
             </div>
           </div>
@@ -176,14 +165,7 @@ const PagesPreview = ({ pages, size }) => {
           <div className="pages__paper_quadratic_centerside">
             <div className="pages__paper_quadratic_ls_elements">
               {pages.papers.pages[pages.papers.selectedPage].templates[2].template.elements?.map((tmplElement, idx) =>
-                <div style={{
-                  width: tmplElement.position.w,
-                  height: tmplElement.position.h,
-                  left: tmplElement.position.l,
-                  top: tmplElement.position.t,
-                }} key={`${tmplElement.id}:${idx}`} className="pages__paper_quadratic_cs_element">
-
-                </div>
+              <TmplElementBox image={tmplElement?.image} key={`${tmplElement.id}:${idx}`} sideToChange={"centerside"} tmplElement={tmplElement} cn="pages__paper_quadratic_cs_element" />  
               )}
             </div>
           </div>
@@ -191,12 +173,41 @@ const PagesPreview = ({ pages, size }) => {
 
 
         {/* Альбомная */}
-        {/* {size.selectedType === 1 && <div className="pages__paper_landscape">
-          landcape
-        </div>} */}
-      </div>
+        {pages.papers.pages[pages.papers.selectedPage]?.selectedSide === "lrside" && size?.selectedType === 1 && <div className="pages__paper_landscape">
+          <div style={{backgroundColor:pages.papers.pages[pages.papers.selectedPage].leftsideHex}} className="pages__paper_landscape_leftside">
+            <div className="pages__paper_landscape_ls_elements">
+              {pages.papers.pages[pages.papers.selectedPage].templates[0].template.elements?.map((tmplElement, idx) =>
+              <TmplElementBox image={tmplElement?.image} key={`${tmplElement.id}:${idx}`} sideToChange={"leftside"} tmplElement={tmplElement} cn="pages__paper_landscape_ls_element" />
+              )}
+            </div>
+          </div>
+          <div style={{backgroundColor:pages.papers.pages[pages.papers.selectedPage].rightsideHex}} className="pages__paper_landscape_rightside">
+            <div  className="pages__paper_landscape_ls_elements">
+              {pages.papers.pages[pages.papers.selectedPage].templates[1].template.elements?.map((tmplElement, idx) =>
+              <TmplElementBox image={tmplElement?.image} key={`${tmplElement.id}:${idx}`} sideToChange={"rightside"} tmplElement={tmplElement} cn="pages__paper_landscape_ls_element" />
+                
+              )}
+            </div>
+          </div>
+        </div>}
 
-      <div className="pages__upload">
+        {pages.papers.pages[pages.papers.selectedPage]?.selectedSide === "cside" && size?.selectedType === 1 && <div className="pages__paper_landscape--full">
+          <div style={{backgroundColor:pages.papers.pages[pages.papers.selectedPage].leftsideHex}} className="pages__paper_landscape--full_leftside">
+
+          </div>
+          <div style={{backgroundColor:pages.papers.pages[pages.papers.selectedPage].rightsideHex}} className="pages__paper_landscape--full_rightside">
+
+          </div>
+          <div className="pages__paper_landscape_centerside">
+            <div className="pages__paper_landscape_ls_elements">
+              {pages.papers.pages[pages.papers.selectedPage].templates[2].template.elements?.map((tmplElement, idx) =>
+              <TmplElementBox image={tmplElement?.image} key={`${tmplElement.id}:${idx}`} sideToChange={"centerside"} tmplElement={tmplElement} cn="pages__paper_landscape_cs_element" />  
+              )}
+            </div>
+          </div>
+        </div>}
+      </div>
+      {!justPreview && <div className="pages__upload">
         <div className="pages__uploader">
           <label onChange={(e) => handleImageUpload(e)} htmlFor="pages_upload">
             <input
@@ -247,18 +258,23 @@ const PagesPreview = ({ pages, size }) => {
               prevEl: ".pages__arrows_prev",
               nextEl: ".pages__arrows_next",
             }}
+            simulateTouch={false}
             slidesPerView={"auto"}
             spaceBetween={20}
             grid={{ rows: 1, fill: "row" }}
             autoplay={{ delay: 2000 }}
           >
             
-          </Swiper>
           {pages.uploads.map((img, idx) => (
-                <DragImage key={`${img.id}:${idx}`} imageName={img.name} handleImageDelete={handleImageDelete} img={img} />
+          
+          <SwiperSlide key={`${img.id}:${idx}`} >
+                <DragImage handleImageDelete={handleImageDelete} img={img} />
+              </SwiperSlide>
             ))}
+            </Swiper>
         </div>
-      </div>
+      </div>}
+      
     </div>
   );
 };

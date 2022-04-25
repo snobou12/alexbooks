@@ -1,12 +1,14 @@
+/** @format */
 
 import { createSlice, current } from "@reduxjs/toolkit";
-
+import { v4 as uuidv4 } from "uuid";
 const constructorSlice = createSlice({
   name: "constructor",
   initialState: {
     header_content: {
       step: 3,
-      price: 9999,
+      price: 2190,
+      bookName:"",
     },
     size: {
       selectedType: 0,
@@ -17,10 +19,10 @@ const constructorSlice = createSlice({
           title: "quadratic",
           transl: "Квадратная",
           sizes: [
-            { id: 0, size: "15x15 см", price: "2190р" },
-            { id: 1, size: "20x20 см", price: "3590р" },
-            { id: 2, size: "25x25 см", price: "5490р" },
-            { id: 3, size: "30x30 см", price: "6990р" },
+            { id: 0, size: "15x15 см", price: 2190 },
+            { id: 1, size: "20x20 см", price: 3590 },
+            { id: 2, size: "25x25 см", price: 5490 },
+            { id: 3, size: "30x30 см", price: 6990 },
           ],
           selectedSize: 0,
         },
@@ -29,9 +31,9 @@ const constructorSlice = createSlice({
           title: "landscape",
           transl: "Альбомная",
           sizes: [
-            { id: 0, size: "15x22,5 см", price: "2490р" },
-            { id: 1, size: "20x32 см", price: "5290р" },
-            { id: 2, size: "30x40 см", price: "8890р" },
+            { id: 0, size: "15x22,5 см", price: 2490 },
+            { id: 1, size: "20x32 см", price: 5290 },
+            { id: 2, size: "30x40 см", price: 8890 },
           ],
           selectedSize: 0,
         },
@@ -1850,7 +1852,7 @@ const constructorSlice = createSlice({
           {
             id: 1,
             selectedSide: "lrside", // centerside or leftside&rightside
-            
+
             leftsideHex: "#FFFFFF",
             rightsideHex: "#FFFFFF",
             templates: [
@@ -1865,7 +1867,7 @@ const constructorSlice = createSlice({
           {
             id: 2,
             selectedSide: "lrside", // centerside or leftside&rightside
-            
+
             leftsideHex: "#FFFFFF",
             rightsideHex: "#FFFFFF",
             templates: [
@@ -1880,7 +1882,7 @@ const constructorSlice = createSlice({
           {
             id: 3,
             selectedSide: "lrside", // centerside or leftside&rightside
-            
+
             leftsideHex: "#FFFFFF",
             rightsideHex: "#FFFFFF",
             templates: [
@@ -1895,7 +1897,7 @@ const constructorSlice = createSlice({
           {
             id: 4,
             selectedSide: "lrside", // centerside or leftside&rightside
-            
+
             leftsideHex: "#FFFFFF",
             rightsideHex: "#FFFFFF",
             templates: [
@@ -1924,7 +1926,7 @@ const constructorSlice = createSlice({
           {
             id: 6,
             selectedSide: "lrside", // centerside or leftside&rightside
-            
+
             leftsideHex: "#FFFFFF",
             rightsideHex: "#FFFFFF",
             templates: [
@@ -1939,7 +1941,7 @@ const constructorSlice = createSlice({
           {
             id: 7,
             selectedSide: "lrside", // centerside or leftside&rightside
-            
+
             leftsideHex: "#FFFFFF",
             rightsideHex: "#FFFFFF",
             templates: [
@@ -1954,7 +1956,7 @@ const constructorSlice = createSlice({
           {
             id: 8,
             selectedSide: "lrside", // centerside or leftside&rightside
-            
+
             leftsideHex: "#FFFFFF",
             rightsideHex: "#FFFFFF",
             templates: [
@@ -1969,7 +1971,7 @@ const constructorSlice = createSlice({
           {
             id: 9,
             selectedSide: "lrside", // centerside or leftside&rightside
-            
+
             leftsideHex: "#FFFFFF",
             rightsideHex: "#FFFFFF",
             templates: [
@@ -1990,12 +1992,14 @@ const constructorSlice = createSlice({
     //SIZE////////////////////////////////////////////////////////
     handleChangeSizeType(state, action) {
       state.size.selectedType = action.payload;
+     
+      
       let pages = [];
       for (let i = 0; i < 10; i++) {
         let page = {
           id: i,
           selectedSide: "lrside",
-          
+
           leftsideHex: "#FFFFFF",
           rightsideHex: "#FFFFFF",
           templates: [
@@ -2028,12 +2032,15 @@ const constructorSlice = createSlice({
       state.size.scale = action.payload;
     },
 
-    //STEP///////////////////////////////////////////////////////////////
+    //HEADER_CONTENT///////////////////////////////////////////////////////////////
     handleIncrementStep(state) {
       if (state.header_content.step !== 5) state.header_content.step += 1;
     },
     handleDecrementStep(state) {
       if (state.header_content.step !== 1) state.header_content.step -= 1;
+    },
+    handleChangeBookName(state,action){
+      state.header_content.bookName=action.payload;
     },
 
     //COVER///////////////////////////////////////////////////////////////////
@@ -2174,7 +2181,7 @@ const constructorSlice = createSlice({
       let { imageBlob, lastModified, name, size, type } = action.payload;
       let prevUploads = [...current(state.pages.uploads)];
       let newImg = {
-        id: prevUploads.length,
+        id: uuidv4(),
         blob: imageBlob,
         lastModified,
         name,
@@ -2196,20 +2203,17 @@ const constructorSlice = createSlice({
     handleChangeSelectedPage(state, action) {
       state.pages.papers.selectedPage = action.payload;
     },
-    handleSetColorToSidePage(state,action){
-      const {colorHex,sideToChange}=action.payload;
+    handleSetColorToSidePage(state, action) {
+      const { colorHex, sideToChange } = action.payload;
       let selectedPage = {
-        ...current(
-          state.pages.papers.pages[state.pages.papers.selectedPage]
-        )
+        ...current(state.pages.papers.pages[state.pages.papers.selectedPage]),
+      };
+      if (sideToChange === "leftside") {
+        selectedPage.leftsideHex = colorHex;
+      } else {
+        selectedPage.rightsideHex = colorHex;
       }
-      if(sideToChange==="leftside"){
-        selectedPage.leftsideHex=colorHex;
-      }
-      else{
-        selectedPage.rightsideHex=colorHex;
-      }
-      state.pages.papers.pages[state.pages.papers.selectedPage]=selectedPage;
+      state.pages.papers.pages[state.pages.papers.selectedPage] = selectedPage;
     },
     //Добавить новую страницу
     handleAddPageToPages(state, action) {
@@ -2218,7 +2222,7 @@ const constructorSlice = createSlice({
       let newPage = {
         id: 0,
         selectedSide: "lrside", // centerside or leftside&rightside
-        
+
         leftsideHex: "#FFFFFF",
         rightsideHex: "#FFFFFF",
         templates: [
@@ -2263,10 +2267,8 @@ const constructorSlice = createSlice({
       const { sideToChange, tmplId, selectedSide, pageType } = action.payload;
       //выбранная страница
       let selectedPage = {
-        ...current(
-          state.pages.papers.pages[state.pages.papers.selectedPage]
-        )
-      }
+        ...current(state.pages.papers.pages[state.pages.papers.selectedPage]),
+      };
       //нужный темплейт из стейта
       let neededTemplate;
       switch (sideToChange) {
@@ -2277,14 +2279,14 @@ const constructorSlice = createSlice({
           break;
         case "rightside":
           neededTemplate = current(
-            state.pages.templates[pageType].templates.rightside[tmplId]);
-
+            state.pages.templates[pageType].templates.rightside[tmplId]
+          );
 
           break;
         case "centerside":
           neededTemplate = current(
-            state.pages.templates[pageType].templates.centerside[tmplId]);
-
+            state.pages.templates[pageType].templates.centerside[tmplId]
+          );
 
           break;
         default:
@@ -2297,53 +2299,83 @@ const constructorSlice = createSlice({
       if (sideToChange === "leftside") {
         newTemplates = [...templates].map((tmpl) => {
           if (tmpl.title === "leftside") {
-            return { ...tmpl, template: neededTemplate }
+            return { ...tmpl, template: neededTemplate };
+          } else if (tmpl.title === "rightside") {
+            return { ...tmpl };
+          } else {
+            return { ...tmpl, template: {} };
           }
-          else if (tmpl.title === "rightside") {
-            return { ...tmpl }
-          }
-          else {
-            return { ...tmpl, template: {} }
-          }
-
-        })
-      }
-      else if (sideToChange === "rightside") {
+        });
+      } else if (sideToChange === "rightside") {
         newTemplates = [...templates].map((tmpl) => {
           if (tmpl.title === "rightside") {
-            return { ...tmpl, template: neededTemplate }
+            return { ...tmpl, template: neededTemplate };
+          } else if (tmpl.title === "leftside") {
+            return { ...tmpl };
+          } else {
+            return { ...tmpl, template: {} };
           }
-          else if (tmpl.title === "leftside") {
-            return { ...tmpl }
-          }
-          else {
-            return { ...tmpl, template: {} }
-          }
-        })
-      }
-      else {
+        });
+      } else {
         newTemplates = [...templates].map((tmpl) => {
           if (tmpl.title === "centerside") {
-            return { ...tmpl, template: neededTemplate }
+            return { ...tmpl, template: neededTemplate };
+          } else {
+            return { ...tmpl, template: {} };
           }
-          else {
-            return { ...tmpl, template: {} }
-          }
-        })
+        });
       }
 
       selectedPage.templates = newTemplates;
       state.pages.papers.pages[state.pages.papers.selectedPage] = selectedPage;
+    },
+    // добавить фото в элемент шаблона
+    handleSetImageToTemplateElement(state, action) {
+      const { imageId, tmplElementId, sideToChange } = action.payload;
 
+      let selectedPage = {
+        ...current(state.pages.papers.pages[state.pages.papers.selectedPage]),
+      };
+      // ищем картинку
+      let neededImageObj = {};
+      [...current(state.pages.uploads)].forEach((upload) => {
+        if (upload.id === imageId) {
+          neededImageObj = upload;
+        }
+      });
 
+      let templatesOfSelectedPage = [...selectedPage.templates];
+      let sideIdx;
+      if (sideToChange === "leftside") {
+        sideIdx = 0;
+      } else if (sideToChange === "rightside") {
+        sideIdx = 1;
+      } else {
+        sideIdx = 2;
+      }
 
-
-
-
-
-    }
-
-
+      let template = { ...templatesOfSelectedPage[sideIdx] };
+      let tmplTemplate = { ...template.template };
+      let tmplElements = [...tmplTemplate.elements];
+      let tmplNewElements = tmplElements.map((elem) => {
+        if (elem.id === tmplElementId) {
+          return { ...elem, image: neededImageObj };
+        } else {
+          return { ...elem };
+        }
+      });
+      tmplTemplate.elements = tmplNewElements;
+      template.template = tmplTemplate;
+      let newTemplates = templatesOfSelectedPage.map((templ) => {
+        if (templ.title === sideToChange) {
+          return { ...template };
+        } else {
+          return { ...templ };
+        }
+      });
+      selectedPage.templates = newTemplates;
+      state.pages.papers.pages[state.pages.papers.selectedPage]=selectedPage;
+    },
   },
   extraReducers: {},
 });
@@ -2376,6 +2408,8 @@ export const {
   handleAddPageToPages,
   handleDeletePageFromPages,
   handleSetTemplateToPage,
-  handleSetColorToSidePage
+  handleSetColorToSidePage,
+  handleSetImageToTemplateElement,
+  handleChangeBookName
 } = constructorSlice.actions;
 export default constructorSlice.reducer;

@@ -26,7 +26,7 @@ const Size = ({selectedType,types}) => {
                 }`}
               >
                 <span>{size.size}</span>
-                <span>от {size.price}</span>
+                <span>от {size.price}р</span>
               </span>
             ))}
           </div>
@@ -46,7 +46,7 @@ const Size = ({selectedType,types}) => {
                 }`}
               >
                 <span>{size.size}</span>
-                <span>от {size.price}</span>
+                <span>от {size.price}р</span>
               </span>
             ))}
           </div>

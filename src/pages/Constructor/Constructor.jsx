@@ -1,7 +1,7 @@
 /** @format */
 
 import React from "react";
-import { Size, SizePreview, Cover, CoverPreview,Pages, PagesPreview } from "./steps";
+import { Size, SizePreview, Cover, CoverPreview,Pages, PagesPreview, Full, FullPreview } from "./steps";
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleIncrementStep,
@@ -10,6 +10,10 @@ import {
 import "./Constructor.scss";
 const Constructor = () => {
   const dispatch = useDispatch();
+  const [selectedFullType,setSelectedFullType]=React.useState(0);
+  const handleChangeSelectedFullType=(typeId)=>{
+    setSelectedFullType(typeId);
+  }
   const { size, header_content,cover,pages } = useSelector(
     (state) => state.constructorSlice
   );
@@ -22,8 +26,11 @@ const Constructor = () => {
         return <Cover selectedType={cover.selectedType} types={cover.types} />;
       case 3:
         return <Pages selectedSize={size.selectedType} pages={pages} />;
+        case 4:
+          return <Full selectedType={selectedFullType} selectType={handleChangeSelectedFullType} />;
+          
       default:
-        return <Size selectedType={size.selectedType} types={size.types} />;
+        break;
     }
   }
   function getPreview(step) {
@@ -43,19 +50,12 @@ const Constructor = () => {
       case 2:
         return <CoverPreview  />;
       case 3:
-        return <PagesPreview pages={pages} size={size} />;
+        return <PagesPreview justPreview={false} pages={pages} size={size} />;
+        case 4:
+          return <FullPreview pages={pages} size={size} selectedType={selectedFullType}  />;
       default:
-        return (
-          <SizePreview
-            typeId={size.selectedType}
-            sizeId={
-              size.types[size.selectedType].sizes[
-                size.types[size.selectedType].selectedSize
-              ].id
-            }
-            scale={size.scale}
-          />
-        );
+       
+       break
     }
   }
   function getUpperTitel(step) {
@@ -66,6 +66,8 @@ const Constructor = () => {
         return "Выберите обложку";
       case 3:
         return "Создание книги";
+      case 4:
+        return "Название альбома. Превью"
       default:
         return "Выберите размер книги";
     }
@@ -83,9 +85,7 @@ const Constructor = () => {
         break;
     }
   }
-  React.useEffect(()=>{
-    console.log("Конструктор рендеред")
-  },[])
+ 
   return (
     <div className="cnsr">
       <div className="cnsr__steps">{getStep(header_content.step)}</div>

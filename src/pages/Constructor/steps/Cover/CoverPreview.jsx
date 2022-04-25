@@ -4,40 +4,10 @@ import React from "react";
 import { Stage, Layer, Image, Text } from "react-konva";
 import "./CoverPreview.scss";
 import { useSelector } from "react-redux";
-//пока только тесты
 
-// const useContainerDimensions = (myRef) => {
-//   const getDimensions = () => ({
-//     canvasWidth: myRef.current.offsetWidth,
-//     canvasHeight: myRef.current.offsetHeight,
-//   });
-
-//   const [dimensions, setDimensions] = React.useState({
-//     canvasWidth: 0,
-//     canvasHeight: 0,
-//   });
-
-//   React.useEffect(() => {
-//     const handleResize = () => {
-//       setDimensions(getDimensions());
-//     };
-
-//     if (myRef.current) {
-//       setDimensions(getDimensions());
-//     }
-
-//     window.addEventListener("resize", handleResize);
-
-//     return () => {
-//       window.removeEventListener("resize", handleResize);
-//     };
-//   }, [myRef.current]);
-
-//   return dimensions;
-// };
-//   const { canvasWidth, canvasHeight } = useContainerDimensions(shellRef);
 
 const CoverPreview = () => {
+  const stageRef=React.useRef(null); //for export canvas to img 
   const [coverImage, setCoverImage] = React.useState(null);
   //Тиснение
   const [ecoLetteringImg, setEcoLetteringImg] = React.useState(null);
@@ -623,7 +593,6 @@ const CoverPreview = () => {
 
   //Металлическая пластина(текст)
   const getMetalplateText = () => {
-    console.log("kek")
     if (
       (cover.types[0].selectedDecor === 2 &&
         cover.selectedType === 0 &&
@@ -771,11 +740,13 @@ const CoverPreview = () => {
       setPhotoCoverImg(null);
     }
   }, [cover.selectedType, cover.types[2].blobImage]);
-
+  
   
   return (
     <div className="cover__preview">
+     
       <Stage
+        ref={stageRef}
         width={size.selectedType === 0 ? 600 : 1000}
         height={600}
         style={{ borderRadius: "8px", overflow: "hidden" }}

@@ -162,6 +162,7 @@ const Pages = ({ selectedSize, pages }) => {
                     {pages.templates[selectedSize].templates.leftside.map(
                       (tmpl, idx) => (
                         <div
+                        onClick={()=>handleSelectTemplate("leftside",tmpl.id,"lrside",selectedSize)}
                           key={`${tmpl.id}:${idx}`}
                           className="pages__type_centerside_tmpl_landscape"
                         >
@@ -191,6 +192,7 @@ const Pages = ({ selectedSize, pages }) => {
                     {pages.templates[selectedSize].templates.rightside.map(
                       (tmpl, idx) => (
                         <div
+                        onClick={()=>handleSelectTemplate("rightside",tmpl.id,"lrside",selectedSize)}
                           key={`${tmpl.id}:${idx}`}
                           className="pages__type_centerside_tmpl_landscape"
                         >
@@ -220,6 +222,8 @@ const Pages = ({ selectedSize, pages }) => {
                     {pages.templates[selectedSize].templates.centerside.map(
                       (tmpl, idx) => (
                         <div
+                        onClick={()=>handleSelectTemplate("centerside",tmpl.id,"cside",selectedSize)}
+
                           key={`${tmpl.id}:${idx}`}
                           className="pages__type_centerside_tmpl_landscape"
                         >
