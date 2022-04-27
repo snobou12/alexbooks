@@ -22,16 +22,7 @@
     max-height: 100vh;
     background: #ffffff;
       overflow-y:scroll;
-       &::-webkit-scrollbar {
-        border-radius: 8px;
-        width: 6px;
-        background-color: rgb(228 232 240);
-        overflow: hidden;
-      }
-      &::-webkit-scrollbar-thumb {
-        background-color: rgb(173 189 209);
-        border-radius: 8px;
-      }
+      
       &--landscape{
         padding: 32px;
 
