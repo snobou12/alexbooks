@@ -8,7 +8,7 @@ const constructorSlice = createSlice({
     header_content: {
       step: 3,
       price: 2190,
-      bookName:"",
+      bookName: "",
     },
     size: {
       selectedType: 0,
@@ -1987,13 +1987,55 @@ const constructorSlice = createSlice({
       },
       uploads: [],
     },
+    checkout: {
+      selectedNav: 1,
+      navs: [{ id: 0, title: "data", transl: "Введите контактные данные" },
+      { id: 1, title: "delivery", transl: "Выберете способ доставки" },
+      { id: 2, title: "paying", transl: "Перейдите к оплате" }],
+      content: [
+        {
+          id: 0, title: "data", options: [
+            { id: 0, title: "fullname", transl: "ФИО", ph: "Ваше имя", value: "" },
+            {
+              id: 1, title: "phone", transl: "Телефон", ph: "8 000 000 00 00", value: {
+                formattedValue: "",
+                value: ""
+              }
+            },
+            { id: 2, title: "email", transl: "Почта", ph: "e-mail@mail.ru", value: "" },
+            { id: 3, title: "city", transl: "Город", ph: "Москва", value: "" },
+          ]
+        },
+        {
+          id:1,title:"delivery",options:[
+            {id:0,title:"service",transl:"Служба доставки",selectedVariable:0,variables:[
+              {id:0,title:"cdek",transl:"СДЭК"},
+              {id:1,title:"russianpost",transl:"ПОЧТА РОССИИ"},
+              {id:2,title:"pickup",transl:"Самовывоз"},
+            ]},
+            {id:1,title:"deliverPlace",transl:"Куда доставить",selectedVariable:0,variables:[
+              {id:0,title:"pointOfIssue",transl:"Пункт выдачи"},
+              {id:1,title:"toTheDoor",transl:"До двери"}
+
+            ]},
+            {id:2,title:"address",transl:"Адрес",data:[
+              {id:0,title:"zipcode",transl:"Индекс",ph:"188212",value:""},
+              {id:1,title:"street",transl:"Улица",ph:"Рубежная",value:""},
+              {id:2,title:"houseNumber",transl:"Дом",ph:"14",value:""},
+              {id:3,title:"flat",transl:"Квартира",ph:"19",value:""},
+
+            ]}
+          ]
+        }
+      ]
+    }
   },
   reducers: {
     //SIZE////////////////////////////////////////////////////////
     handleChangeSizeType(state, action) {
       state.size.selectedType = action.payload;
-     
-      
+
+
       let pages = [];
       for (let i = 0; i < 10; i++) {
         let page = {
@@ -2039,8 +2081,8 @@ const constructorSlice = createSlice({
     handleDecrementStep(state) {
       if (state.header_content.step !== 1) state.header_content.step -= 1;
     },
-    handleChangeBookName(state,action){
-      state.header_content.bookName=action.payload;
+    handleChangeBookName(state, action) {
+      state.header_content.bookName = action.payload;
     },
 
     //COVER///////////////////////////////////////////////////////////////////
@@ -2374,8 +2416,33 @@ const constructorSlice = createSlice({
         }
       });
       selectedPage.templates = newTemplates;
-      state.pages.papers.pages[state.pages.papers.selectedPage]=selectedPage;
+      state.pages.papers.pages[state.pages.papers.selectedPage] = selectedPage;
     },
+    //CHECKOUT/////////////////////////////////////////////////////////////////////////
+    handleIncrementNavigation(state){
+      state.checkout.selectedNav+=1;
+    },
+    //data изменить номер
+    handleChangeDataPhone(state, action) {
+      state.checkout.content[0].options[1].value = action.payload;
+    },
+    //изменить другие опции data
+    handleChangeDataOtherOptions(state, action) {
+      const { value, target } = action.payload;
+      switch (target) {
+        case "fullname":
+          state.checkout.content[0].options[0].value = value;
+          break;
+        case "email":
+          state.checkout.content[0].options[2].value = value;
+          break;
+        case "city":
+          state.checkout.content[0].options[3].value = value;
+          break;
+        default:
+          break;
+      }
+    }
   },
   extraReducers: {},
 });
@@ -2410,6 +2477,9 @@ export const {
   handleSetTemplateToPage,
   handleSetColorToSidePage,
   handleSetImageToTemplateElement,
-  handleChangeBookName
+  handleChangeBookName,
+  handleIncrementNavigation,
+  handleChangeDataPhone,
+  handleChangeDataOtherOptions
 } = constructorSlice.actions;
 export default constructorSlice.reducer;

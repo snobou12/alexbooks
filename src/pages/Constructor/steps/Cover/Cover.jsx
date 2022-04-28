@@ -400,13 +400,11 @@ const Cover = ({ selectedType, types }) => {
   }
   //Загрузить фото для фотовствки эко кожи
   const photoBidImageChange = (e, coverType) => {
-    console.log(e.target.files[0]);
     if (e.target.files && e.target.files[0]) {
       let reader = new FileReader();
       let img = e.target.files[0];
       reader.readAsDataURL(img);
       reader.onload = function () {
-        console.log(reader.result);
         dispatch(
           handleChangePhotoBidBlobImage({
             blob: reader.result,
