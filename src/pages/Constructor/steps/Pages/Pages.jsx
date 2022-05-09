@@ -260,11 +260,11 @@ const Pages = ({ selectedSize, pages }) => {
                         Левая страница
                     </div>
                     <div className="pages__colors_description">
-                        Выберете цвет страницы
+                        Выберите цвет страницы
                     </div>
                     <div className="pages__colors">
                         {pages.colors.map((color,idx)=>
-                        <div onClick={()=>handleChangeColor(color.hex,"leftside")} style={{backgroundColor:color.hex}} key={`${color.id}:${idx}`} className="pages__colors_item">
+                        <div onClick={()=>handleChangeColor(color.hex,"leftside")} style={{backgroundColor:`#${color.hex}`}} key={`${color.id}:${idx}`} className="pages__colors_item">
                             
                         </div>
                         )}
@@ -275,11 +275,11 @@ const Pages = ({ selectedSize, pages }) => {
                         Правая страница
                     </div>
                     <div className="pages__colors_description">
-                        Выберете цвет страницы
+                        Выберите цвет страницы
                     </div>
                     <div className="pages__colors">
                         {pages.colors.map((color,idx)=>
-                        <div onClick={()=>handleChangeColor(color.hex,"rightside")} style={{backgroundColor:color.hex}} key={`${color.id}:${idx}`} className="pages__colors_item">
+                        <div onClick={()=>handleChangeColor(color.hex,"rightside")} style={{backgroundColor:`#${color.hex}`}} key={`${color.id}:${idx}`} className="pages__colors_item">
                             
                         </div>
                         )}

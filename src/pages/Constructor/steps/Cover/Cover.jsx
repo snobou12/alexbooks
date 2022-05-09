@@ -1,7 +1,7 @@
-/** @format */
 
 import React from "react";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 import {
   handleChangeCoverType,
@@ -19,12 +19,12 @@ import {
   handleChangeMetalplateTextSize,
   handleChangeMetalplateTextFont,
   handleChangeMetalplateText,
-  handleChangePhotoCoverImage
+  handleChangePhotoCoverImage,
 } from "../../../../redux/reducers/constructor/constructorSlice";
 
 import "./Cover.scss";
 //Это step слева (визуал)
-const Cover = ({ selectedType, types }) => {
+const Cover = ({ selectedType, types, setCoverImages }) => {
   const dispatch = useDispatch();
   //Получить главные svgшки для левой части
   function getTypeSvg(typeId) {
@@ -332,16 +332,12 @@ const Cover = ({ selectedType, types }) => {
                 </div>
               </div>
             </div>
-            
+
             <div className="photoCover__uploader">
-              <label
-                onChange={photoCoverChange}
-                htmlFor="photoCover_upload"
-              >
-                <input name="" type="file" id="photoCover_upload" hidden />
+              <label onChange={photoCoverChange} htmlFor="photoCover_upload">
+                <input  name="" type="file" accept="image/jpeg,image/png,image/jpg,image/JPEG,image/PNG,image/JPG,image/BPM" id="photoCover_upload" hidden />
                 Выбрать фото
               </label>
-            
             </div>
           </div>
         );
@@ -395,14 +391,22 @@ const Cover = ({ selectedType, types }) => {
     dispatch(handleChangeMetalplateTextFont({ typeId, value: idx }));
   };
   //изменить текст (для пластины)
-  const handleChangeText=(value,typeId)=>{
-    dispatch(handleChangeMetalplateText({typeId,value}));
-  }
-  //Загрузить фото для фотовствки эко кожи
+  const handleChangeText = (value, typeId) => {
+    dispatch(handleChangeMetalplateText({ typeId, value }));
+  };
+  //Загрузить фото для фотовствки эко кожи и ткани
   const photoBidImageChange = (e, coverType) => {
     if (e.target.files && e.target.files[0]) {
+      let fileObj = {
+        target: `${coverType === "eco" ? "eco_photobid" : "textile_photobid"}`,
+        file: e.target.files[0],
+      };
+      setCoverImages(fileObj);
       let reader = new FileReader();
       let img = e.target.files[0];
+      if (img.size > 20000000) {
+        return toast.error("Максимальный размер файла 20мб");
+      }
       reader.readAsDataURL(img);
       reader.onload = function () {
         dispatch(
@@ -415,20 +419,21 @@ const Cover = ({ selectedType, types }) => {
     }
   };
 
-  
-
-  const photoCoverChange=(e)=>{
+  const photoCoverChange = (e) => {
     if (e.target.files && e.target.files[0]) {
+      let fileObj = { target: "photocover", file: e.target.files[0] };
+      setCoverImages(fileObj);
       let reader = new FileReader();
       let img = e.target.files[0];
+      if (img.size > 20000000) {
+        return toast.error("Максимальный размер файла 20мб");
+      }
       reader.readAsDataURL(img);
       reader.onload = function () {
-        dispatch(
-          handleChangePhotoCoverImage(reader.result)
-        );
+        dispatch(handleChangePhotoCoverImage(reader.result));
       };
     }
-  }
+  };
 
   //получить контент оформления эко кожи
   function getEcoDecorContent(decorId) {
@@ -514,7 +519,7 @@ const Cover = ({ selectedType, types }) => {
                 onChange={(e) => photoBidImageChange(e, "eco")}
                 htmlFor="photobid_upload"
               >
-                <input name="" type="file" id="photobid_upload" hidden />
+                <input accept="image/*" name="" type="file" id="photobid_upload" hidden />
                 Выбрать фото
               </label>
             </div>
@@ -626,15 +631,20 @@ const Cover = ({ selectedType, types }) => {
                 1 && (
                 <div className="eco__metalPlate_text">
                   <div className="eco__metalPlate_text-input">
-                    <textarea onChange={(e)=>handleChangeText(e.target.value,"eco")} value={types[0].features.decor[2].options[2].decors[1].typedText} placeholder="Введите текст" />
+                    <textarea
+                      onChange={(e) => handleChangeText(e.target.value, "eco")}
+                      value={
+                        types[0].features.decor[2].options[2].decors[1]
+                          .typedText
+                      }
+                      placeholder="Введите текст"
+                    />
                   </div>
-                 
+
                   <div className="eco__metalPlate_text-fonts">
                     <select
-                    className="select__css"
-                      onChange={(e) =>
-                        handleChangeFont(e.target.value, "eco")
-                      }
+                      className="select__css"
+                      onChange={(e) => handleChangeFont(e.target.value, "eco")}
                       value={
                         types[0].features.decor[2].options[2].decors[1].fonts[
                           types[0].features.decor[2].options[2].decors[1]
@@ -653,7 +663,7 @@ const Cover = ({ selectedType, types }) => {
                   </div>
                   <div className="eco__metalPlate_text-sizes">
                     <select
-                    className="select__css"
+                      className="select__css"
                       onChange={(e) =>
                         handleChangeTextSize(e.target.value, "eco")
                       }
@@ -769,7 +779,7 @@ const Cover = ({ selectedType, types }) => {
                 onChange={(e) => photoBidImageChange(e, "textile")}
                 htmlFor="photobid_upload"
               >
-                <input name="" type="file" id="photobid_upload" hidden />
+                <input accept="image/*" name="" type="file" id="photobid_upload" hidden />
                 Выбрать фото
               </label>
             </div>
@@ -884,10 +894,20 @@ const Cover = ({ selectedType, types }) => {
                 1 && (
                 <div className="eco__metalPlate_text">
                   <div className="eco__metalPlate_text-input">
-                    <textarea onChange={(e)=>handleChangeText(e.target.value,"textile")} value={types[1].features.decor[2].options[2].decors[1].typedText} placeholder="Введите текст" />
+                    <textarea
+                      onChange={(e) =>
+                        handleChangeText(e.target.value, "textile")
+                      }
+                      value={
+                        types[1].features.decor[2].options[2].decors[1]
+                          .typedText
+                      }
+                      placeholder="Введите текст"
+                    />
                   </div>
                   <div className="eco__metalPlate_text-fonts">
-                    <select className="select__css"
+                    <select
+                      className="select__css"
                       onChange={(e) =>
                         handleChangeFont(e.target.value, "textile")
                       }
@@ -909,7 +929,7 @@ const Cover = ({ selectedType, types }) => {
                   </div>
                   <div className="eco__metalPlate_text-sizes">
                     <select
-                    className="select__css"
+                      className="select__css"
                       onChange={(e) =>
                         handleChangeTextSize(e.target.value, "textile")
                       }
@@ -929,10 +949,8 @@ const Cover = ({ selectedType, types }) => {
                       )}
                     </select>
                   </div>
-                 
                 </div>
               )}
-
             </div>
           </div>
         );

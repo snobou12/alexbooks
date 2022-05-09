@@ -1,9 +1,10 @@
+/** @format */
 
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { handleChangeScale } from "../../../../redux/reducers/constructor/constructorSlice";
 import "./SizePreview.scss";
-const SizePreview = ({ typeId, sizeId, scale }) => {
+const SizePreview = ({ typeId, sizeId, scale,albumName,handleChangeName }) => {
   const dispatch = useDispatch();
   function getScale(scaleTypeId, scaleSizeId) {
     switch (scaleTypeId) {
@@ -41,19 +42,26 @@ const SizePreview = ({ typeId, sizeId, scale }) => {
         break;
     }
   }
+  
   React.useEffect(() => {
     let scale = getScale(typeId, sizeId);
     dispatch(handleChangeScale(scale));
-    
   }, [typeId, sizeId, dispatch]);
   return (
     <div className="size__preview">
+      
+     
       <div
         style={{ transform: `scale(${scale})` }}
         className={`size__default_book size__default_book--${
           typeId === 0 ? "quadratic" : "landscape"
         }`}
-      ></div>
+      >
+         <div className="size__albumname">
+        <span>Введите название альбома</span>
+        <input type="text" onChange={(e)=>handleChangeName(e.target.value)} placeholder="Название" value={albumName} />
+      </div>
+      </div>
     </div>
   );
 };

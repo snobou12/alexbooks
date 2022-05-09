@@ -3,11 +3,11 @@
 import React from "react";
 import { Stage, Layer, Image, Text } from "react-konva";
 import "./CoverPreview.scss";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setStageURI } from "../../../../redux/reducers/constructor/constructorSlice";
 
-
-const CoverPreview = () => {
-  const stageRef=React.useRef(null); //for export canvas to img 
+const CoverPreview = ({stageRef}) => {
+  const dispatch = useDispatch();
   const [coverImage, setCoverImage] = React.useState(null);
   //Тиснение
   const [ecoLetteringImg, setEcoLetteringImg] = React.useState(null);
@@ -50,6 +50,7 @@ const CoverPreview = () => {
       //Можно сделать как выше, можно брать id вручную
       case 2:
         let colorType = cover.types[2].selectedType;
+
         let photoCoverColorObj =
           cover.types[2].options[colorType].colors[
             cover.types[2].selectedColor
@@ -284,7 +285,7 @@ const CoverPreview = () => {
               <Image
                 width={size.selectedType === 0 ? 560 : 960}
                 height={440}
-                x={ 38 }
+                x={38}
                 y={80}
                 fill="#FFFFFF"
                 dash={[5, 5]}
@@ -298,7 +299,7 @@ const CoverPreview = () => {
                 fill="#FFFFFF"
                 width={300}
                 height={598}
-                x={size.selectedType === 0 ? 240 :440}
+                x={size.selectedType === 0 ? 240 : 440}
                 y={1}
                 dash={[5, 5]}
                 strokeWidth={0.5}
@@ -327,40 +328,40 @@ const CoverPreview = () => {
           case 0:
             return (
               <Image
-              width={size.selectedType === 0 ? 560 : 960}
-              height={440}
-              x={ 38 }
-              y={80}
-              fill="#FFFFFF"
-              dash={[5, 5]}
-              strokeWidth={0.5}
-              stroke={"dae4f2"}
+                width={size.selectedType === 0 ? 560 : 960}
+                height={440}
+                x={38}
+                y={80}
+                fill="#FFFFFF"
+                dash={[5, 5]}
+                strokeWidth={0.5}
+                stroke={"dae4f2"}
               />
             );
           case 1:
             return (
               <Image
-              fill="#FFFFFF"
-              width={300}
-              height={598}
-              x={size.selectedType === 0 ? 240 :440}
-              y={1}
-              dash={[5, 5]}
-              strokeWidth={0.5}
-              stroke={"dae4f2"}
+                fill="#FFFFFF"
+                width={300}
+                height={598}
+                x={size.selectedType === 0 ? 240 : 440}
+                y={1}
+                dash={[5, 5]}
+                strokeWidth={0.5}
+                stroke={"dae4f2"}
               />
             );
           case 2:
             return (
               <Image
-              fill="#FFFFFF"
-              width={270}
-              height={270}
-              x={size.selectedType === 0 ? 175 : 375}
-              y={160}
-              dash={[5, 5]}
-              strokeWidth={0.5}
-              stroke={"dae4f2"}
+                fill="#FFFFFF"
+                width={270}
+                height={270}
+                x={size.selectedType === 0 ? 175 : 375}
+                y={160}
+                dash={[5, 5]}
+                strokeWidth={0.5}
+                stroke={"dae4f2"}
               />
             );
           default:
@@ -370,7 +371,6 @@ const CoverPreview = () => {
         break;
     }
   }
-
   //Металлическая пластина(эмблема)
   React.useEffect(() => {
     if (
@@ -430,7 +430,7 @@ const CoverPreview = () => {
           switch (textileMetalPlateSelectedSizeObj.id) {
             case 0:
               textileMetalplatePosition = {
-                x: size.selectedType === 0 ? 200: 400,
+                x: size.selectedType === 0 ? 200 : 400,
                 y: 125,
                 w: 200,
                 h: 200,
@@ -438,7 +438,7 @@ const CoverPreview = () => {
               break;
             case 1:
               textileMetalplatePosition = {
-                x: size.selectedType === 0 ? 270: 470,
+                x: size.selectedType === 0 ? 270 : 470,
                 y: 420,
                 w: 270,
                 h: 120,
@@ -740,11 +740,10 @@ const CoverPreview = () => {
       setPhotoCoverImg(null);
     }
   }, [cover.selectedType, cover.types[2].blobImage]);
-  
-  
+
   return (
     <div className="cover__preview">
-     
+      
       <Stage
         ref={stageRef}
         width={size.selectedType === 0 ? 600 : 1000}
@@ -779,7 +778,9 @@ const CoverPreview = () => {
             <Image
               x={
                 ecoLetteringImg.position
-                  ? size.selectedType === 0 ? ecoLetteringImg.position.x : ecoLetteringImg.position.x + 200
+                  ? size.selectedType === 0
+                    ? ecoLetteringImg.position.x
+                    : ecoLetteringImg.position.x + 200
                   : size.selectedType === 0
                   ? 175
                   : 375
@@ -798,10 +799,12 @@ const CoverPreview = () => {
             <Image
               x={
                 textileLetteringImg.position
-                ? size.selectedType === 0 ? textileLetteringImg.position.x : textileLetteringImg.position.x + 200
-                : size.selectedType === 0
-                ? 175
-                : 375
+                  ? size.selectedType === 0
+                    ? textileLetteringImg.position.x
+                    : textileLetteringImg.position.x + 200
+                  : size.selectedType === 0
+                  ? 175
+                  : 375
               }
               y={
                 textileLetteringImg.position
@@ -826,7 +829,7 @@ const CoverPreview = () => {
           {cover.selectedType === 0 && ecoPhotoBidImg && (
             <Image
               x={photobidOptions.x}
-              width={photobidOptions.w }
+              width={photobidOptions.w}
               height={photobidOptions.h}
               y={photobidOptions.y}
               image={ecoPhotoBidImg}
@@ -887,24 +890,25 @@ const CoverPreview = () => {
             textileMetalplateText &&
             textileMetalplateText}
           {/*Фотообложка */}
-          { cover.selectedType === 2 && (
-              <Image
-                x={35}
-                width={size.selectedType === 0 ? 565 : 965}
-                height={600}
-                fill="#FFFFFF"
-                dash={[5, 5]}
-                strokeWidth={photoCoverImg ? 0 : 0.5}
-                stroke={"dae4f2"}
-              />
-            )
-           
-           
-          }
-          {cover.selectedType === 2 && photoCoverImg &&
-            <Image x={35} width={size.selectedType === 0 ? 565 : 965} height={600} image={photoCoverImg} />
-}
-
+          {cover.selectedType === 2 && (
+            <Image
+              x={35}
+              width={size.selectedType === 0 ? 565 : 965}
+              height={600}
+              fill="#FFFFFF"
+              dash={[5, 5]}
+              strokeWidth={photoCoverImg ? 0 : 0.5}
+              stroke={"dae4f2"}
+            />
+          )}
+          {cover.selectedType === 2 && photoCoverImg && (
+            <Image
+              x={35}
+              width={size.selectedType === 0 ? 565 : 965}
+              height={600}
+              image={photoCoverImg}
+            />
+          )}
         </Layer>
       </Stage>
 

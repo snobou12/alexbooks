@@ -1,15 +1,32 @@
-/** @format */
 
 import { createSlice, current } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
+
+import {BASE_URL} from "../../../static/values";
+
+
+import {
+  getAlbumIDS,
+  deleteAlbumById,
+  newAlbum,
+  getAlbumById,
+} from "./actionConstructorCreator";
 const constructorSlice = createSlice({
   name: "constructor",
   initialState: {
-    header_content: {
-      step: 3,
-      price: 2190,
-      bookName: "",
+    albumsId: {
+      isLoading: true,
+      ids: [],
     },
+    header_content: {
+      step: 1,
+      price: 2190,
+      albumName: "",
+      albumId: 7155,
+      countOfAlbums:1,
+      coverPreviewImage:""
+    },
+    constructorLoading: false,
+    newAlbumLoading: false,
     size: {
       selectedType: 0,
       scale: 0.75,
@@ -1786,47 +1803,47 @@ const constructorSlice = createSlice({
       ],
       //Цвета для страниц
       colors: [
-        { id: 0, color: "white", transl: "белый", hex: "#FFFFFF" },
-        { id: 1, color: "pink", transl: "розовый", hex: "#FFB0AA" },
-        { id: 2, color: "orange", transl: "оранжевый", hex: "#FEC19E" },
+        { id: 0, color: "white", transl: "белый", hex: "FFFFFF" },
+        { id: 1, color: "pink", transl: "розовый", hex: "FFB0AA" },
+        { id: 2, color: "orange", transl: "оранжевый", hex: "FEC19E" },
         {
           id: 3,
           color: "highOrange",
           transl: "светло-оранжевый",
-          hex: "#FFE5C8",
+          hex: "FFE5C8",
         },
         {
           id: 4,
           color: "highGreen",
           transl: "светло-зеленый",
-          hex: "#DFEECB",
+          hex: "DFEECB",
         },
-        { id: 5, color: "blue", transl: "голубой", hex: "#A5D8E6" },
-        { id: 6, color: "purple", transl: "фиолетовый", hex: "#CBC4E2" },
+        { id: 5, color: "blue", transl: "голубой", hex: "A5D8E6" },
+        { id: 6, color: "purple", transl: "фиолетовый", hex: "CBC4E2" },
         {
           id: 7,
           color: "highPink",
           transl: "светло-розовый",
-          hex: "#FFE2E2",
+          hex: "FFE2E2",
         },
-        { id: 8, color: "grass", transl: "травяной", hex: "#8EF6E4" },
+        { id: 8, color: "grass", transl: "травяной", hex: "8EF6E4" },
         {
           id: 9,
           color: "veryHighPink",
           transl: "пре-светло-розовый",
-          hex: "#FEF0FF",
+          hex: "FEF0FF",
         },
         {
           id: 10,
           color: "veryHighGreen",
           transl: "пре-светло-зеленый",
-          hex: "#D7EEDE",
+          hex: "D7EEDE",
         },
         {
           id: 10,
           color: "highBlue",
           transl: "светло-голубой",
-          hex: "#F0F8FF",
+          hex: "F0F8FF",
         },
       ],
 
@@ -1837,9 +1854,9 @@ const constructorSlice = createSlice({
           {
             id: 0,
             selectedSide: "lrside", // lrside(leftside + rightside) | cside(centerside)
-            leftsideHex: "#FFFFFF",
-            rightsideHex: "#FFFFFF",
-
+            leftsideHex: "FFFFFF",
+            rightsideHex: "FFFFFF",
+            templateIsValid:true,
             templates: [
               //Левая страница
               { id: 0, title: "leftside", template: {} },
@@ -1853,203 +1870,169 @@ const constructorSlice = createSlice({
             id: 1,
             selectedSide: "lrside", // centerside or leftside&rightside
 
-            leftsideHex: "#FFFFFF",
-            rightsideHex: "#FFFFFF",
+            leftsideHex: "FFFFFF",
+            rightsideHex: "FFFFFF",
+            templateIsValid:true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: [] },
+              { id: 0, title: "leftside", template: {} },
               //Правая страница
-              { id: 1, title: "rightside", template: [] },
+              { id: 1, title: "rightside", template: {} },
               //Разворот
-              { id: 2, title: "centerside", template: [] },
+              { id: 2, title: "centerside", template: {} },
             ],
           },
           {
             id: 2,
             selectedSide: "lrside", // centerside or leftside&rightside
 
-            leftsideHex: "#FFFFFF",
-            rightsideHex: "#FFFFFF",
+            leftsideHex: "FFFFFF",
+            rightsideHex: "FFFFFF",
+            templateIsValid:true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: [] },
+              { id: 0, title: "leftside", template: {} },
               //Правая страница
-              { id: 1, title: "rightside", template: [] },
+              { id: 1, title: "rightside", template: {} },
               //Разворот
-              { id: 2, title: "centerside", template: [] },
+              { id: 2, title: "centerside", template: {} },
             ],
           },
           {
             id: 3,
             selectedSide: "lrside", // centerside or leftside&rightside
 
-            leftsideHex: "#FFFFFF",
-            rightsideHex: "#FFFFFF",
+            leftsideHex: "FFFFFF",
+            rightsideHex: "FFFFFF",
+            templateIsValid:true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: [] },
+              { id: 0, title: "leftside", template: {} },
               //Правая страница
-              { id: 1, title: "rightside", template: [] },
+              { id: 1, title: "rightside", template: {} },
               //Разворот
-              { id: 2, title: "centerside", template: [] },
+              { id: 2, title: "centerside", template: {} },
             ],
           },
           {
             id: 4,
             selectedSide: "lrside", // centerside or leftside&rightside
 
-            leftsideHex: "#FFFFFF",
-            rightsideHex: "#FFFFFF",
+            leftsideHex: "FFFFFF",
+            rightsideHex: "FFFFFF",
+            templateIsValid:true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: [] },
+              { id: 0, title: "leftside", template: {} },
               //Правая страница
-              { id: 1, title: "rightside", template: [] },
+              { id: 1, title: "rightside", template: {} },
               //Разворот
-              { id: 2, title: "centerside", template: [] },
+              { id: 2, title: "centerside", template: {} },
             ],
           },
           {
             id: 5,
             selectedSide: "lrside", // centerside or leftside&rightside
-            leftsideHex: "#FFFFFF",
-            rightsideHex: "#FFFFFF",
+            leftsideHex: "FFFFFF",
+            rightsideHex: "FFFFFF",
+            templateIsValid:true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: [] },
+              { id: 0, title: "leftside", template: {} },
               //Правая страница
-              { id: 1, title: "rightside", template: [] },
+              { id: 1, title: "rightside", template: {} },
               //Разворот
-              { id: 2, title: "centerside", template: [] },
+              { id: 2, title: "centerside", template: {} },
             ],
           },
           {
             id: 6,
             selectedSide: "lrside", // centerside or leftside&rightside
 
-            leftsideHex: "#FFFFFF",
-            rightsideHex: "#FFFFFF",
+            leftsideHex: "FFFFFF",
+            rightsideHex: "FFFFFF",
+            templateIsValid:true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: [] },
+              { id: 0, title: "leftside", template: {} },
               //Правая страница
-              { id: 1, title: "rightside", template: [] },
+              { id: 1, title: "rightside", template: {} },
               //Разворот
-              { id: 2, title: "centerside", template: [] },
+              { id: 2, title: "centerside", template: {} },
             ],
           },
           {
             id: 7,
             selectedSide: "lrside", // centerside or leftside&rightside
 
-            leftsideHex: "#FFFFFF",
-            rightsideHex: "#FFFFFF",
+            leftsideHex: "FFFFFF",
+            rightsideHex: "FFFFFF",
+            templateIsValid:true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: [] },
+              { id: 0, title: "leftside", template: {} },
               //Правая страница
-              { id: 1, title: "rightside", template: [] },
+              { id: 1, title: "rightside", template: {} },
               //Разворот
-              { id: 2, title: "centerside", template: [] },
+              { id: 2, title: "centerside", template: {} },
             ],
           },
           {
             id: 8,
             selectedSide: "lrside", // centerside or leftside&rightside
 
-            leftsideHex: "#FFFFFF",
-            rightsideHex: "#FFFFFF",
+            leftsideHex: "FFFFFF",
+            rightsideHex: "FFFFFF",
+            templateIsValid:true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: [] },
+              { id: 0, title: "leftside", template: {} },
               //Правая страница
-              { id: 1, title: "rightside", template: [] },
+              { id: 1, title: "rightside", template: {} },
               //Разворот
-              { id: 2, title: "centerside", template: [] },
+              { id: 2, title: "centerside", template: {} },
             ],
           },
           {
             id: 9,
             selectedSide: "lrside", // centerside or leftside&rightside
 
-            leftsideHex: "#FFFFFF",
-            rightsideHex: "#FFFFFF",
+            leftsideHex: "FFFFFF",
+            rightsideHex: "FFFFFF",
+            templateIsValid:true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: [] },
+              { id: 0, title: "leftside", template: {} },
               //Правая страница
-              { id: 1, title: "rightside", template: [] },
+              { id: 1, title: "rightside", template: {} },
               //Разворот
-              { id: 2, title: "centerside", template: [] },
+              { id: 2, title: "centerside", template: {} },
             ],
           },
         ],
       },
       uploads: [],
     },
-    checkout: {
-      selectedNav: 1,
-      navs: [{ id: 0, title: "data", transl: "Введите контактные данные" },
-      { id: 1, title: "delivery", transl: "Выберете способ доставки" },
-      { id: 2, title: "paying", transl: "Перейдите к оплате" }],
-      content: [
-        {
-          id: 0, title: "data", options: [
-            { id: 0, title: "fullname", transl: "ФИО", ph: "Ваше имя", value: "" },
-            {
-              id: 1, title: "phone", transl: "Телефон", ph: "8 000 000 00 00", value: {
-                formattedValue: "",
-                value: ""
-              }
-            },
-            { id: 2, title: "email", transl: "Почта", ph: "e-mail@mail.ru", value: "" },
-            { id: 3, title: "city", transl: "Город", ph: "Москва", value: "" },
-          ]
-        },
-        {
-          id:1,title:"delivery",options:[
-            {id:0,title:"service",transl:"Служба доставки",selectedVariable:0,variables:[
-              {id:0,title:"cdek",transl:"СДЭК"},
-              {id:1,title:"russianpost",transl:"ПОЧТА РОССИИ"},
-              {id:2,title:"pickup",transl:"Самовывоз"},
-            ]},
-            {id:1,title:"deliverPlace",transl:"Куда доставить",selectedVariable:0,variables:[
-              {id:0,title:"pointOfIssue",transl:"Пункт выдачи"},
-              {id:1,title:"toTheDoor",transl:"До двери"}
-
-            ]},
-            {id:2,title:"address",transl:"Адрес",data:[
-              {id:0,title:"zipcode",transl:"Индекс",ph:"188212",value:""},
-              {id:1,title:"street",transl:"Улица",ph:"Рубежная",value:""},
-              {id:2,title:"houseNumber",transl:"Дом",ph:"14",value:""},
-              {id:3,title:"flat",transl:"Квартира",ph:"19",value:""},
-
-            ]}
-          ]
-        }
-      ]
-    }
   },
   reducers: {
     //SIZE////////////////////////////////////////////////////////
     handleChangeSizeType(state, action) {
       state.size.selectedType = action.payload;
 
-
       let pages = [];
       for (let i = 0; i < 10; i++) {
         let page = {
           id: i,
           selectedSide: "lrside",
-
-          leftsideHex: "#FFFFFF",
-          rightsideHex: "#FFFFFF",
+          templateIsValid:true,
+          leftsideHex: "FFFFFF",
+          rightsideHex: "FFFFFF",
           templates: [
-            { id: 0, title: "leftside", template: [] },
+            { id: 0, title: "leftside", template: {} },
             //Правая страница
-            { id: 1, title: "rightside", template: [] },
+            { id: 1, title: "rightside", template: {} },
             //Разворот
-            { id: 2, title: "centerside", template: [] },
+            { id: 2, title: "centerside", template: {} },
           ],
         };
         pages.push(page);
@@ -2076,13 +2059,19 @@ const constructorSlice = createSlice({
 
     //HEADER_CONTENT///////////////////////////////////////////////////////////////
     handleIncrementStep(state) {
-      if (state.header_content.step !== 5) state.header_content.step += 1;
+      if (state.header_content.step !== 4) state.header_content.step += 1;
     },
     handleDecrementStep(state) {
       if (state.header_content.step !== 1) state.header_content.step -= 1;
     },
-    handleChangeBookName(state, action) {
-      state.header_content.bookName = action.payload;
+    handleChangeAlbumName(state, action) {
+      state.header_content.albumName = action.payload;
+    },
+    setAlbumId(state,action){
+      state.header_content.albumId=action.payload;
+    },
+    setStageURI(state,action){
+      state.header_content.stageURI=action.payload;
     },
 
     //COVER///////////////////////////////////////////////////////////////////
@@ -2220,16 +2209,8 @@ const constructorSlice = createSlice({
     },
     //загрузить картинку(и) в uploads
     handleAddImageToUploads(state, action) {
-      let { imageBlob, lastModified, name, size, type } = action.payload;
+      let { newImg } = action.payload;
       let prevUploads = [...current(state.pages.uploads)];
-      let newImg = {
-        id: uuidv4(),
-        blob: imageBlob,
-        lastModified,
-        name,
-        size,
-        type,
-      };
       let newUploads = [...prevUploads, newImg];
       state.pages.uploads = newUploads;
     },
@@ -2238,6 +2219,10 @@ const constructorSlice = createSlice({
       let prevUploads = [...current(state.pages.uploads)];
       let id = action.payload;
       let newUploads = prevUploads.filter((upload) => upload.id !== id);
+      let allPages=[...current(state.pages.papers.pages)];
+
+        
+      
       state.pages.uploads = newUploads;
     },
     //PAGES PAPERS////
@@ -2264,16 +2249,17 @@ const constructorSlice = createSlice({
       let newPage = {
         id: 0,
         selectedSide: "lrside", // centerside or leftside&rightside
-
-        leftsideHex: "#FFFFFF",
-        rightsideHex: "#FFFFFF",
+        templateIsValid:true,
+        leftsideHex: "FFFFFF",
+        rightsideHex: "FFFFFF",
+        
         templates: [
           //Левая страница
-          { id: 0, title: "leftside", template: [] },
+          { id: 0, title: "leftside", template: {} },
           //Правая страница
-          { id: 1, title: "rightside", template: [] },
+          { id: 1, title: "rightside", template: {} },
           //Разворот
-          { id: 2, title: "centerside", template: [] },
+          { id: 2, title: "centerside", template: {} },
         ],
       };
       Array.prototype.insert = function (index, item) {
@@ -2418,40 +2404,218 @@ const constructorSlice = createSlice({
       selectedPage.templates = newTemplates;
       state.pages.papers.pages[state.pages.papers.selectedPage] = selectedPage;
     },
-    //CHECKOUT/////////////////////////////////////////////////////////////////////////
-    handleIncrementNavigation(state){
-      state.checkout.selectedNav+=1;
-    },
-    //data изменить номер
-    handleChangeDataPhone(state, action) {
-      state.checkout.content[0].options[1].value = action.payload;
-    },
-    //изменить другие опции data
-    handleChangeDataOtherOptions(state, action) {
-      const { value, target } = action.payload;
-      switch (target) {
-        case "fullname":
-          state.checkout.content[0].options[0].value = value;
-          break;
-        case "email":
-          state.checkout.content[0].options[2].value = value;
-          break;
-        case "city":
-          state.checkout.content[0].options[3].value = value;
-          break;
-        default:
-          break;
-      }
+    handleSetTemplatesValidsPage(state,action){
+      const pagesTemplateValids=action.payload;
+      let pages = [...current(state.pages.papers.pages)];
+      let newPages = pages.map((page,idx)=>({
+        ...page,
+        templateIsValid:pagesTemplateValids[idx].isValid
+      }))
+      state.pages.papers.pages=newPages;
     }
   },
-  extraReducers: {},
+  extraReducers: {
+    //Получить все id альбомов
+    [getAlbumIDS.fulfilled.type]: (state, action) => {
+      state.albumsId.isLoading = false;
+      state.albumsId.ids = action.payload;
+    },
+    [getAlbumIDS.pending.type]: (state) => {
+      state.albumsId.isLoading = true;
+    },
+    [getAlbumIDS.rejected.type]: (state, action) => {
+      state.albumsId.isLoading = false;
+    },
+    //Удаление альбома по id
+    [deleteAlbumById.fulfilled.type]: (state, action) => {
+      state.albumsId.isLoading = false;
+      let prevIds = [...state.albumsId.ids];
+      let newIds = prevIds.filter((id) => id.id !== action.payload);
+      state.albumsId.ids = newIds;
+    },
+    [deleteAlbumById.pending.type]: (state) => {
+      state.albumsId.isLoading = true;
+    },
+    [deleteAlbumById.rejected.type]: (state, action) => {
+      state.albumsId.isLoading = false;
+    },
+    //Создание альбома
+    [newAlbum.fulfilled.type]: (state, action) => {
+      state.newAlbumLoading = false;
+    },
+    [newAlbum.pending.type]: (state) => {
+      state.newAlbumLoading = true;
+    },
+    [newAlbum.rejected.type]: (state, action) => {
+      state.newAlbumLoading = false;
+    },
+    //Получение альбома по id
+    [getAlbumById.fulfilled.type]: (state, action) => {
+      state.constructorLoading = false;
+      if (action.payload.data) {
+        let { data, images } = action.payload;
+        let { mainData, coverData,pagesData } = data;
+         //MAIN
+        state.header_content.albumId = mainData.albumId;
+        state.header_content.albumName = mainData.albumName;
+        state.header_content.price = mainData.price;
+        state.header_content.step = mainData.step;
+        state.size.scale = mainData.scale;
+        state.size.selectedType = mainData.selectedType;
+        state.size.types[0].selectedSize = mainData.selectedQuadraticSize;
+        state.size.types[1].selectedSize = mainData.selectedLandscapeSize;
+        state.header_content.coverPreviewImage=String(BASE_URL + images.cover_preview);
+
+        //COVER
+        state.cover.selectedType = coverData.coverSelectedType;
+        //ecoLeather
+        let { ecoLeather, photoCover, textile } = coverData;
+        state.cover.types[0].selectedColor = ecoLeather.ecoLeatherSelectedColor;
+        state.cover.types[0].selectedDecor = ecoLeather.ecoLeatherSelectedDecor;
+
+        state.cover.types[0].features.decor[0].options[0].selectedColor =
+          ecoLeather.ecoLeatherLetteringColor;
+        state.cover.types[0].features.decor[0].options[1].selectedDesign =
+          ecoLeather.ecoLeatherLetteringDesign;
+        state.cover.types[0].features.decor[1].selectedSize =
+          ecoLeather.ecoLeatherPhotoBidSize;
+        // photobid image
+        if(images.eco_photobid){
+          state.cover.types[0].features.decor[1].blobImage = String(
+            BASE_URL + images.eco_photobid
+          );
+        }
+       
+       
+
+        state.cover.types[0].features.decor[2].options[0].selectedColor =
+          ecoLeather.ecoLeatherMetalPlateColor;
+        state.cover.types[0].features.decor[2].options[1].selectedSize =
+          ecoLeather.ecoLeatherMetalPlateSize;
+        state.cover.types[0].features.decor[2].options[2].selectedDecoration =
+          ecoLeather.ecoLeatherMetalPlateDecoration;
+        state.cover.types[0].features.decor[2].options[2].decors[0].selectedEngrave =
+          ecoLeather.ecoLeatherMetalPlateEngrave;
+        state.cover.types[0].features.decor[2].options[2].decors[1].selectedSize =
+          ecoLeather.ecoLeatherMetalPlateTextSize;
+        state.cover.types[0].features.decor[2].options[2].decors[1].selectedFont =
+          ecoLeather.ecoLeatherMetalPlateTextFont;
+        state.cover.types[0].features.decor[2].options[2].decors[1].typedText =
+          ecoLeather.ecoLeatherMetalPlateText;
+
+        //textile
+        state.cover.types[1].selectedColor = textile.textileSelectedColor;
+        state.cover.types[1].selectedDecor = textile.textileSelectedDecor;
+
+        state.cover.types[1].features.decor[0].options[0].selectedColor =
+          textile.textileLetteringColor;
+        state.cover.types[1].features.decor[0].options[1].selectedDesign =
+          textile.textileLetteringDesign;
+        state.cover.types[1].features.decor[1].selectedSize =
+          textile.textilePhotoBidSize;
+        //photobid image
+        if(images.textile_photobid){
+          state.cover.types[1].features.decor[1].blobImage = String(
+            BASE_URL + images.textile_photobid
+          );
+        }
+       
+
+        state.cover.types[1].features.decor[2].options[0].selectedColor =
+          textile.textileMetalPlateColor;
+        state.cover.types[1].features.decor[2].options[1].selectedSize =
+          textile.textileMetalPlateSize;
+        state.cover.types[1].features.decor[2].options[2].selectedDecoration =
+          textile.textileMetalPlateDecoration;
+        state.cover.types[1].features.decor[2].options[2].decors[0].selectedEngrave =
+          textile.textileMetalPlateEngrave;
+        state.cover.types[1].features.decor[2].options[2].decors[1].selectedSize =
+          textile.textileMetalPlateTextSize;
+        state.cover.types[1].features.decor[2].options[2].decors[1].selectedFont =
+          textile.textileMetalPlateTextFont;
+        state.cover.types[1].features.decor[2].options[2].decors[1].typedText =
+          textile.textileMetalPlateText;
+        //photoCover
+        state.cover.types[2].selectedType = photoCover.photoCoverSelectedType;
+        state.cover.types[2].selectedColor = photoCover.photoCoverColor;
+        if(images.photocover){
+          state.cover.types[2].blobImage = String(BASE_URL + images.photocover);
+        }
+        //PAGES
+        //ЕЩЕ ПРИ УДАЛЕНИЕ ИЗ UPLOADS!! 
+        state.pages.papers.selectedPage=0;
+        state.pages.papers.pages=pagesData.pages;
+        state.pages.selectedType=pagesData.selectedType;
+        let uploadImages=[];
+        for (let imageKey in images){
+          if(imageKey !== "textile_photobid" && imageKey !== "photocover" && imageKey !== "eco_photobid" && imageKey !== "cover_preview"){
+            let id = imageKey.split("/")[1];
+            let newImg={
+              blob:`${BASE_URL}${images[imageKey]}`,
+              id
+            }
+            uploadImages.push(newImg);
+          }
+        }
+        // let allPages=[...state.pages.papers.pages];
+        // let needToChangeArray=[];
+        // for(let i=0;i<allPages.length;i++){
+        //   for(let j=0;j<allPages[i].templates.length;j++){
+        //     if(Object.keys(allPages[i].templates[j].template).length !== 0){
+        //       for(let k=0;k<allPages[i].templates[j].template.elements.length;k++){
+        //         if(Object.keys(allPages[i].templates[j].template.elements[k]?.image).length !==0){
+        //           uploadImages.some((upload,idx)=>{
+        //             if(upload.id === allPages[i].templates[j].template.elements[k].image.id){
+        //               console.log(upload.blob);
+        //               let objectToChange={
+        //                 pagesIdx:i,
+        //                 templatesIdx:j,
+        //                 elementsIdx:k,
+        //                 blob:upload.blob,
+        //               }
+        //               needToChangeArray.push(objectToChange);
+        //             }
+                   
+                    
+        //           })
+                    
+                    
+                  
+        //         }
+                
+                  
+                
+        //       }
+        //     }
+        //   }
+        // }
+        // for (let i=0;i<needToChangeArray.length;i++){
+        //   state.pages.papers.pages[needToChangeArray[i].pagesIdx].templates[needToChangeArray[i].templatesIdx].template.elements[needToChangeArray[i].elementsIdx].image.blob=needToChangeArray[i].blob;
+          
+        // }
+        
+        // console.log(uploadImages);
+        state.pages.uploads=uploadImages;
+        
+      }
+    },
+    [getAlbumById.pending.type]: (state) => {
+      state.constructorLoading = true;
+    },
+    [getAlbumById.rejected.type]: (state, action) => {
+      state.constructorLoading = false;
+    },
+  },
 });
 export const {
   handleChangeSizeType,
   handleChangeSizeOf,
   handleIncrementStep,
   handleDecrementStep,
+  setAlbumId,
+  setStageURI,
   handleChangeScale,
+  handleChangeAlbumName,
   handleChangeCoverType,
   handleChangeCoverEcoColor,
   handleChangeCoverDecor,
@@ -2480,6 +2644,6 @@ export const {
   handleChangeBookName,
   handleIncrementNavigation,
   handleChangeDataPhone,
-  handleChangeDataOtherOptions
+  handleSetTemplatesValidsPage,
 } = constructorSlice.actions;
 export default constructorSlice.reducer;

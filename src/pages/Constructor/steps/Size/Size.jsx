@@ -83,6 +83,7 @@ const Size = ({selectedType,types}) => {
         </div>
       </div>
       <div className="cnsr__size_rightside">
+        
         {getTypeContent(selectedType)}
       </div>
     </div>

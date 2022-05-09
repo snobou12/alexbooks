@@ -102,6 +102,7 @@
     color: rgb(255 255 255);
     background-color: rgb(246 145 106);
     cursor: pointer;
+    
   }
   
 }
@@ -120,5 +121,28 @@
   font-size: 14px;
   color: rgb(232 138 131);
   transition: .3s;
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
   
+}
+
+
+.cnsr__save_album{
+  border: 2px solid rgb(243 243 243);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  fill: rgb(232 124 116);
+  transition: ease .3s all;
+  background-color: #f7f7f7;
+  cursor: pointer;
+  &:hover{
+    fill: white;
+    background-color: #E87C74;
+  }
 }

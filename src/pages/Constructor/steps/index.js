@@ -4,8 +4,6 @@ export {default as Cover} from "./Cover/Cover";
 export {default as CoverPreview} from "./Cover/CoverPreview";
 export {default as Pages} from "./Pages/Pages";
 export {default as PagesPreview} from "./Pages/PagesPreview";
-export {default as Full} from "./Full/Full";
-export {default as FullPreview} from "./Full/FullPreview";
 
 
 
