@@ -3,6 +3,8 @@ export {default as ConstructorPrev} from "./ConstructorPrev/ConstructorPrev";
 
 export {default as Basket} from "./Basket/Basket";
 export {default as Checkout} from "./Checkout/Checkout";
+export {default as Blank} from "./Blank/Blank";
+
 
 
 

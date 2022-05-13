@@ -1,4 +1,5 @@
 
+import axios from "axios";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -21,10 +22,11 @@ import {
   handleChangeMetalplateText,
   handleChangePhotoCoverImage,
 } from "../../../../redux/reducers/constructor/constructorSlice";
+import { BASE_URL } from "../../../../static/values";
 
 import "./Cover.scss";
 //Это step слева (визуал)
-const Cover = ({ selectedType, types, setCoverImages }) => {
+const Cover = ({albumId, selectedType, types }) => {
   const dispatch = useDispatch();
   //Получить главные svgшки для левой части
   function getTypeSvg(typeId) {
@@ -395,43 +397,74 @@ const Cover = ({ selectedType, types, setCoverImages }) => {
     dispatch(handleChangeMetalplateText({ typeId, value }));
   };
   //Загрузить фото для фотовствки эко кожи и ткани
-  const photoBidImageChange = (e, coverType) => {
+  function uploadImageToServer(keyImg,file){
+    let formData = new FormData();
+    if(keyImg === "eco"){
+      formData.append("eco_photobid",file);
+    }
+    else if (keyImg === "textile"){
+      formData.append("textile_photobid",file);
+    }
+    else{
+      formData.append("photocover",file);
+    }
+    axios({
+      method:"post",
+      url:`${BASE_URL}/designer/?controller=Album&method=image&album=${albumId}`,
+      data:formData,
+      headers: { "Content-Type": "multipart/form-data" },
+    }).then((res)=>{
+      if(res.status === 200){
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload=function(){
+          if(keyImg === "eco"){
+            dispatch(
+              handleChangePhotoBidBlobImage({
+                blob: reader.result,
+                type: "eco",
+              })
+            );
+          }
+          else if (keyImg === "textile"){
+            dispatch(
+              handleChangePhotoBidBlobImage({
+                blob: reader.result,
+                type: "textile",
+              })
+            );
+          }
+          else{
+            dispatch(handleChangePhotoCoverImage(reader.result));
+          }
+          
+        }
+      }
+    })
+    .catch((e)=>{
+      toast.error("Что-то пошло не так")
+    })
+  }
+
+
+  const  photoBidImageChange  = (e, coverType) => {
     if (e.target.files && e.target.files[0]) {
-      let fileObj = {
-        target: `${coverType === "eco" ? "eco_photobid" : "textile_photobid"}`,
-        file: e.target.files[0],
-      };
-      setCoverImages(fileObj);
-      let reader = new FileReader();
       let img = e.target.files[0];
       if (img.size > 20000000) {
         return toast.error("Максимальный размер файла 20мб");
       }
-      reader.readAsDataURL(img);
-      reader.onload = function () {
-        dispatch(
-          handleChangePhotoBidBlobImage({
-            blob: reader.result,
-            type: coverType,
-          })
-        );
-      };
+      uploadImageToServer(coverType,img);
     }
   };
 
   const photoCoverChange = (e) => {
     if (e.target.files && e.target.files[0]) {
-      let fileObj = { target: "photocover", file: e.target.files[0] };
-      setCoverImages(fileObj);
       let reader = new FileReader();
       let img = e.target.files[0];
       if (img.size > 20000000) {
         return toast.error("Максимальный размер файла 20мб");
       }
-      reader.readAsDataURL(img);
-      reader.onload = function () {
-        dispatch(handleChangePhotoCoverImage(reader.result));
-      };
+      uploadImageToServer("photocover",img);
     }
   };
 

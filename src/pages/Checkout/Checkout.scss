@@ -513,3 +513,17 @@
   }
   margin-bottom: 5px;
 }
+
+.checkout__success{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  span{
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 32px;
+    color: rgb(92 92 92);
+  }
+}

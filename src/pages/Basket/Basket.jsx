@@ -34,6 +34,7 @@ const Basket = () => {
       });
     }
   }, [basketAlbumsId.length]);
+
   const handleDeleteAlbumFromBasket = async (albumId) => {
     let formData = new FormData();
     let idsArr = [...basketAlbumsId];
@@ -44,7 +45,7 @@ const Basket = () => {
     formData.append("request", jsonData);
     axios({
       method: "post",
-      url: `https://alexbooks.bannikon.fvds.ru/designer/?controller=Shop&method=save`,
+      url: `${BASE_URL}/designer/?controller=Shop&method=save`,
       data: formData,
       headers: { "Content-Type": "application/json" },
     }).then((res) => {
@@ -58,7 +59,7 @@ const Basket = () => {
   };
   function getFullPrice() {
     let summ = 0;
-    basketAlbums.forEach((basketAlbum, idx) => {
+    basketAlbums.forEach((basketAlbum) => {
       summ +=
         basketAlbum.data.mainData.price *
         basketAlbum.data.mainData.countOfAlbums;

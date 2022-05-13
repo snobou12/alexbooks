@@ -3,6 +3,7 @@ import React from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   deleteAlbumById,
   getAlbumIDS,
@@ -20,8 +21,14 @@ const ConstructorPrev = () => {
     dispatch(getAlbumIDS());
   }, []);
   const handleCreateAlbum = async () => {
-    const response = await dispatch(newAlbum()).unwrap();
-    navigate(`/constructor/album/${response.album}`);
+    try{
+      const response = await dispatch(newAlbum()).unwrap();
+      navigate(`/constructor/album/${response.album}`);
+
+    }
+    catch(e){
+      toast.error("Что-то пошло не так")
+    }
   };
   React.useEffect(() => {
     if (!albumsId.isLoading) {

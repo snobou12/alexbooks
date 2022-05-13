@@ -1,8 +1,8 @@
+/** @format */
 
 import { createSlice, current } from "@reduxjs/toolkit";
 
-import {BASE_URL} from "../../../static/values";
-
+import { BASE_URL } from "../../../static/values";
 
 import {
   getAlbumIDS,
@@ -22,8 +22,8 @@ const constructorSlice = createSlice({
       price: 2190,
       albumName: "",
       albumId: 7155,
-      countOfAlbums:1,
-      coverPreviewImage:""
+      countOfAlbums: 1,
+      coverPreviewImage: "",
     },
     constructorLoading: false,
     newAlbumLoading: false,
@@ -471,6 +471,7 @@ const constructorSlice = createSlice({
         },
       ],
     },
+    pagesValid:[],
     pages: {
       //шаблоны(0) или цвета(1)
       selectedType: 0,
@@ -1856,7 +1857,7 @@ const constructorSlice = createSlice({
             selectedSide: "lrside", // lrside(leftside + rightside) | cside(centerside)
             leftsideHex: "FFFFFF",
             rightsideHex: "FFFFFF",
-            templateIsValid:true,
+            templateIsValid: true,
             templates: [
               //Левая страница
               { id: 0, title: "leftside", template: {} },
@@ -1872,7 +1873,7 @@ const constructorSlice = createSlice({
 
             leftsideHex: "FFFFFF",
             rightsideHex: "FFFFFF",
-            templateIsValid:true,
+            templateIsValid: true,
             templates: [
               //Левая страница
               { id: 0, title: "leftside", template: {} },
@@ -1888,7 +1889,7 @@ const constructorSlice = createSlice({
 
             leftsideHex: "FFFFFF",
             rightsideHex: "FFFFFF",
-            templateIsValid:true,
+            templateIsValid: true,
             templates: [
               //Левая страница
               { id: 0, title: "leftside", template: {} },
@@ -1904,7 +1905,7 @@ const constructorSlice = createSlice({
 
             leftsideHex: "FFFFFF",
             rightsideHex: "FFFFFF",
-            templateIsValid:true,
+            templateIsValid: true,
             templates: [
               //Левая страница
               { id: 0, title: "leftside", template: {} },
@@ -1920,7 +1921,7 @@ const constructorSlice = createSlice({
 
             leftsideHex: "FFFFFF",
             rightsideHex: "FFFFFF",
-            templateIsValid:true,
+            templateIsValid: true,
             templates: [
               //Левая страница
               { id: 0, title: "leftside", template: {} },
@@ -1935,7 +1936,7 @@ const constructorSlice = createSlice({
             selectedSide: "lrside", // centerside or leftside&rightside
             leftsideHex: "FFFFFF",
             rightsideHex: "FFFFFF",
-            templateIsValid:true,
+            templateIsValid: true,
             templates: [
               //Левая страница
               { id: 0, title: "leftside", template: {} },
@@ -1951,7 +1952,7 @@ const constructorSlice = createSlice({
 
             leftsideHex: "FFFFFF",
             rightsideHex: "FFFFFF",
-            templateIsValid:true,
+            templateIsValid: true,
             templates: [
               //Левая страница
               { id: 0, title: "leftside", template: {} },
@@ -1967,7 +1968,7 @@ const constructorSlice = createSlice({
 
             leftsideHex: "FFFFFF",
             rightsideHex: "FFFFFF",
-            templateIsValid:true,
+            templateIsValid: true,
             templates: [
               //Левая страница
               { id: 0, title: "leftside", template: {} },
@@ -1983,7 +1984,7 @@ const constructorSlice = createSlice({
 
             leftsideHex: "FFFFFF",
             rightsideHex: "FFFFFF",
-            templateIsValid:true,
+            templateIsValid: true,
             templates: [
               //Левая страница
               { id: 0, title: "leftside", template: {} },
@@ -1999,7 +2000,7 @@ const constructorSlice = createSlice({
 
             leftsideHex: "FFFFFF",
             rightsideHex: "FFFFFF",
-            templateIsValid:true,
+            templateIsValid: true,
             templates: [
               //Левая страница
               { id: 0, title: "leftside", template: {} },
@@ -2024,7 +2025,7 @@ const constructorSlice = createSlice({
         let page = {
           id: i,
           selectedSide: "lrside",
-          templateIsValid:true,
+          templateIsValid: true,
           leftsideHex: "FFFFFF",
           rightsideHex: "FFFFFF",
           templates: [
@@ -2067,11 +2068,11 @@ const constructorSlice = createSlice({
     handleChangeAlbumName(state, action) {
       state.header_content.albumName = action.payload;
     },
-    setAlbumId(state,action){
-      state.header_content.albumId=action.payload;
+    setAlbumId(state, action) {
+      state.header_content.albumId = action.payload;
     },
-    setStageURI(state,action){
-      state.header_content.stageURI=action.payload;
+    setStageURI(state, action) {
+      state.header_content.stageURI = action.payload;
     },
 
     //COVER///////////////////////////////////////////////////////////////////
@@ -2219,11 +2220,9 @@ const constructorSlice = createSlice({
       let prevUploads = [...current(state.pages.uploads)];
       let id = action.payload;
       let newUploads = prevUploads.filter((upload) => upload.id !== id);
-      let allPages=[...current(state.pages.papers.pages)];
-
-        
       
       state.pages.uploads = newUploads;
+      // Добавить удаление из темплейтов
     },
     //PAGES PAPERS////
     //выбрать страница
@@ -2249,10 +2248,10 @@ const constructorSlice = createSlice({
       let newPage = {
         id: 0,
         selectedSide: "lrside", // centerside or leftside&rightside
-        templateIsValid:true,
+        templateIsValid: true,
         leftsideHex: "FFFFFF",
         rightsideHex: "FFFFFF",
-        
+
         templates: [
           //Левая страница
           { id: 0, title: "leftside", template: {} },
@@ -2404,15 +2403,10 @@ const constructorSlice = createSlice({
       selectedPage.templates = newTemplates;
       state.pages.papers.pages[state.pages.papers.selectedPage] = selectedPage;
     },
-    handleSetTemplatesValidsPage(state,action){
-      const pagesTemplateValids=action.payload;
-      let pages = [...current(state.pages.papers.pages)];
-      let newPages = pages.map((page,idx)=>({
-        ...page,
-        templateIsValid:pagesTemplateValids[idx].isValid
-      }))
-      state.pages.papers.pages=newPages;
-    }
+    handleSetTemplatesValidsPage(state, action) {
+      const pagesTemplateValids = action.payload;
+      state.pagesValid=pagesTemplateValids;
+    },
   },
   extraReducers: {
     //Получить все id альбомов
@@ -2454,8 +2448,8 @@ const constructorSlice = createSlice({
       state.constructorLoading = false;
       if (action.payload.data) {
         let { data, images } = action.payload;
-        let { mainData, coverData,pagesData } = data;
-         //MAIN
+        let { mainData, coverData, pagesData } = data;
+        //MAIN
         state.header_content.albumId = mainData.albumId;
         state.header_content.albumName = mainData.albumName;
         state.header_content.price = mainData.price;
@@ -2464,7 +2458,9 @@ const constructorSlice = createSlice({
         state.size.selectedType = mainData.selectedType;
         state.size.types[0].selectedSize = mainData.selectedQuadraticSize;
         state.size.types[1].selectedSize = mainData.selectedLandscapeSize;
-        state.header_content.coverPreviewImage=String(BASE_URL + images.cover_preview);
+        state.header_content.coverPreviewImage = String(
+          BASE_URL + images.cover_preview
+        );
 
         //COVER
         state.cover.selectedType = coverData.coverSelectedType;
@@ -2480,13 +2476,11 @@ const constructorSlice = createSlice({
         state.cover.types[0].features.decor[1].selectedSize =
           ecoLeather.ecoLeatherPhotoBidSize;
         // photobid image
-        if(images.eco_photobid){
+        if (images.eco_photobid) {
           state.cover.types[0].features.decor[1].blobImage = String(
             BASE_URL + images.eco_photobid
           );
         }
-       
-       
 
         state.cover.types[0].features.decor[2].options[0].selectedColor =
           ecoLeather.ecoLeatherMetalPlateColor;
@@ -2514,12 +2508,11 @@ const constructorSlice = createSlice({
         state.cover.types[1].features.decor[1].selectedSize =
           textile.textilePhotoBidSize;
         //photobid image
-        if(images.textile_photobid){
+        if (images.textile_photobid) {
           state.cover.types[1].features.decor[1].blobImage = String(
             BASE_URL + images.textile_photobid
           );
         }
-       
 
         state.cover.types[1].features.decor[2].options[0].selectedColor =
           textile.textileMetalPlateColor;
@@ -2538,65 +2531,75 @@ const constructorSlice = createSlice({
         //photoCover
         state.cover.types[2].selectedType = photoCover.photoCoverSelectedType;
         state.cover.types[2].selectedColor = photoCover.photoCoverColor;
-        if(images.photocover){
+        if (images.photocover) {
           state.cover.types[2].blobImage = String(BASE_URL + images.photocover);
         }
         //PAGES
-        //ЕЩЕ ПРИ УДАЛЕНИЕ ИЗ UPLOADS!! 
-        state.pages.papers.selectedPage=0;
-        state.pages.papers.pages=pagesData.pages;
-        state.pages.selectedType=pagesData.selectedType;
-        let uploadImages=[];
-        for (let imageKey in images){
-          if(imageKey !== "textile_photobid" && imageKey !== "photocover" && imageKey !== "eco_photobid" && imageKey !== "cover_preview"){
+        //ЕЩЕ ПРИ УДАЛЕНИЕ ИЗ UPLOADS!!
+        state.pages.papers.selectedPage = 0;
+        state.pages.papers.pages = pagesData.pages;
+        state.pages.selectedType = pagesData.selectedType;
+        let uploadImages = [];
+        for (let imageKey in images) {
+          if (
+            imageKey !== "textile_photobid" &&
+            imageKey !== "photocover" &&
+            imageKey !== "eco_photobid" &&
+            imageKey !== "cover_preview"
+          ) {
             let id = imageKey.split("/")[1];
-            let newImg={
-              blob:`${BASE_URL}${images[imageKey]}`,
-              id
-            }
+            let newImg = {
+              blob: `${BASE_URL}${images[imageKey]}`,
+              id,
+            };
             uploadImages.push(newImg);
           }
         }
-        // let allPages=[...state.pages.papers.pages];
-        // let needToChangeArray=[];
-        // for(let i=0;i<allPages.length;i++){
-        //   for(let j=0;j<allPages[i].templates.length;j++){
-        //     if(Object.keys(allPages[i].templates[j].template).length !== 0){
-        //       for(let k=0;k<allPages[i].templates[j].template.elements.length;k++){
-        //         if(Object.keys(allPages[i].templates[j].template.elements[k]?.image).length !==0){
-        //           uploadImages.some((upload,idx)=>{
-        //             if(upload.id === allPages[i].templates[j].template.elements[k].image.id){
-        //               console.log(upload.blob);
-        //               let objectToChange={
-        //                 pagesIdx:i,
-        //                 templatesIdx:j,
-        //                 elementsIdx:k,
-        //                 blob:upload.blob,
-        //               }
-        //               needToChangeArray.push(objectToChange);
-        //             }
-                   
-                    
-        //           })
-                    
-                    
-                  
-        //         }
-                
-                  
-                
-        //       }
-        //     }
-        //   }
-        // }
-        // for (let i=0;i<needToChangeArray.length;i++){
-        //   state.pages.papers.pages[needToChangeArray[i].pagesIdx].templates[needToChangeArray[i].templatesIdx].template.elements[needToChangeArray[i].elementsIdx].image.blob=needToChangeArray[i].blob;
-          
-        // }
-        
         // console.log(uploadImages);
-        state.pages.uploads=uploadImages;
-        
+        let allPages = [...state.pages.papers.pages];
+        let needToChangeArray = [];
+        for (let i = 0; i < allPages.length; i++) {
+          for (let j = 0; j < allPages[i].templates.length; j++) {
+            if (Object.keys(allPages[i].templates[j].template).length !== 0) {
+              for (
+                let k = 0;
+                k < allPages[i].templates[j].template.elements.length;
+                k++
+              ) {
+                if (allPages[i].templates[j].template.elements[k].image) {
+                  if (
+                    Object.keys(
+                      allPages[i].templates[j].template.elements[k].image
+                    ).length !== 0
+                  ) {
+                    uploadImages.some((upload, idx) => {
+                      if (
+                        upload.id ===
+                        allPages[i].templates[j].template.elements[k].image.id
+                      ) {
+                        let objectToChange = {
+                          pagesIdx: i,
+                          templatesIdx: j,
+                          elementsIdx: k,
+                          blob: upload.blob,
+                        };
+                        needToChangeArray.push(objectToChange);
+                      }
+                    });
+                  }
+                }
+              }
+            }
+          }
+        }
+        for (let i = 0; i < needToChangeArray.length; i++) {
+          state.pages.papers.pages[needToChangeArray[i].pagesIdx].templates[
+            needToChangeArray[i].templatesIdx
+          ].template.elements[needToChangeArray[i].elementsIdx].image.blob =
+            needToChangeArray[i].blob;
+        }
+
+        state.pages.uploads = uploadImages;
       }
     },
     [getAlbumById.pending.type]: (state) => {

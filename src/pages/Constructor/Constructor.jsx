@@ -1,4 +1,3 @@
-/** @format */
 
 import React from "react";
 import {
@@ -25,64 +24,20 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { getAlbumById } from "../../redux/reducers/constructor/actionConstructorCreator";
 import { removeBasketData } from "../../redux/reducers/basket/basketSlice";
+import { BASE_URL } from "../../static/values";
 const Constructor = () => {
   const dispatch = useDispatch();
   const params = useParams();
   //Пикчи в стейт
-  const [coverImages, setCoverImages] = React.useState([]);
-  const [uploadImages, setUploadImages] = React.useState([]);
-  const [previewImage, setPreviewImage] = React.useState({});
-  const [orderLoading,setOrderLoading]=React.useState(false);
-  const handleSetCoverImages = (fileObj) => {
-    switch (fileObj.target) {
-      case "eco_photobid":
-        let ecoImgObj = { target: fileObj.target, file: fileObj.file };
-        setCoverImages((prev) => {
-          return {
-            ...prev,
-            ecoImgObj,
-          };
-        });
-        break;
-      case "textile_photobid":
-        let textileImgObj = { target: fileObj.target, file: fileObj.file };
-        setCoverImages((prev) => {
-          return {
-            ...prev,
-            textileImgObj,
-          };
-        });
-        break;
-      case "photocover":
-        let photoCoverImgObj = { target: fileObj.target, file: fileObj.file };
-        setCoverImages((prev) => {
-          return {
-            ...prev,
-            photoCoverImgObj,
-          };
-        });
-        break;
-      default:
-        break;
-    }
-  };
-  const handleSetUploadImages = (fileObj) => {
-    setUploadImages((prev) => {
-      return [...prev, fileObj];
-    });
-  };
-  const handleDeleteUploadImage = (imageId) => {
-    let prev = [...uploadImages];
-    let newImages = prev.filter((fileObj) => fileObj.id !== imageId);
-    setUploadImages(newImages);
-  };
-
+  const [orderLoading, setOrderLoading] = React.useState(false);
   const navigate = useNavigate();
-  const { size, header_content, cover, pages } = useSelector(
+  const { size, header_content, cover, pages, pagesValid } = useSelector(
     (state) => state.constructorSlice
   );
+  //ref stage preview
   let stageRef = React.useRef(null);
-
+  //Uploads инфа
+  
   //изменить имя альбома
   const handleChangeName = (value) => {
     dispatch(handleChangeAlbumName(value));
@@ -94,7 +49,7 @@ const Constructor = () => {
       case 2:
         return (
           <Cover
-            setCoverImages={handleSetCoverImages}
+            albumId={header_content.albumId}
             selectedType={cover.selectedType}
             types={cover.types}
           />
@@ -128,8 +83,9 @@ const Constructor = () => {
       case 3:
         return (
           <PagesPreview
-            deleteUploadImage={handleDeleteUploadImage}
-            setUploadImages={handleSetUploadImages}
+           
+            pagesValid={pagesValid}
+            albumId={header_content.albumId}
             justPreview={false}
             pages={pages}
             size={size}
@@ -196,6 +152,27 @@ const Constructor = () => {
     return result;
   }
 
+  function uploadImageToServer(keyImg, file) {
+    let formData = new FormData();
+    if (keyImg === "cover_preview") {
+      formData.append("cover_preview", file);
+    }
+    axios({
+      method: "post",
+      url: `${BASE_URL}/designer/?controller=Album&method=image&album=${header_content.albumId}`,
+      data: formData,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          dispatch(handleIncrementStep());
+        }
+      })
+      .catch((e) => {
+        toast.error("Что-то пошло не так");
+      });
+  }
+
   async function crementStep(str) {
     switch (str) {
       case "-":
@@ -210,13 +187,12 @@ const Constructor = () => {
               dispatch(handleIncrementStep());
             }
           } else if (header_content.step === 2) {
-            let uri = stageRef.current.toDataURL();
+            let stageURI = stageRef.current.getStage().toDataURL();
             const previewImage = await fetchImageFromServer(
-              uri,
+              stageURI,
               "cover_preview"
             );
-            setPreviewImage(previewImage);
-            dispatch(handleIncrementStep());
+            uploadImageToServer("cover_preview", previewImage);
           } else if (header_content.step === 3) {
             let allPages = [...pages.papers.pages];
 
@@ -379,7 +355,7 @@ const Constructor = () => {
               ) {
                 axios({
                   method: "post",
-                  url: "https://alexbooks.bannikon.fvds.ru/designer/?controller=Shop&method=new",
+                  url: `${BASE_URL}/designer/?controller=Shop&method=new`,
                   headers: { "Content-Type": "application/json" },
                 });
                 prevBasket = [];
@@ -397,7 +373,7 @@ const Constructor = () => {
               formData.append("request", jsonData);
               axios({
                 method: "post",
-                url: `https://alexbooks.bannikon.fvds.ru/designer/?controller=Shop&method=save`,
+                url: `${BASE_URL}/designer/?controller=Shop&method=save`,
                 data: formData,
                 headers: { "Content-Type": "application/json" },
               }).then((res) => {
@@ -436,76 +412,6 @@ const Constructor = () => {
   }
   const handleSaveAlbum = async (ordered) => {
     let formData = new FormData();
-    //Cover images
-    if (coverImages.ecoImgObj) {
-      formData.append(coverImages.ecoImgObj.target, coverImages.ecoImgObj.file);
-    } else {
-      if (cover.types[0].features.decor[1].blobImage) {
-        const file = await fetchImageFromServer(
-          cover.types[0].features.decor[1].blobImage,
-          "eco_photobid"
-        );
-        formData.append("eco_photobid", file);
-      }
-    }
-
-    if (coverImages.textileImgObj) {
-      formData.append(
-        coverImages.textileImgObj.target,
-        coverImages.textileImgObj.file
-      );
-    } else {
-      if (cover.types[1].features.decor[1].blobImage) {
-        const file = await fetchImageFromServer(
-          cover.types[1].features.decor[1].blobImage,
-          "textile_photobid"
-        );
-        formData.append("textile_photobid", file);
-      }
-    }
-    if (coverImages.photoCoverImgObj) {
-      formData.append(
-        coverImages.photoCoverImgObj.target,
-        coverImages.photoCoverImgObj.file
-      );
-    } else {
-      if (cover.types[2].blobImage) {
-        const file = await fetchImageFromServer(
-          cover.types[2].blobImage,
-          "photocover"
-        );
-        formData.append("photocover", file);
-      }
-    }
-    //Uploads images
-    if (uploadImages.length > 0) {
-      for (let i = 0; i < uploadImages.length; i++) {
-        formData.append(`uploads/${uploadImages[i].id}`, uploadImages[i].file);
-      }
-    }
-
-    if (pages.uploads.length > 0) {
-      for (let i = 0; i < pages.uploads.length; i++) {
-        const file = await fetchImageFromServer(
-          pages.uploads[i].blob,
-          `uploads/${pages.uploads[i].id}`
-        );
-        formData.append(`uploads/${pages.uploads[i].id}`, file);
-      }
-    }
-    //PREVIEW IMAGE
-
-    if (previewImage instanceof File) {
-      formData.append("cover_preview", previewImage);
-      // console.log(previewImage);
-    } else {
-      const file = await fetchImageFromServer(
-        header_content.coverPreviewImage,
-        "cover_preview"
-      );
-      formData.append("cover_preview", file);
-    }
-
     //MAIN DATA
     let headerContentASizeData = { ...header_content, ...size };
     let selectedQuadraticSize = headerContentASizeData.types[0].selectedSize;
@@ -633,9 +539,6 @@ const Constructor = () => {
         photoCoverSelectedType,
       },
     };
-    //PAGES
-    //УБРАТЬ ВСЕ ISVALID ВЕЗДЕ
-    // let paperPages=[...pages.papers.pages]
     let fullPagesData = { ...pages.papers, selectedType: pages.selectedType };
     let fullData = {
       coverData: fullCoverData,
@@ -646,7 +549,7 @@ const Constructor = () => {
     formData.append("request", jsonData);
     axios({
       method: "post",
-      url: `https://alexbooks.bannikon.fvds.ru/designer/?controller=Album&method=save&album=${header_content.albumId}`,
+      url: `${BASE_URL}/designer/?controller=Album&method=save&album=${header_content.albumId}`,
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     }).then((res) => {
@@ -693,7 +596,13 @@ const Constructor = () => {
               итого:<span>{header_content.price} руб.</span>
             </span>
 
-            <button disabled={orderLoading} onClick={() => crementStep("+")} className={`next__step_btn ${orderLoading && "next__step_btn--disabled"}`}>
+            <button
+              disabled={orderLoading}
+              onClick={() => crementStep("+")}
+              className={`next__step_btn ${
+                orderLoading && "next__step_btn--disabled"
+              }`}
+            >
               {header_content.step === 3 ? "Заказать" : "Далее"}
             </button>
 

@@ -4,7 +4,6 @@ import React from "react";
 import { Stage, Layer, Image, Text } from "react-konva";
 import "./CoverPreview.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { setStageURI } from "../../../../redux/reducers/constructor/constructorSlice";
 
 const CoverPreview = ({stageRef}) => {
   const dispatch = useDispatch();
@@ -743,7 +742,6 @@ const CoverPreview = ({stageRef}) => {
 
   return (
     <div className="cover__preview">
-      
       <Stage
         ref={stageRef}
         width={size.selectedType === 0 ? 600 : 1000}

@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { ToastContainer } from "react-toastify";
-import {Constructor,Basket,Checkout,ConstructorPrev} from '../pages';
+import {Constructor,Basket,Checkout,ConstructorPrev, Blank} from '../pages';
 import "react-toastify/dist/ReactToastify.css";
 
 import './App.scss';
@@ -14,6 +14,7 @@ function App() {
          <Route path="/constructor" element={<ConstructorPrev />} />
          <Route path='/basket' element={<Basket />} />
          <Route path='/checkout' element={<Checkout />} />
+         <Route path='/blank/:blankId/:albumId' element={<Blank />} />
        </Routes>
      <ToastContainer />
      </div>

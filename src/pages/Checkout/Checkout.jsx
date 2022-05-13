@@ -1,10 +1,12 @@
 /** @format */
 
+import axios from "axios";
 import React from "react";
 import NumberFormat from "react-number-format";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   handleIncrementNavigation,
   handleChangeDataPhone,
@@ -20,11 +22,11 @@ import "./Checkout.scss";
 
 const Checkout = () => {
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
   const { checkout } = useSelector((state) => state.checkoutSlice);
   const {size}=useSelector((state)=>state.constructorSlice);
   const { basketAlbums } = useSelector((state) => state.basketSlice);
+  const [successMsg,setSuccessMsg]=React.useState("");
   const handleSetDataPhone = (phoneValues) => {
     dispatch(handleChangeDataPhone(phoneValues));
   };
@@ -187,7 +189,7 @@ const Checkout = () => {
             <div className="checkout__content_wrapper_items">
             <div className="checkout__content_wrapper_item">
               <div className="checkout__content_title">Информация о заказе</div>
-              <div className={`checkout__content_pricelist ${basketAlbums && basketAlbums.length <= 3 && "checkout__content_pricelist--noscroll"}`}>
+              <div className={`checkout__content_pricelist ${basketAlbums && basketAlbums.length <= 2 && "checkout__content_pricelist--noscroll"}`}>
                 {basketAlbums && basketAlbums.map((album,idx)=>
                  <div key={`${album.data.mainData.albumId}:${idx}`} className="checkout__album"> 
                   <div className="checkout__album_data">
@@ -210,7 +212,7 @@ const Checkout = () => {
                     </ul>
                   </div>
                   <div className="checkout__album_price">
-                    {album.data.mainData.price} * {album.data.mainData.countOfAlbums}
+                    {album.data.mainData.price}р * {album.data.mainData.countOfAlbums}
                   </div>
 
                 </div>
@@ -260,7 +262,7 @@ const Checkout = () => {
               </div>
             </div>
             </div>
-            <button className="next__step_btn">Перейти к оплате</button>
+            <button onClick={handleSubmit} className="next__step_btn">Перейти к оплате ({getFullPrice()} руб)</button>
           </div>
         );
       default:
@@ -317,7 +319,67 @@ const Checkout = () => {
   }, [basketAlbums.length]);
 
   function getFullPrice(){
-
+    let summ=0;
+    basketAlbums.forEach((album)=>{
+      let albumSumm=album.data.mainData.price * album.data.mainData.countOfAlbums;
+      summ+=albumSumm;
+    })
+    return summ;
+  }
+  function padTo2Digits(num) {
+    return num.toString().padStart(2, '0');
+  }
+  
+  function formatDate(date) {
+    return [
+      padTo2Digits(date.getDate()),
+      padTo2Digits(date.getMonth() + 1),
+      date.getFullYear(),
+    ].join('.');
+  }
+  
+  
+  const handleSubmit =()=>{
+    let formData= new FormData();
+    let deliveryInfo = {
+      name:checkout.content[0].options[0].value,
+      phone:checkout.content[0].options[1].value.formattedValue,
+      email:checkout.content[0].options[2].value,
+      city:checkout.content[0].options[3].value,
+      deliveryType:checkout.content[1].options[0].variables[
+        checkout.content[1].options[0].selectedVariable
+      ].transl,
+      street:checkout.content[1].options[2].data[1].value,
+      houseNumber:checkout.content[1].options[2].data[2].value,
+      flat:checkout.content[1].options[2].data[3].value,
+      zipcode:checkout.content[1].options[2].data[0].value,
+      date:formatDate(new Date()),
+      
+    }
+    let albumsData=[...basketAlbums];
+    let fullData = {
+      deliveryInfo,
+      albumsData
+    }
+    let jsonData = JSON.stringify(fullData);
+    formData.append("request",jsonData);
+    axios({
+      method: "post",
+      url: `${BASE_URL}/designer/?controller=Shop&method=save`,
+      data: formData,
+      headers: { "Content-Type": "application/json" },
+    }).then((res)=>{
+      if(res.status===200){
+        // axios({
+        //   method: "post",
+        //   url: `${BASE_URL}/designer/?controller=Shop&method=new`,
+        //   headers: { "Content-Type": "application/json" },
+        // }); // для бланк тестов пока что
+        toast.success(`Спасибо. Ваш заказ успешно оформлен! Данные об оплате и составе заказа отправлены Вам на электронную почту. Если вы не получили письмо, проверьте папку "Спам" Мы свяжемся с Вами в ближайшее время для уточнения деталей заказа.`)
+        navigate("/constructor");
+      }
+    })
+     
   }
   return (
     <div className="checkout">
@@ -385,6 +447,7 @@ const Checkout = () => {
           </div>
         </div>
       </div>
+      
     </div>
   );
 };
