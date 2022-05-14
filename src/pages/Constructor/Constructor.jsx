@@ -22,10 +22,12 @@ import {
 import "./Constructor.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import {usePriceStatus} from "../../hooks/priceStatus";
 import { getAlbumById } from "../../redux/reducers/constructor/actionConstructorCreator";
 import { removeBasketData } from "../../redux/reducers/basket/basketSlice";
 import { BASE_URL } from "../../static/values";
 const Constructor = () => {
+  const priceStatus = usePriceStatus();
   const dispatch = useDispatch();
   const params = useParams();
   //Пикчи в стейт
@@ -83,7 +85,7 @@ const Constructor = () => {
       case 3:
         return (
           <PagesPreview
-           
+          handleSaveAlbum={handleSaveAlbum}
             pagesValid={pagesValid}
             albumId={header_content.albumId}
             justPreview={false}
@@ -360,6 +362,9 @@ const Constructor = () => {
                 });
                 prevBasket = [];
               }
+              if(Object.keys(prevBasket).length === 0){
+                prevBasket=[];
+              }
               if (prevBasket.length === 0) {
                 basketAlbums.push(header_content.albumId);
               } else {
@@ -368,7 +373,6 @@ const Constructor = () => {
                 );
                 basketAlbums = [...newPrevAlbums, header_content.albumId];
               }
-
               let jsonData = JSON.stringify(basketAlbums);
               formData.append("request", jsonData);
               axios({

@@ -1,9 +1,8 @@
-/** @format */
 
 import { createSlice, current } from "@reduxjs/toolkit";
 
 import { BASE_URL } from "../../../static/values";
-
+import { contsructorDefaultState } from "./contsructorDefaultState";
 import {
   getAlbumIDS,
   deleteAlbumById,
@@ -36,10 +35,10 @@ const constructorSlice = createSlice({
           title: "quadratic",
           transl: "Квадратная",
           sizes: [
-            { id: 0, size: "15x15 см", price: 2190 },
-            { id: 1, size: "20x20 см", price: 3590 },
-            { id: 2, size: "25x25 см", price: 5490 },
-            { id: 3, size: "30x30 см", price: 6990 },
+            { id: 0, size: "15x15", price: 2190 },
+            { id: 1, size: "20x20", price: 3590 },
+            { id: 2, size: "25x25", price: 5490 },
+            { id: 3, size: "30x30", price: 6990 },
           ],
           selectedSize: 0,
         },
@@ -48,9 +47,9 @@ const constructorSlice = createSlice({
           title: "landscape",
           transl: "Альбомная",
           sizes: [
-            { id: 0, size: "15x22,5 см", price: 2490 },
-            { id: 1, size: "20x32 см", price: 5290 },
-            { id: 2, size: "30x40 см", price: 8890 },
+            { id: 0, size: "15x22,5", price: 2490 },
+            { id: 1, size: "20x32", price: 5290 },
+            { id: 2, size: "30x40", price: 8890 },
           ],
           selectedSize: 0,
         },
@@ -218,7 +217,7 @@ const constructorSlice = createSlice({
                         id: 1,
                         title: "text",
                         transl: "Текст",
-                        typedText: "",
+                        typedText: `${"\n"}${"\n"}${"\n"}`,
                         selectedSize: 0,
                         selectedFont: 0,
                         sizes: [
@@ -401,7 +400,7 @@ const constructorSlice = createSlice({
                         id: 1,
                         title: "text",
                         transl: "Текст",
-                        typedText: "",
+                        typedText: `${"\n"}${"\n"}${"\n"}`,
                         selectedSize: 0,
                         selectedFont: 0,
                         sizes: [
@@ -471,7 +470,7 @@ const constructorSlice = createSlice({
         },
       ],
     },
-    pagesValid:[],
+    pagesValid: [],
     pages: {
       //шаблоны(0) или цвета(1)
       selectedType: 0,
@@ -2060,13 +2059,16 @@ const constructorSlice = createSlice({
 
     //HEADER_CONTENT///////////////////////////////////////////////////////////////
     handleIncrementStep(state) {
-      if (state.header_content.step !== 4) state.header_content.step += 1;
+      if (state.header_content.step !== 3) state.header_content.step += 1;
     },
     handleDecrementStep(state) {
       if (state.header_content.step !== 1) state.header_content.step -= 1;
     },
     handleChangeAlbumName(state, action) {
       state.header_content.albumName = action.payload;
+    },
+    handleChangePrice(state, action) {
+      state.header_content.price = action.payload;
     },
     setAlbumId(state, action) {
       state.header_content.albumId = action.payload;
@@ -2215,14 +2217,80 @@ const constructorSlice = createSlice({
       let newUploads = [...prevUploads, newImg];
       state.pages.uploads = newUploads;
     },
-    //удалить картинку по id
+    //удалить картинку по id из Uploads
     handleDeleteImageFromUploads(state, action) {
       let prevUploads = [...current(state.pages.uploads)];
       let id = action.payload;
       let newUploads = prevUploads.filter((upload) => upload.id !== id);
-      
+
+
+      // Добавить удаление Картинок из темплейтов;
+
+      let allPages=[...current(state.pages.papers.pages)];
+      let needToRemoveArray=[];
+      allPages.forEach((page,pageIdx)=>{
+        page.templates.forEach((tmpl,tmplIdx)=>{
+          if(Object.keys(tmpl.template).length > 0){
+            tmpl.template.elements.forEach((elem,elemIdx)=>{
+              if(elem?.image){
+                if(Object.keys(elem.image).length > 0 ){
+                  if(elem.image.id === id){
+                    let elementIdx=elemIdx;
+                    let templateIdx=tmplIdx;
+                    let neededPageIdx = pageIdx;
+                    let elementToDelete={
+                      elementIdx,templateIdx,neededPageIdx
+                    }
+                    needToRemoveArray.push(elementToDelete);
+                  }
+                }
+              }
+            })
+          }
+        })
+      })
+      console.log(needToRemoveArray);
+      if(needToRemoveArray.length > 0){
+        
+       
+        for (let removeItem of needToRemoveArray){
+          
+          let selectedPage = {
+            ...state.pages.papers.pages[removeItem.neededPageIdx],
+          };
+          let templatesOfSelectedPage = [...selectedPage.templates];
+          
+          let template = { ...templatesOfSelectedPage[removeItem.templateIdx] };
+          let tmplTemplate = { ...template.template };
+          let tmplElements = [...tmplTemplate.elements];
+          let tmplNewElements = tmplElements.map((elem) => {
+            if (elem.id === removeItem.elementIdx) {
+              let prevElem = { ...elem };
+              delete prevElem["image"];
+              return { ...prevElem };
+            } else {
+              return { ...elem };
+            }
+          });
+          tmplTemplate.elements = tmplNewElements;
+          template.template = tmplTemplate;
+
+          let newTemplates = templatesOfSelectedPage.map((templ) => {
+            if (templ.id === removeItem.templateIdx) {
+              return { ...template };
+            } else {
+              return { ...templ };
+            }
+          });
+
+          selectedPage.templates = newTemplates;
+
+          state.pages.papers.pages[removeItem.neededPageIdx] = selectedPage;
+          
+        }
+      }
       state.pages.uploads = newUploads;
-      // Добавить удаление из темплейтов
+
     },
     //PAGES PAPERS////
     //выбрать страница
@@ -2403,9 +2471,62 @@ const constructorSlice = createSlice({
       selectedPage.templates = newTemplates;
       state.pages.papers.pages[state.pages.papers.selectedPage] = selectedPage;
     },
+    //Удалить фото из элемента шаблона
+    handleDeleteImageFromElementTemplate(state, action) {
+      const { pageId, sideToChange, tmplElementId } = action.payload;
+
+      let selectedPage = {
+        ...current(state.pages.papers.pages[pageId]),
+      };
+      let templatesOfSelectedPage = [...selectedPage.templates];
+      let sideIdx;
+      if (sideToChange === "leftside") {
+        sideIdx = 0;
+      } else if (sideToChange === "rightside") {
+        sideIdx = 1;
+      } else {
+        sideIdx = 2;
+      }
+      let template = { ...templatesOfSelectedPage[sideIdx] };
+      let tmplTemplate = { ...template.template };
+      let tmplElements = [...tmplTemplate.elements];
+
+      let tmplNewElements = tmplElements.map((elem) => {
+        if (elem.id === tmplElementId) {
+          let prevElem = { ...elem };
+          delete prevElem["image"];
+          return { ...prevElem };
+        } else {
+          return { ...elem };
+        }
+      });
+      tmplTemplate.elements = tmplNewElements;
+      template.template = tmplTemplate;
+      let newTemplates = templatesOfSelectedPage.map((templ) => {
+        if (templ.title === sideToChange) {
+          return { ...template };
+        } else {
+          return { ...templ };
+        }
+      });
+      selectedPage.templates = newTemplates;
+      state.pages.papers.pages[pageId] = selectedPage;
+    },
+    //Добавить валидность страниц (заказать)-(Just frontend)
     handleSetTemplatesValidsPage(state, action) {
       const pagesTemplateValids = action.payload;
-      state.pagesValid=pagesTemplateValids;
+      state.pagesValid = pagesTemplateValids;
+    },
+    //UPDATE TO DEFAULT
+    handleReloadConstructorConfig(state) {
+      state.albumsId = contsructorDefaultState.albumsId;
+      state.constructorLoading = contsructorDefaultState.constructorLoading;
+      state.cover = contsructorDefaultState.cover;
+      state.header_content = contsructorDefaultState.header_content;
+      state.newAlbumLoading = contsructorDefaultState.newAlbumLoading;
+      state.pages = contsructorDefaultState.pages;
+      state.pagesValid = contsructorDefaultState.pagesValid;
+      state.size = contsructorDefaultState.size;
     },
   },
   extraReducers: {
@@ -2417,7 +2538,7 @@ const constructorSlice = createSlice({
     [getAlbumIDS.pending.type]: (state) => {
       state.albumsId.isLoading = true;
     },
-    [getAlbumIDS.rejected.type]: (state, action) => {
+    [getAlbumIDS.rejected.type]: (state) => {
       state.albumsId.isLoading = false;
     },
     //Удаление альбома по id
@@ -2430,17 +2551,17 @@ const constructorSlice = createSlice({
     [deleteAlbumById.pending.type]: (state) => {
       state.albumsId.isLoading = true;
     },
-    [deleteAlbumById.rejected.type]: (state, action) => {
+    [deleteAlbumById.rejected.type]: (state) => {
       state.albumsId.isLoading = false;
     },
     //Создание альбома
-    [newAlbum.fulfilled.type]: (state, action) => {
+    [newAlbum.fulfilled.type]: (state) => {
       state.newAlbumLoading = false;
     },
     [newAlbum.pending.type]: (state) => {
       state.newAlbumLoading = true;
     },
-    [newAlbum.rejected.type]: (state, action) => {
+    [newAlbum.rejected.type]: (state) => {
       state.newAlbumLoading = false;
     },
     //Получение альбома по id
@@ -2535,7 +2656,6 @@ const constructorSlice = createSlice({
           state.cover.types[2].blobImage = String(BASE_URL + images.photocover);
         }
         //PAGES
-        //ЕЩЕ ПРИ УДАЛЕНИЕ ИЗ UPLOADS!!
         state.pages.papers.selectedPage = 0;
         state.pages.papers.pages = pagesData.pages;
         state.pages.selectedType = pagesData.selectedType;
@@ -2547,15 +2667,20 @@ const constructorSlice = createSlice({
             imageKey !== "eco_photobid" &&
             imageKey !== "cover_preview"
           ) {
-            let id = imageKey.split("/")[1];
+            let id = imageKey.split("/")[2];
+            let fullOptions = imageKey.split("/")[1];
+            let splitOptions = fullOptions.split("-");
+            let imageWidth = splitOptions[0];
+            let imageHeight = splitOptions[1];
             let newImg = {
               blob: `${BASE_URL}${images[imageKey]}`,
               id,
+              imageWidth,
+              imageHeight,
             };
             uploadImages.push(newImg);
           }
         }
-        // console.log(uploadImages);
         let allPages = [...state.pages.papers.pages];
         let needToChangeArray = [];
         for (let i = 0; i < allPages.length; i++) {
@@ -2617,6 +2742,7 @@ export const {
   handleDecrementStep,
   setAlbumId,
   setStageURI,
+  handleChangePrice,
   handleChangeScale,
   handleChangeAlbumName,
   handleChangeCoverType,
@@ -2648,5 +2774,7 @@ export const {
   handleIncrementNavigation,
   handleChangeDataPhone,
   handleSetTemplatesValidsPage,
+  handleDeleteImageFromElementTemplate,
+  handleReloadConstructorConfig,
 } = constructorSlice.actions;
 export default constructorSlice.reducer;

@@ -25,7 +25,7 @@ const Size = ({selectedType,types}) => {
                   "size__type_content_item--active"
                 }`}
               >
-                <span>{size.size}</span>
+                <span>{size.size} см</span>
                 <span>от {size.price}р</span>
               </span>
             ))}
@@ -45,7 +45,7 @@ const Size = ({selectedType,types}) => {
                   "size__type_content_item--active"
                 }`}
               >
-                <span>{size.size}</span>
+                <span>{size.size} см</span>
                 <span>от {size.price}р</span>
               </span>
             ))}

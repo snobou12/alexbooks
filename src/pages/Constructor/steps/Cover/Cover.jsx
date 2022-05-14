@@ -1,3 +1,4 @@
+/** @format */
 
 import axios from "axios";
 import React from "react";
@@ -26,7 +27,7 @@ import { BASE_URL } from "../../../../static/values";
 
 import "./Cover.scss";
 //Это step слева (визуал)
-const Cover = ({albumId, selectedType, types }) => {
+const Cover = ({ albumId, selectedType, types }) => {
   const dispatch = useDispatch();
   //Получить главные svgшки для левой части
   function getTypeSvg(typeId) {
@@ -337,7 +338,13 @@ const Cover = ({albumId, selectedType, types }) => {
 
             <div className="photoCover__uploader">
               <label onChange={photoCoverChange} htmlFor="photoCover_upload">
-                <input  name="" type="file" accept="image/jpeg,image/png,image/jpg,image/JPEG,image/PNG,image/JPG,image/BPM" id="photoCover_upload" hidden />
+                <input
+                  name=""
+                  type="file"
+                  accept="image/jpeg,image/png,image/jpg,image/JPEG,image/PNG,image/JPG,image/BPM"
+                  id="photoCover_upload"
+                  hidden
+                />
                 Выбрать фото
               </label>
             </div>
@@ -397,74 +404,68 @@ const Cover = ({albumId, selectedType, types }) => {
     dispatch(handleChangeMetalplateText({ typeId, value }));
   };
   //Загрузить фото для фотовствки эко кожи и ткани
-  function uploadImageToServer(keyImg,file){
+  function uploadImageToServer(keyImg, file) {
     let formData = new FormData();
-    if(keyImg === "eco"){
-      formData.append("eco_photobid",file);
-    }
-    else if (keyImg === "textile"){
-      formData.append("textile_photobid",file);
-    }
-    else{
-      formData.append("photocover",file);
+    if (keyImg === "eco") {
+      formData.append("eco_photobid", file);
+    } else if (keyImg === "textile") {
+      formData.append("textile_photobid", file);
+    } else {
+      formData.append("photocover", file);
     }
     axios({
-      method:"post",
-      url:`${BASE_URL}/designer/?controller=Album&method=image&album=${albumId}`,
-      data:formData,
+      method: "post",
+      url: `${BASE_URL}/designer/?controller=Album&method=image&album=${albumId}`,
+      data: formData,
       headers: { "Content-Type": "multipart/form-data" },
-    }).then((res)=>{
-      if(res.status === 200){
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload=function(){
-          if(keyImg === "eco"){
-            dispatch(
-              handleChangePhotoBidBlobImage({
-                blob: reader.result,
-                type: "eco",
-              })
-            );
-          }
-          else if (keyImg === "textile"){
-            dispatch(
-              handleChangePhotoBidBlobImage({
-                blob: reader.result,
-                type: "textile",
-              })
-            );
-          }
-          else{
-            dispatch(handleChangePhotoCoverImage(reader.result));
-          }
-          
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          let reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = function () {
+            if (keyImg === "eco") {
+              dispatch(
+                handleChangePhotoBidBlobImage({
+                  blob: reader.result,
+                  type: "eco",
+                })
+              );
+            } else if (keyImg === "textile") {
+              dispatch(
+                handleChangePhotoBidBlobImage({
+                  blob: reader.result,
+                  type: "textile",
+                })
+              );
+            } else {
+              dispatch(handleChangePhotoCoverImage(reader.result));
+            }
+          };
         }
-      }
-    })
-    .catch((e)=>{
-      toast.error("Что-то пошло не так")
-    })
+      })
+      .catch((e) => {
+        toast.error("Что-то пошло не так");
+      });
   }
 
-
-  const  photoBidImageChange  = (e, coverType) => {
+  const photoBidImageChange = (e, coverType) => {
     if (e.target.files && e.target.files[0]) {
       let img = e.target.files[0];
       if (img.size > 20000000) {
         return toast.error("Максимальный размер файла 20мб");
       }
-      uploadImageToServer(coverType,img);
+      uploadImageToServer(coverType, img);
     }
   };
 
   const photoCoverChange = (e) => {
     if (e.target.files && e.target.files[0]) {
-      let reader = new FileReader();
       let img = e.target.files[0];
       if (img.size > 20000000) {
         return toast.error("Максимальный размер файла 20мб");
       }
-      uploadImageToServer("photocover",img);
+      uploadImageToServer("photocover", img);
     }
   };
 
@@ -510,16 +511,22 @@ const Cover = ({albumId, selectedType, types }) => {
                   (design, idx) => (
                     <div
                       onClick={() => handleChangeDesign(design.id, "eco")}
+                      style={{
+                        backgroundImage:
+                          "url(" +
+                          require(`../../../../assets/eco_leather_lettering_designs/${design.title}_colorless.png`) +
+                          ")",
+                        backgroundPosition: "center",
+                        backgroundSize: "contain",
+                        backgroundRepeat: "no-repeat",
+                      }}
                       key={`${design.id}:${idx}`}
                       className={`eco__lettering_designs_item ${
                         types[0].features.decor[0].options[1].selectedDesign ===
                           design.id && "eco__lettering_designs_item--active"
                       }`}
                     >
-                      <img
-                        src={require(`../../../../assets/eco_leather_lettering_designs/${design.title}_colorless.png`)}
-                        alt="eco_design"
-                      />
+                      
                     </div>
                   )
                 )}
@@ -552,7 +559,13 @@ const Cover = ({albumId, selectedType, types }) => {
                 onChange={(e) => photoBidImageChange(e, "eco")}
                 htmlFor="photobid_upload"
               >
-                <input accept="image/*" name="" type="file" id="photobid_upload" hidden />
+                <input
+                  accept="image/*"
+                  name=""
+                  type="file"
+                  id="photobid_upload"
+                  hidden
+                />
                 Выбрать фото
               </label>
             </div>
@@ -639,22 +652,30 @@ const Cover = ({albumId, selectedType, types }) => {
                         onClick={() =>
                           handleChangeMetalplateEngrave(egs.id, "eco")
                         }
+                        
                         key={`${egs.id}:${idx}`}
                         className={`eco__metalPlate_dec ${
                           egs.id ===
                             types[0].features.decor[2].options[2].decors[0]
                               .selectedEngrave && "eco__metalPlate_dec--active"
                         }`}
+
+                        style={{
+                          backgroundImage:
+                            "url(" +
+                            require(`../../../../assets/eco_metalplate_decorations_${
+                              types[0].features.decor[2].options[1]
+                                .selectedSize === 0
+                                ? "quadratic"
+                                : "rectangular"
+                            }/${egs.title}.png`) +
+                            ")",
+                          backgroundPosition: "center",
+                          backgroundSize: "contain",
+                          backgroundRepeat: "no-repeat",
+                        }}
                       >
-                        <img
-                          src={require(`../../../../assets/eco_metalplate_decorations_${
-                            types[0].features.decor[2].options[1]
-                              .selectedSize === 0
-                              ? "quadratic"
-                              : "rectangular"
-                          }/${egs.title}.png`)}
-                          alt="metalplate_dec"
-                        />
+                       
                       </div>
                     )
                   )}
@@ -753,6 +774,7 @@ const Cover = ({albumId, selectedType, types }) => {
                           types[1].features.decor[0].options[0].selectedColor &&
                         "eco__lettering_colors_item--active"
                       }`}
+                      
                     >
                       <img
                         src={require(`../../../../assets/eco_leather_lettering_colors/${color.title}.png`)}
@@ -775,11 +797,17 @@ const Cover = ({albumId, selectedType, types }) => {
                         types[1].features.decor[0].options[1].selectedDesign ===
                           design.id && "eco__lettering_designs_item--active"
                       }`}
+                      style={{
+                        backgroundImage:
+                          "url(" +
+                          require(`../../../../assets/eco_leather_lettering_designs/${design.title}_colorless.png`) +
+                          ")",
+                        backgroundPosition: "center",
+                        backgroundSize: "contain",
+                        backgroundRepeat: "no-repeat",
+                      }}
                     >
-                      <img
-                        src={require(`../../../../assets/eco_leather_lettering_designs/${design.title}_colorless.png`)}
-                        alt="eco_design"
-                      />
+                      
                     </div>
                   )
                 )}
@@ -812,7 +840,13 @@ const Cover = ({albumId, selectedType, types }) => {
                 onChange={(e) => photoBidImageChange(e, "textile")}
                 htmlFor="photobid_upload"
               >
-                <input accept="image/*" name="" type="file" id="photobid_upload" hidden />
+                <input
+                  accept="image/*"
+                  name=""
+                  type="file"
+                  id="photobid_upload"
+                  hidden
+                />
                 Выбрать фото
               </label>
             </div>
@@ -907,16 +941,22 @@ const Cover = ({albumId, selectedType, types }) => {
                             types[1].features.decor[2].options[2].decors[0]
                               .selectedEngrave && "eco__metalPlate_dec--active"
                         }`}
+                        style={{
+                          backgroundImage:
+                            "url(" +
+                            require(`../../../../assets/eco_metalplate_decorations_${
+                              types[1].features.decor[2].options[1]
+                                .selectedSize === 0
+                                ? "quadratic"
+                                : "rectangular"
+                            }/${egs.title}.png`) +
+                            ")",
+                          backgroundPosition: "center",
+                          backgroundSize: "contain",
+                          backgroundRepeat: "no-repeat",
+                        }}
                       >
-                        <img
-                          src={require(`../../../../assets/eco_metalplate_decorations_${
-                            types[1].features.decor[2].options[1]
-                              .selectedSize === 0
-                              ? "quadratic"
-                              : "rectangular"
-                          }/${egs.title}.png`)}
-                          alt="metalplate_dec"
-                        />
+                        
                       </div>
                     )
                   )}

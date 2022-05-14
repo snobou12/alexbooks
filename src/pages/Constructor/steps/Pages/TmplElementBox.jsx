@@ -3,7 +3,7 @@
 import React from "react";
 import { useDrop } from "react-dnd";
 
-const TmplElementBox = ({ tmplElement, cn, sideToChange, image }) => {
+const TmplElementBox = ({pageId,justPreview, tmplElement, cn, sideToChange, image,handleDeleteImageFromElement }) => {
   //justPreview
   const [visibleControls,setVisibleControls]=React.useState(false);
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
@@ -21,6 +21,10 @@ const TmplElementBox = ({ tmplElement, cn, sideToChange, image }) => {
     backgroundColor = "rgb(53, 250, 96)";
   } else if (canDrop) {
     backgroundColor = "rgb(189, 189, 189)";
+  }
+
+  const handleDelete=()=>{
+    handleDeleteImageFromElement({tmplElement,sideToChange,image,pageId});
   }
   return (
     <>
@@ -53,7 +57,7 @@ const TmplElementBox = ({ tmplElement, cn, sideToChange, image }) => {
           left: tmplElement.position.l,
           top: tmplElement.position.t,
         }}
-        className={`tmpl__image_controls ${(!visibleControls || !tmplElement.image) && "tmpl__image_controls--hidden"}`}
+        className={`tmpl__image_controls ${(!visibleControls || !tmplElement.image || justPreview) && "tmpl__image_controls--hidden"}`}
       >
         <div  className="tmpl__image_control tmpl__image_control--rotate">
         <svg
@@ -83,7 +87,7 @@ const TmplElementBox = ({ tmplElement, cn, sideToChange, image }) => {
       ></path>
     </svg>
         </div>
-        <div className="tmpl__image_control tmpl__image_control--delete">
+        <div onClick={handleDelete} className="tmpl__image_control tmpl__image_control--delete">
         <svg
       xmlns="http://www.w3.org/2000/svg"
       width="20"

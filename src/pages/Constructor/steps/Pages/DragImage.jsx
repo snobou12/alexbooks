@@ -9,7 +9,6 @@ const DragImage = ({ img,isUploadingImages,deleteImageFromUploads,baseItem,uploa
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "TMPL_EL_BOX",
     item: { name:img.id },
-    canDrag:!isUploadingImages,
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult();
       if (item && dropResult) {
@@ -30,6 +29,7 @@ const DragImage = ({ img,isUploadingImages,deleteImageFromUploads,baseItem,uploa
       deleteImageFromUploads(imageId)
   }
   const opacity = isDragging ? 0.4 : 1;
+ 
   return (
     <div ref={drag} style={{ opacity }} className={`pages__uploads_item ${isUploadingImages && !baseItem && "pages__uploads_item--disabled"}`}>
       <img src={img.blob} alt={`uploaded_img ${img.id}`} />

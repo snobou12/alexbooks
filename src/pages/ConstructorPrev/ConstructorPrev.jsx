@@ -9,6 +9,8 @@ import {
   getAlbumIDS,
   newAlbum,
 } from "../../redux/reducers/constructor/actionConstructorCreator";
+  
+  import {handleReloadConstructorConfig} from "../../redux/reducers/constructor/constructorSlice";
 import "./ConstructorPrev.scss";
 const ConstructorPrev = () => {
   const { albumsId} = useSelector(
@@ -23,6 +25,7 @@ const ConstructorPrev = () => {
   const handleCreateAlbum = async () => {
     try{
       const response = await dispatch(newAlbum()).unwrap();
+      dispatch(handleReloadConstructorConfig());
       navigate(`/constructor/album/${response.album}`);
 
     }
@@ -40,6 +43,10 @@ const ConstructorPrev = () => {
   const handleDeleteAlbum = (albumId) => {
     dispatch(deleteAlbumById(albumId));
   };
+  const handleNavigateToAlbum =(albumId)=>{
+    dispatch(handleReloadConstructorConfig());
+    navigate(`/constructor/album/${albumId}`);
+  }
 
   return (
     <>
@@ -52,7 +59,7 @@ const ConstructorPrev = () => {
             {albumsId.ids.map((album, idx) => (
               <div key={`${album.id}:${idx}`} className="cnsr__prev_albums_item">
                 <button
-                  onClick={() => navigate(`/constructor/album/${album.id}`)}
+                  onClick={()=>handleNavigateToAlbum(album.id)}
                   className="next__step_btn cnsr__prev_albums_item_title"
                 >
                   ID:{album.id} - {album.name}

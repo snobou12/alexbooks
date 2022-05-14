@@ -1,4 +1,3 @@
-/** @format */
 
 import React from "react";
 import { useDispatch } from "react-redux";
@@ -10,9 +9,10 @@ import { toast } from "react-toastify";
 
 const PagesUploader = ({
   albumId,
+  handleSaveAlbum,
   handleSetIsUploadingImages,
   handleSetUploadPercent,
-  handleSwipeToEnd
+  handleSwipeToEnd,
 }) => {
   const dispatch = useDispatch();
   const updatePercent = (value) => {
@@ -24,9 +24,36 @@ const PagesUploader = ({
   function swipeToEnd() {
     handleSwipeToEnd();
   }
+  const handleAlbumSave = () => {
+    handleSaveAlbum(false);
+  };
+
+  function readFileAsync(imageFile) {
+    return new Promise((resolve, reject) => {
+      let imageWidth;
+      let imageHeight;
+      const reader = new FileReader();
+      reader.readAsDataURL(imageFile);
+      reader.onload = async (theFile) => {
+        const image = new Image();
+        image.src = theFile.target.result;
+        image.onload = () => {
+          imageWidth = image.width;
+          imageHeight = image.height;
+          resolve({ imageWidth, imageHeight });
+        };
+      };
+      reader.onerror = reject;
+    });
+  }
+
   async function uploudImageToServer(id, imageFile) {
     let data = new FormData();
-    data.append(`uploads/${id}`, imageFile);
+    const options = await readFileAsync(imageFile);
+    data.append(
+      `uploads/${options.imageWidth}-${options.imageHeight}/${id}`,
+      imageFile
+    );
     return axios({
       method: "post",
       url: `https://alexbooks.bannikon.fvds.ru/designer/?controller=Album&method=image&album=${albumId}`,
@@ -39,12 +66,16 @@ const PagesUploader = ({
       headers: { "Content-Type": "multipart/form-data" },
     })
       .then(async () => {
-
         const imageBlob = URL.createObjectURL(imageFile);
-        let newImg = { id, blob: imageBlob };
-        dispatch(handleAddImageToUploads({ newImg }));
-      swipeToEnd();
 
+        let newImg = {
+          id,
+          blob: imageBlob,
+          imageWidth: options.imageWidth,
+          imageHeight: options.imageHeight,
+        };
+        dispatch(handleAddImageToUploads({ newImg }));
+        swipeToEnd();
       })
       .catch((e) => {
         return e;
@@ -53,18 +84,28 @@ const PagesUploader = ({
 
   const handleImageUpload = async (e) => {
     if (e.target.files && e.target.files[0]) {
-      updateUploadingImages(true);
       const files = e.target.files;
+      const neededFiles = [];
       for (const file of files) {
-        try {
-
-          await uploudImageToServer(uuidv4(), file);
-        } catch (e) {
-          toast.error("Что-то пошло не так");
+        if (file.size > 20000000) {
+          toast.error("Максимальный размер файла 20мб");
+        } else {
+          neededFiles.push(file);
         }
       }
-      updateUploadingImages(false);
-      updatePercent(0);
+      if (neededFiles.length > 0) {
+        updateUploadingImages(true);
+        for (const file of neededFiles) {
+          try {
+            await uploudImageToServer(uuidv4(), file);
+          } catch (e) {
+            toast.error("Что-то пошло не так");
+          }
+        }
+        updateUploadingImages(false);
+        updatePercent(0);
+        handleAlbumSave();
+      }
     }
   };
 

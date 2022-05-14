@@ -374,6 +374,58 @@
   &:hover {
     background-color: #fff;
   }
+  @media (max-width: 1666px) {
+    width: 30px;
+  height: 30px;
+    svg{
+      width: 15px;
+      height: 15px;
+    }
+    &--rotate {
+      left: 10px;
+      top: 10px;
+    }
+  
+    &--delete {
+      right: 10px;
+      top: 10px;
+    }
+  
+ 
+  
+    &--contain {
+      bottom: 10px;
+      left: 10px;
+    }
+
+
+}
+@media (max-width: 1404px) {
+  width: 20px;
+  height: 20px;
+  svg{
+    width: 10px;
+    height: 10px;
+  }
+  &--rotate {
+    left: 5px;
+    top: 5px;
+  }
+
+  &--delete {
+    right: 5px;
+    top: 5px;
+  }
+
+
+
+  &--contain {
+    bottom: 5px;
+    left: 5px;
+  }
+
+
+}
 }
 
 .pages__paper_quadratic--full {
@@ -448,10 +500,15 @@
 }
 
 .pages__paper_quadratic_cs_element {
+  
+
   position: absolute;
+  display: block;
   background-color: rgb(225 225 225);
   border: 0;
   outline: none;
+  overflow: hidden;
+  user-select: none;
 }
 
 .tmpl__element_image {
@@ -459,9 +516,10 @@
   display: block;
   // width: 100%;
   // min-height: 100%;
+
   height: 100%;
   min-width: 100%;
-
+ 
   left: 0%;
   top: 0%;
   user-select: none;
@@ -527,6 +585,7 @@
 
 .pages__paper_landscape_ls_element {
   position: absolute;
+  display: block;
   background-color: rgb(225 225 225);
   border: 0;
   outline: none;
@@ -607,7 +666,10 @@
 
 .pages__paper_landscape_cs_element {
   position: absolute;
+  display: block;
   background-color: rgb(225 225 225);
   border: 0;
   outline: none;
+  overflow: hidden;
+  user-select: none;
 }

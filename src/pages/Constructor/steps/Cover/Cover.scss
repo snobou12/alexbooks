@@ -244,11 +244,7 @@
   cursor: pointer;
   border: 2px solid transparent;
   border-radius: 7px;
-  img {
-    height: 125px;
-    width: 100%;
-    padding: 15px;
-  }
+  
   &--active {
     pointer-events: none;
     border: 2px solid rgb(2, 141, 216);
@@ -425,7 +421,7 @@
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
 }
 
 .eco__metalPlate_dec {
@@ -437,11 +433,6 @@
   align-items: center;
   border: 2px solid transparent;
 
-  img {
-    height: 120px;
-    width: 120px;
-    padding: 20px;
-  }
   &--active {
     border: 2px solid rgb(2, 141, 216);
   }

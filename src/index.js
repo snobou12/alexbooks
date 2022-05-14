@@ -11,7 +11,7 @@ import { Provider } from 'react-redux';
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <DndProvider backend={HTML5Backend}>
+      <DndProvider  backend={HTML5Backend}> 
         <Provider store={store}>
           <App />
         </Provider>

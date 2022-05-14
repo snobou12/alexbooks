@@ -6,6 +6,7 @@ import {
   handleAddPageToPages,
   handleDeletePageFromPages,
   handleDeleteImageFromUploads,
+  handleDeleteImageFromElementTemplate
 } from "../../../../redux/reducers/constructor/constructorSlice";
 import DragImage from "./DragImage";
 import PagesUploader from "./PagesUploader";
@@ -20,13 +21,13 @@ import "swiper/css/grid";
 import "swiper/css";
 import "./PagesPreview.scss";
 
-
 const PagesPreview = ({
   albumId,
   pages,
   size,
   justPreview,
   selectedPage,
+  handleSaveAlbum,
   handleChangePage,
   pagesValid,
 }) => {
@@ -60,16 +61,18 @@ const PagesPreview = ({
       method: "post",
       url: `${BASE_URL}/designer/?controller=Album&method=remove&album=${albumId}&image=${imageId}`,
       headers: { "Content-Type": "application/json" },
-    }).then((res) => {
-      if (res.status === 200) {
-        dispatch(handleDeleteImageFromUploads(imageId));
-      }
-      else{
-        toast.error("Что-то пошло не так");
-      }
-    }).catch((e)=>{
-      toast.error("Что-то пошло не так")
     })
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          dispatch(handleDeleteImageFromUploads(imageId));
+        } else {
+          toast.error("Что-то пошло не так");
+        }
+      })
+      .catch((e) => {
+        toast.error("Что-то пошло не так");
+      });
   };
   function uploadsMap() {
     if (!isUploadingImages) {
@@ -87,6 +90,24 @@ const PagesPreview = ({
     let lastIndex = swiperRef.current.swiper.imagesLoaded;
     swiperRef.current.swiper.slideTo(lastIndex);
   };
+  const handleDeleteImageFromElement =(tmplInfo)=>{
+    let infoChange={
+      pageId:tmplInfo.pageId,
+      sideToChange:tmplInfo.sideToChange,
+      tmplElementId:tmplInfo.tmplElement.id
+    }
+    dispatch(handleDeleteImageFromElementTemplate(infoChange))
+  }
+   function nonValidateClass(idx){
+    if(pagesValid.length > 0){
+      if(pagesValid[idx] && Object.keys(pagesValid[idx]).length > 0){
+        if(!pagesValid[idx].isValid){
+          return true
+        }
+      }
+    }
+    return false;
+  }
   return (
     <>
       {justPreview ? (
@@ -135,6 +156,7 @@ const PagesPreview = ({
                       {pages[selectedPage].templates[0].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          justPreview={justPreview}
                             image={tmplElement?.image}
                             key={`${tmplElement.id}:${idx}`}
                             sideToChange={"leftside"}
@@ -155,6 +177,7 @@ const PagesPreview = ({
                       {pages[selectedPage].templates[1].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          justPreview={justPreview}
                             image={tmplElement?.image}
                             key={`${tmplElement.id}:${idx}`}
                             sideToChange={"rightside"}
@@ -187,6 +210,7 @@ const PagesPreview = ({
                       {pages[selectedPage].templates[2].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          justPreview={justPreview}
                             image={tmplElement?.image}
                             key={`${tmplElement.id}:${idx}`}
                             sideToChange={"centerside"}
@@ -214,6 +238,7 @@ const PagesPreview = ({
                       {pages[selectedPage].templates[0].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          justPreview={justPreview}
                             image={tmplElement?.image}
                             key={`${tmplElement.id}:${idx}`}
                             sideToChange={"leftside"}
@@ -234,6 +259,7 @@ const PagesPreview = ({
                       {pages[selectedPage].templates[1].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          justPreview={justPreview}
                             image={tmplElement?.image}
                             key={`${tmplElement.id}:${idx}`}
                             sideToChange={"rightside"}
@@ -267,6 +293,7 @@ const PagesPreview = ({
                       {pages[selectedPage].templates[2].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          justPreview={justPreview}
                             image={tmplElement?.image}
                             key={`${tmplElement.id}:${idx}`}
                             sideToChange={"centerside"}
@@ -300,37 +327,35 @@ const PagesPreview = ({
                     className={`pages__selector_page ${
                       pages.papers.selectedPage === page.id &&
                       "pages__selector_page--active"
-                    } ${
-                      pagesValid.length > 0 &&
-                      !pagesValid[idx].isValid &&
-                      "pages__selector_page--noValid"
-                    }`}
+                    } ${ nonValidateClass(idx) && "pages__selector_page--noValid"}`}
                   >
                     <span>{page.id + 1}</span>
-
-                    <div
-                      onClick={(e) => handleDeletePage(e, page.id)}
-                      className="pages__selector_page_delete"
-                    >
-                      <svg
-                        width="6"
-                        height="6"
-                        viewBox="0 0 6 6"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path d="M0.802495 5.08652L2.5 3.28951L0.685547 1.57552L1.27885 0.947439L3.09331 2.66143L4.79082 0.864418L5.43635 1.4742L3.73884 3.27121L5.55329 4.9852L4.95999 5.61328L3.14553 3.8993L1.44802 5.69631L0.802495 5.08652Z"></path>
-                      </svg>
-                    </div>
-
-                    {pages.papers.selectedPage === page.id && (
+                    {pages.papers.pages.length !== 10 && (
                       <div
-                        onClick={(e) => handleAddPage(e, page.id)}
-                        className="pages__selector_page_add"
+                        onClick={(e) => handleDeletePage(e, page.id)}
+                        className="pages__selector_page_delete"
                       >
-                        +
+                        <svg
+                          width="6"
+                          height="6"
+                          viewBox="0 0 6 6"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M0.802495 5.08652L2.5 3.28951L0.685547 1.57552L1.27885 0.947439L3.09331 2.66143L4.79082 0.864418L5.43635 1.4742L3.73884 3.27121L5.55329 4.9852L4.95999 5.61328L3.14553 3.8993L1.44802 5.69631L0.802495 5.08652Z"></path>
+                        </svg>
                       </div>
                     )}
+
+                    {pages.papers.selectedPage === page.id &&
+                      pages.papers.pages.length !== 50 && (
+                        <div
+                          onClick={(e) => handleAddPage(e, page.id)}
+                          className="pages__selector_page_add"
+                        >
+                          +
+                        </div>
+                      )}
                   </div>
                 </SwiperSlide>
               ))}
@@ -362,6 +387,8 @@ const PagesPreview = ({
                       ].templates[0].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          pageId={pages.papers.selectedPage}
+                          handleDeleteImageFromElement={handleDeleteImageFromElement}
                             image={tmplElement?.image}
                             // image options после загрузки в uploads понимать какая ширина высота
                             key={`${tmplElement.id}:${idx}`}
@@ -388,6 +415,8 @@ const PagesPreview = ({
                       ].templates[1].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          pageId={pages.papers.selectedPage}
+                          handleDeleteImageFromElement={handleDeleteImageFromElement}
                             image={tmplElement?.image}
                             key={`${tmplElement.id}:${idx}`}
                             sideToChange={"rightside"}
@@ -429,6 +458,8 @@ const PagesPreview = ({
                       ].templates[2].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          pageId={pages.papers.selectedPage}
+                          handleDeleteImageFromElement={handleDeleteImageFromElement}
                             image={tmplElement?.image}
                             key={`${tmplElement.id}:${idx}`}
                             sideToChange={"centerside"}
@@ -462,6 +493,8 @@ const PagesPreview = ({
                       ].templates[0].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          pageId={pages.papers.selectedPage}
+                          handleDeleteImageFromElement={handleDeleteImageFromElement}
                             image={tmplElement?.image}
                             key={`${tmplElement.id}:${idx}`}
                             sideToChange={"leftside"}
@@ -487,6 +520,8 @@ const PagesPreview = ({
                       ].templates[1].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          pageId={pages.papers.selectedPage}
+                          handleDeleteImageFromElement={handleDeleteImageFromElement}
                             image={tmplElement?.image}
                             key={`${tmplElement.id}:${idx}`}
                             sideToChange={"rightside"}
@@ -529,6 +564,8 @@ const PagesPreview = ({
                       ].templates[2].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          pageId={pages.papers.selectedPage}
+                          handleDeleteImageFromElement={handleDeleteImageFromElement}
                             image={tmplElement?.image}
                             key={`${tmplElement.id}:${idx}`}
                             sideToChange={"centerside"}
@@ -545,6 +582,7 @@ const PagesPreview = ({
 
           <div className={`pages__upload`}>
             <PagesUploader
+            handleSaveAlbum={handleSaveAlbum}
               handleSwipeToEnd={handleSwipeToEnd}
               handleSetIsUploadingImages={handleSetIsUploadingImages}
               handleSetUploadPercent={handleSetUploadPercent}
