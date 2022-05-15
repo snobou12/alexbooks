@@ -5,14 +5,15 @@ import {
   handleChangeSelectedPage,
   handleAddPageToPages,
   handleDeletePageFromPages,
+  handleSetImageToTemplateElement,
   handleDeleteImageFromUploads,
-  handleDeleteImageFromElementTemplate
+  handleDeleteImageFromElementTemplate,
+  handleContainImageInTemplateElement,
+  handleRotateImageInTemplateElement,
+  handleChangeAxisValuesInTemplateElement,
 } from "../../../../redux/reducers/constructor/constructorSlice";
 import DragImage from "./DragImage";
 import PagesUploader from "./PagesUploader";
-import axios from "axios";
-import { toast } from "react-toastify";
-import { BASE_URL } from "../../../../static/values";
 import TmplElementBox from "./TmplElementBox";
 import { Scrollbar, Autoplay, Grid, Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -55,24 +56,10 @@ const PagesPreview = ({
     e.stopPropagation();
     dispatch(handleDeletePageFromPages(pageId));
   };
-  const deleteImageFromUploads = (imageId) => {
-    // Добавить удаление на сервер
-    axios({
-      method: "post",
-      url: `${BASE_URL}/designer/?controller=Album&method=remove&album=${albumId}&image=${imageId}`,
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((res) => {
-        console.log(res);
-        if (res.status === 200) {
-          dispatch(handleDeleteImageFromUploads(imageId));
-        } else {
-          toast.error("Что-то пошло не так");
-        }
-      })
-      .catch((e) => {
-        toast.error("Что-то пошло не так");
-      });
+  const deleteImageFromUploads = async(imgOptions) => {
+    let imageKey = `uploads/${imgOptions.imageWidth}-${imgOptions.imageHeight}/${imgOptions.imageId}`;
+    let imageId = imgOptions.imageId;
+    dispatch(handleDeleteImageFromUploads({imageId,imageKey}))
   };
   function uploadsMap() {
     if (!isUploadingImages) {
@@ -90,6 +77,11 @@ const PagesPreview = ({
     let lastIndex = swiperRef.current.swiper.imagesLoaded;
     swiperRef.current.swiper.slideTo(lastIndex);
   };
+
+  const handleSetImgToTemplate =(changeInfo)=>{
+    dispatch(handleSetImageToTemplateElement(changeInfo))
+  }
+  //delete image from uploads(adding imageKey to imageKeysDelete)
   const handleDeleteImageFromElement =(tmplInfo)=>{
     let infoChange={
       pageId:tmplInfo.pageId,
@@ -97,6 +89,33 @@ const PagesPreview = ({
       tmplElementId:tmplInfo.tmplElement.id
     }
     dispatch(handleDeleteImageFromElementTemplate(infoChange))
+  }
+  //contain image
+  const handleSetContainToImage =(tmplInfo)=>{
+    let infoChange={
+      pageId:tmplInfo.pageId,
+      sideToChange:tmplInfo.sideToChange,
+      tmplElementId:tmplInfo.tmplElement.id,
+    }
+    dispatch(handleContainImageInTemplateElement(infoChange))
+  }
+  //rotate on 180deg
+  const handleRotateImage=(tmplInfo)=>{
+    let infoChange={
+      pageId:tmplInfo.pageId,
+      sideToChange:tmplInfo.sideToChange,
+      tmplElementId:tmplInfo.tmplElement.id,
+    }
+     dispatch(handleRotateImageInTemplateElement(infoChange))
+  }
+  const handleChangeAxisValues =(tmplInfo)=>{
+    let infoChange={
+      pageId:tmplInfo.pageId,
+      sideToChange:tmplInfo.sideToChange,
+      tmplElementId:tmplInfo.tmplElement.id,
+      direction:tmplInfo.direction
+    }
+    dispatch(handleChangeAxisValuesInTemplateElement(infoChange));
   }
    function nonValidateClass(idx){
     if(pagesValid.length > 0){
@@ -387,10 +406,13 @@ const PagesPreview = ({
                       ].templates[0].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          handleChangeAxisValues={handleChangeAxisValues}
+                          handleRotateImage={handleRotateImage}
+                          handleSetContainToImage={handleSetContainToImage}
+                          
                           pageId={pages.papers.selectedPage}
                           handleDeleteImageFromElement={handleDeleteImageFromElement}
                             image={tmplElement?.image}
-                            // image options после загрузки в uploads понимать какая ширина высота
                             key={`${tmplElement.id}:${idx}`}
                             sideToChange={"leftside"}
                             tmplElement={tmplElement}
@@ -415,6 +437,9 @@ const PagesPreview = ({
                       ].templates[1].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          handleChangeAxisValues={handleChangeAxisValues}
+                          handleRotateImage={handleRotateImage}
+                          handleSetContainToImage={handleSetContainToImage}
                           pageId={pages.papers.selectedPage}
                           handleDeleteImageFromElement={handleDeleteImageFromElement}
                             image={tmplElement?.image}
@@ -458,6 +483,9 @@ const PagesPreview = ({
                       ].templates[2].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          handleChangeAxisValues={handleChangeAxisValues}
+                          handleRotateImage={handleRotateImage}
+                          handleSetContainToImage={handleSetContainToImage}
                           pageId={pages.papers.selectedPage}
                           handleDeleteImageFromElement={handleDeleteImageFromElement}
                             image={tmplElement?.image}
@@ -493,6 +521,9 @@ const PagesPreview = ({
                       ].templates[0].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          handleChangeAxisValues={handleChangeAxisValues}
+                          handleRotateImage={handleRotateImage}
+                          handleSetContainToImage={handleSetContainToImage}
                           pageId={pages.papers.selectedPage}
                           handleDeleteImageFromElement={handleDeleteImageFromElement}
                             image={tmplElement?.image}
@@ -520,6 +551,9 @@ const PagesPreview = ({
                       ].templates[1].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          handleChangeAxisValues={handleChangeAxisValues}
+                          handleRotateImage={handleRotateImage}
+                          handleSetContainToImage={handleSetContainToImage}
                           pageId={pages.papers.selectedPage}
                           handleDeleteImageFromElement={handleDeleteImageFromElement}
                             image={tmplElement?.image}
@@ -564,6 +598,9 @@ const PagesPreview = ({
                       ].templates[2].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          handleChangeAxisValues={handleChangeAxisValues}
+                          handleRotateImage={handleRotateImage}
+                          handleSetContainToImage={handleSetContainToImage}
                           pageId={pages.papers.selectedPage}
                           handleDeleteImageFromElement={handleDeleteImageFromElement}
                             image={tmplElement?.image}
@@ -604,6 +641,8 @@ const PagesPreview = ({
               {uploadsMap().map((img, idx) => (
                 <SwiperSlide key={`${img.id}:${idx}`}>
                   <DragImage
+                  
+                    handleSetImgToTemplate={handleSetImgToTemplate}
                     uploadPercent={uploadPercent}
                     baseItem={img.id == null}
                     deleteImageFromUploads={deleteImageFromUploads}

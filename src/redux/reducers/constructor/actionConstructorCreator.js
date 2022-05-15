@@ -49,7 +49,7 @@ export const getAlbumIDS = createAsyncThunk(
 
   export const getAlbumById = createAsyncThunk(
     "constructor/get_album_by_id",
-    async (albumId, thunkApi) => {
+    async ([albumId,justImages], thunkApi) => {
       try {
         const response = await ConstructorService.getAlbumById(albumId);
         if(response.data){
@@ -57,7 +57,8 @@ export const getAlbumIDS = createAsyncThunk(
         
           let images = JSON.parse(response.data.images);
           let fullData = {data,images};
-          return fullData;
+         
+          return {fullData,justImages};
         }
         else{
           return {}

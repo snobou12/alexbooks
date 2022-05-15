@@ -2,7 +2,12 @@
 
 import React from "react";
 import { useDrop } from "react-dnd";
-
+import {
+	BsFillArrowUpCircleFill,
+	BsFillArrowDownCircleFill,
+	BsFillArrowLeftCircleFill,
+	BsFillArrowRightCircleFill,
+} from "react-icons/bs";
 const TmplElementBox = ({
 	pageId,
 	justPreview,
@@ -11,9 +16,12 @@ const TmplElementBox = ({
 	sideToChange,
 	image,
 	handleDeleteImageFromElement,
+	handleSetContainToImage,
+	handleRotateImage,
+	handleChangeAxisValues,
 }) => {
 	//justPreview
-	const [visibleControls, setVisibleControls] = React.useState(false);
+	const [visibleControls, setVisibleControls] = React.useState(true);
 	const [{ canDrop, isOver }, drop] = useDrop(() => ({
 		accept: "TMPL_EL_BOX",
 		drop: () => ({
@@ -39,6 +47,21 @@ const TmplElementBox = ({
 	const handleDelete = () => {
 		handleDeleteImageFromElement({ tmplElement, sideToChange, image, pageId });
 	};
+	const handleSetContain = () => {
+		handleSetContainToImage({ tmplElement, sideToChange, image, pageId });
+	};
+	const handleRotate = () => {
+		handleRotateImage({ tmplElement, sideToChange, image, pageId });
+	};
+	const handleChangeAxisVls = direction => {
+		handleChangeAxisValues({
+			tmplElement,
+			sideToChange,
+			image,
+			pageId,
+			direction,
+		});
+	};
 	return (
 		<>
 			<div
@@ -50,17 +73,20 @@ const TmplElementBox = ({
 					left: tmplElement.position.l,
 					top: tmplElement.position.t,
 					backgroundColor,
+					userSelect: "none",
+					transform: `rotate(${
+						image?.directionOptions.rotate ? "180deg" : "0deg"
+					})`,
+					backgroundImage: tmplElement.image && `url(${image.blob})`,
+					backgroundPosition: image?.directionOptions.contain
+						? "center"
+						: `${image?.directionOptions.axisX}% ${image?.directionOptions.axisY}%`,
+					backgroundSize: image?.directionOptions.contain ? "contain" : "cover",
+					backgroundRepeat: "no-repeat",
+					transition: "ease all .3s",
 				}}
 				className={cn}
-			>
-				{tmplElement.image && (
-					<img
-						src={image.blob}
-						alt="element_img"
-						className="tmpl__element_image"
-					/>
-				)}
-			</div>
+			></div>
 			<div
 				onMouseLeave={() => setVisibleControls(false)}
 				style={{
@@ -74,7 +100,10 @@ const TmplElementBox = ({
 					"tmpl__image_controls--hidden"
 				}`}
 			>
-				<div className="tmpl__image_control tmpl__image_control--rotate">
+				<div
+					onClick={handleRotate}
+					className="tmpl__image_control tmpl__image_control--rotate"
+				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						width="20"
@@ -88,20 +117,37 @@ const TmplElementBox = ({
 						></path>
 					</svg>
 				</div>
-				<div className="tmpl__image_control tmpl__image_control--dragging">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="20"
-						height="20"
-						fill="none"
-						viewBox="0 0 22 22"
-					>
-						<path
-							fill="#393939"
-							d="M12.375 13.75v4.125h2.75L11 22l-4.125-4.125h2.75V13.75h2.75zM9.625 8.25V4.125h-2.75L11 0l4.125 4.125h-2.75V8.25h-2.75zM8.25 12.375H4.125v2.75L0 11l4.125-4.125v2.75H8.25v2.75zM13.75 9.625h4.125v-2.75L22 11l-4.125 4.125v-2.75H13.75v-2.75z"
-						></path>
-					</svg>
-				</div>
+				{!image?.directionOptions.contain && (
+					<div className="tmpl__image_control tmpl__image_control--dragging">
+						<div
+							onClick={() => handleChangeAxisVls("up")}
+							className="tmpl__dragging_part tmpl__dragging_part--up"
+						>
+							<BsFillArrowUpCircleFill />
+						</div>
+						<div className="tmpl__dragging_row">
+							<div
+								onClick={() => handleChangeAxisVls("left")}
+								className="tmpl__dragging_part tmpl__dragging_part--left"
+							>
+								<BsFillArrowLeftCircleFill />
+							</div>
+							<div
+								onClick={() => handleChangeAxisVls("right")}
+								className="tmpl__dragging_part tmpl__dragging_part--right"
+							>
+								<BsFillArrowRightCircleFill />
+							</div>
+						</div>
+						<div
+							onClick={() => handleChangeAxisVls("down")}
+							className="tmpl__dragging_part tmpl__dragging_part--down"
+						>
+							<BsFillArrowDownCircleFill />
+						</div>
+					</div>
+				)}
+
 				<div
 					onClick={handleDelete}
 					className="tmpl__image_control tmpl__image_control--delete"
@@ -121,7 +167,10 @@ const TmplElementBox = ({
 						></path>
 					</svg>
 				</div>
-				<div className="tmpl__image_control tmpl__image_control--contain">
+				<div
+					className="tmpl__image_control tmpl__image_control--contain"
+					onClick={handleSetContain}
+				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						width="20"

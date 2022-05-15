@@ -11,6 +11,7 @@ import {
 } from "../../redux/reducers/constructor/actionConstructorCreator";
   
   import {handleReloadConstructorConfig} from "../../redux/reducers/constructor/constructorSlice";
+import { BASE_URL } from "../../static/values";
 import "./ConstructorPrev.scss";
 const ConstructorPrev = () => {
   const { albumsId} = useSelector(
@@ -79,7 +80,7 @@ const ConstructorPrev = () => {
               Создать новую книгу
             </button>
             <a
-              href="http://alexbooks.bannikon.fvds.ru"
+              href={BASE_URL}
               target="_self"
               className="next__step_btn"
             >

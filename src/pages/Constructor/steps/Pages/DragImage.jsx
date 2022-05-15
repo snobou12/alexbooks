@@ -1,13 +1,10 @@
 
 import React from "react";
 import { useDrag } from "react-dnd";
-import {handleSetImageToTemplateElement} from "../../../../redux/reducers/constructor/constructorSlice";
-import { useDispatch } from "react-redux";
-
-const DragImage = ({ img,isUploadingImages,deleteImageFromUploads,baseItem,uploadPercent }) => {
-  const dispatch = useDispatch();
+const DragImage = ({img,isUploadingImages,deleteImageFromUploads,baseItem,uploadPercent,handleSetImgToTemplate }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "TMPL_EL_BOX",
+    canDrag:!isUploadingImages,
     item: { imageId:img.id,imageOptions:{imageWidth:img.imageWidth,imageHeight:img.imageHeight} },
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult();
@@ -17,26 +14,31 @@ const DragImage = ({ img,isUploadingImages,deleteImageFromUploads,baseItem,uploa
         let dropBoxOptions = dropResult.options;
         let tmplElementId=Number(dropBoxOptions.tmplElementId)
         let sideToChange=dropBoxOptions.sideToChange;
-        dispatch(handleSetImageToTemplateElement({imageId,imageOptions,tmplElementId,sideToChange}))
+        handleSetImgToTemplate({imageId,imageOptions,tmplElementId,sideToChange});
+       
       }
     },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
       handlerId: monitor.getHandlerId(),
     }),
-  }));
+  }),[isUploadingImages]);
   
-  const deleteImage=(imageId)=>{
-      deleteImageFromUploads(imageId)
+  const deleteImage=(img)=>{
+      
+      deleteImageFromUploads({imageId:img.id,imageWidth:img.imageWidth,imageHeight:img.imageHeight})
   }
   const opacity = isDragging ? 0.4 : 1;
  
   return (
-    <div ref={drag} style={{ opacity }} className={`pages__uploads_item ${isUploadingImages && !baseItem && "pages__uploads_item--disabled"}`}>
-      <img src={img.blob} alt={`uploaded_img ${img.id}`} />
+    <div style={{opacity,backgroundImage:
+													`url(${img.blob})`,
+												backgroundPosition: "center",
+												backgroundSize: "cover",
+												backgroundRepeat: "no-repeat",}} ref={drag}  className={`pages__uploads_item ${isUploadingImages && "pages__uploads_item--disabled"}`}>
       {!isUploadingImages && <div
         className="pages__uploads_item_delete"
-        onClick={()=>deleteImage(img.id)}
+        onClick={()=>deleteImage(img)}
       >
         <svg
           width="6"

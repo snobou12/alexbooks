@@ -397,23 +397,29 @@ const Checkout = () => {
 			albumsData,
 		};
 		let jsonData = JSON.stringify(fullData);
+		console.log(jsonData);
 		formData.append("request", jsonData);
 		axios({
 			method: "post",
-			url: `${BASE_URL}/designer/?controller=Shop&method=save`,
+			url: `${BASE_URL}/designer/?controller=Shop&method=save&mail=${deliveryInfo.email}`,
 			data: formData,
 			headers: { "Content-Type": "application/json" },
 		}).then(res => {
 			if (res.status === 200) {
-				// axios({
-				//   method: "post",
-				//   url: `${BASE_URL}/designer/?controller=Shop&method=new`,
-				//   headers: { "Content-Type": "application/json" },
-				// }); // для бланк тестов пока что
 				toast.success(
 					`Спасибо. Ваш заказ успешно оформлен! Данные об оплате и составе заказа отправлены Вам на электронную почту. Если вы не получили письмо, проверьте папку "Спам" Мы свяжемся с Вами в ближайшее время для уточнения деталей заказа.`
 				);
-				navigate("/constructor");
+				axios({
+					method: "post",
+					url: `${BASE_URL}/designer/?controller=Shop&method=new`,
+					headers: { "Content-Type": "application/json" },
+				})
+					.then(() => {
+						navigate("/constructor");
+					})
+					.catch(() => {
+						navigate("Не удалось создать корзину");
+					});
 			}
 		});
 	};

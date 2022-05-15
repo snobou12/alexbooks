@@ -915,7 +915,8 @@ const CoverPreview = ({ stageRef }) => {
 					size.types[size.selectedType].sizes[
 						size.types[size.selectedType].selectedSize
 					].size
-				}
+				}{" "}
+				см
 			</div>
 		</div>
 	);

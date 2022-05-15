@@ -2,7 +2,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { handleAddImageToUploads } from "../../../../redux/reducers/constructor/constructorSlice";
-
+import {getAlbumById} from "../../../../redux/reducers/constructor/actionConstructorCreator";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -25,7 +25,7 @@ const PagesUploader = ({
     handleSwipeToEnd();
   }
   const handleAlbumSave = () => {
-    handleSaveAlbum(false);
+    handleSaveAlbum(true);
   };
 
   function readFileAsync(imageFile) {
@@ -47,7 +47,7 @@ const PagesUploader = ({
     });
   }
 
-  async function uploudImageToServer(id, imageFile) {
+  async function uploadImageToServer(id, imageFile) {
     let data = new FormData();
     const options = await readFileAsync(imageFile);
     data.append(
@@ -74,6 +74,7 @@ const PagesUploader = ({
           imageWidth: options.imageWidth,
           imageHeight: options.imageHeight,
         };
+        updatePercent(0);
         dispatch(handleAddImageToUploads({ newImg }));
         swipeToEnd();
       })
@@ -97,14 +98,14 @@ const PagesUploader = ({
         updateUploadingImages(true);
         for (const file of neededFiles) {
           try {
-            await uploudImageToServer(uuidv4(), file);
+            await uploadImageToServer(uuidv4(), file);
           } catch (e) {
             toast.error("Что-то пошло не так");
           }
         }
         updateUploadingImages(false);
         updatePercent(0);
-        handleAlbumSave();
+        dispatch(getAlbumById([albumId,true]));
       }
     }
   };

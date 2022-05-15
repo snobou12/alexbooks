@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider } from 'react-dnd'
@@ -8,8 +8,8 @@ import App from './app/App';
 import './index.scss';
 import { Provider } from 'react-redux';
 
-ReactDOM.render(
-  <React.StrictMode>
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
     <BrowserRouter>
       <DndProvider  backend={HTML5Backend}> 
         <Provider store={store}>
@@ -17,7 +17,5 @@ ReactDOM.render(
         </Provider>
       </DndProvider>
     </BrowserRouter>
-  </React.StrictMode>,
-  document.getElementById('root')
 );
 

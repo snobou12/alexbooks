@@ -132,7 +132,7 @@ const Basket = () => {
 							Создать фотокнигу
 						</button>
 						<a
-							href="http://alexbooks.bannikon.fvds.ru"
+							href={BASE_URL}
 							target="_self"
 							className="next__step_btn"
 						>

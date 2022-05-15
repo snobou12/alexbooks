@@ -470,6 +470,7 @@ const constructorSlice = createSlice({
         },
       ],
     },
+    imageKeysToDelete:[],
     pagesValid: [],
     pages: {
       //шаблоны(0) или цвета(1)
@@ -2219,12 +2220,14 @@ const constructorSlice = createSlice({
     },
     //удалить картинку по id из Uploads
     handleDeleteImageFromUploads(state, action) {
+      let {imageId,imageKey}=action.payload;
+     
+     
       let prevUploads = [...current(state.pages.uploads)];
-      let id = action.payload;
+      let id = imageId;
       let newUploads = prevUploads.filter((upload) => upload.id !== id);
 
 
-      // Добавить удаление Картинок из темплейтов;
 
       let allPages=[...current(state.pages.papers.pages)];
       let needToRemoveArray=[];
@@ -2249,7 +2252,6 @@ const constructorSlice = createSlice({
           }
         })
       })
-      console.log(needToRemoveArray);
       if(needToRemoveArray.length > 0){
         
        
@@ -2289,8 +2291,17 @@ const constructorSlice = createSlice({
           
         }
       }
-      state.pages.uploads = newUploads;
-
+     
+ let prevImageKeysToDelete = [...current(state.imageKeysToDelete)];
+      let newImageKeysToDelete = [...prevImageKeysToDelete,imageKey];
+       state.pages.uploads = newUploads;
+      state.imageKeysToDelete=newImageKeysToDelete;
+    },
+    deleteImageKeyFromImagesKey(state,action){
+      const imageKeyToDelete = action.payload;
+      let prevImageKeys = [...current(state.imageKeysToDelete)];
+      let newImageKeys = prevImageKeys.filter((imageKey)=>imageKey !== imageKeyToDelete);
+      state.imageKeysToDelete=newImageKeys
     },
     //PAGES PAPERS////
     //выбрать страница
@@ -2448,13 +2459,13 @@ const constructorSlice = createSlice({
       } else {
         sideIdx = 2;
       }
-
+      
       let template = { ...templatesOfSelectedPage[sideIdx] };
       let tmplTemplate = { ...template.template };
       let tmplElements = [...tmplTemplate.elements];
       let tmplNewElements = tmplElements.map((elem) => {
         if (elem.id === tmplElementId) {
-          return { ...elem, image: neededImageObj };
+          return { ...elem,image: {...neededImageObj,directionOptions:{contain:false,axisY:50,axisX:50,rotate:false,},imageOptions} };
         } else {
           return { ...elem };
         }
@@ -2512,6 +2523,193 @@ const constructorSlice = createSlice({
       selectedPage.templates = newTemplates;
       state.pages.papers.pages[pageId] = selectedPage;
     },
+    //Добавить к фото элементу темплейта contain
+    handleContainImageInTemplateElement(state,action){
+const { pageId, sideToChange, tmplElementId } = action.payload;
+
+      let selectedPage = {
+        ...current(state.pages.papers.pages[pageId]),
+      };
+      let templatesOfSelectedPage = [...selectedPage.templates];
+      let sideIdx;
+      if (sideToChange === "leftside") {
+        sideIdx = 0;
+      } else if (sideToChange === "rightside") {
+        sideIdx = 1;
+      } else {
+        sideIdx = 2;
+      }
+      let template = { ...templatesOfSelectedPage[sideIdx] };
+      let tmplTemplate = { ...template.template };
+      let tmplElements = [...tmplTemplate.elements];
+
+      let tmplNewElements = tmplElements.map((elem) => {
+        if (elem.id === tmplElementId) {
+          let prevElem = { ...elem };
+          let prevImage={...prevElem.image};
+          let prevDirectionOptions={...prevImage.directionOptions};
+          let newDirectionOptions={...prevDirectionOptions,contain:!prevDirectionOptions.contain};
+          let newImage={...prevElem.image,directionOptions:newDirectionOptions};
+          let newElem={...elem,image:newImage};
+          return { ...newElem };
+        } else {
+          return { ...elem };
+        }
+      });
+      tmplTemplate.elements = tmplNewElements;
+      template.template = tmplTemplate;
+      let newTemplates = templatesOfSelectedPage.map((templ) => {
+        if (templ.title === sideToChange) {
+          return { ...template };
+        } else {
+          return { ...templ };
+        }
+      });
+      selectedPage.templates = newTemplates;
+      state.pages.papers.pages[pageId] = selectedPage;
+    },
+    //Перевернуть фото элемента темплейта rotate
+    handleRotateImageInTemplateElement(state,action){
+      const { pageId, sideToChange, tmplElementId } = action.payload;
+
+      let selectedPage = {
+        ...current(state.pages.papers.pages[pageId]),
+      };
+      let templatesOfSelectedPage = [...selectedPage.templates];
+      let sideIdx;
+      if (sideToChange === "leftside") {
+        sideIdx = 0;
+      } else if (sideToChange === "rightside") {
+        sideIdx = 1;
+      } else {
+        sideIdx = 2;
+      }
+      let template = { ...templatesOfSelectedPage[sideIdx] };
+      let tmplTemplate = { ...template.template };
+      let tmplElements = [...tmplTemplate.elements];
+
+      let tmplNewElements = tmplElements.map((elem) => {
+        if (elem.id === tmplElementId) {
+          let prevElem = { ...elem };
+          let prevImage={...prevElem.image};
+          let prevDirectionOptions={...prevImage.directionOptions};
+          let newDirectionOptions={...prevDirectionOptions,rotate:!prevDirectionOptions.rotate};
+          let newImage={...prevElem.image,directionOptions:newDirectionOptions};
+          let newElem={...elem,image:newImage};
+          return { ...newElem };
+        } else {
+          return { ...elem };
+        }
+      });
+      tmplTemplate.elements = tmplNewElements;
+      template.template = tmplTemplate;
+      let newTemplates = templatesOfSelectedPage.map((templ) => {
+        if (templ.title === sideToChange) {
+          return { ...template };
+        } else {
+          return { ...templ };
+        }
+      });
+      selectedPage.templates = newTemplates;
+      state.pages.papers.pages[pageId] = selectedPage;
+    },
+    //Изменить направление фотки по X и Y
+    handleChangeAxisValuesInTemplateElement(state,action){
+       const { pageId, sideToChange, tmplElementId,direction } = action.payload;
+
+      let selectedPage = {
+        ...current(state.pages.papers.pages[pageId]),
+      };
+      let templatesOfSelectedPage = [...selectedPage.templates];
+      let sideIdx;
+      if (sideToChange === "leftside") {
+        sideIdx = 0;
+      } else if (sideToChange === "rightside") {
+        sideIdx = 1;
+      } else {
+        sideIdx = 2;
+      }
+      let template = { ...templatesOfSelectedPage[sideIdx] };
+      let tmplTemplate = { ...template.template };
+      let tmplElements = [...tmplTemplate.elements];
+
+      let tmplNewElements = tmplElements.map((elem) => {
+        if (elem.id === tmplElementId) {
+          let prevElem = { ...elem };
+          let prevImage={...prevElem.image};
+          let prevDirectionOptions={...prevImage.directionOptions};
+          let prevAxisY=prevDirectionOptions.axisY;
+          let prevAxisX=prevDirectionOptions.axisX;
+          let rotated = prevDirectionOptions.rotate;
+          if(!rotated){
+            if(direction === "up"){
+             if(prevAxisY > 0){
+              prevAxisY-=10;
+             }
+          }
+          else if(direction === "right"){
+         if(prevAxisX < 100){
+              prevAxisX+=10;
+             }
+
+          }
+          else if(direction === "down"){
+            if(prevAxisY < 100){
+              prevAxisY+=10;
+             }
+          }
+          else if(direction === "left"){
+              if(prevAxisX > 0){
+              prevAxisX-=10;
+             }
+          }
+          }
+          else{
+             if(direction === "up"){
+             if(prevAxisY < 100){
+              prevAxisY+=10;
+             }
+          }
+          else if(direction === "right"){
+         if(prevAxisX > 0){
+              prevAxisX-=10;
+             }
+
+          }
+          else if(direction === "down"){
+            if(prevAxisY > 0){
+              prevAxisY-=10;
+             }
+          }
+          else if(direction === "left"){
+              if(prevAxisX < 100){
+              prevAxisX+=10;
+             }
+          }
+          }
+          console.log(prevAxisX,prevAxisY);
+        
+          
+          let newDirectionOptions={...prevDirectionOptions,axisY:prevAxisY,axisX:prevAxisX};
+          let newImage={...prevElem.image,directionOptions:newDirectionOptions};
+          let newElem={...elem,image:newImage};
+          return { ...newElem };
+        } else {
+          return { ...elem };
+        }
+      });
+      tmplTemplate.elements = tmplNewElements;
+      template.template = tmplTemplate;
+      let newTemplates = templatesOfSelectedPage.map((templ) => {
+        if (templ.title === sideToChange) {
+          return { ...template };
+        } else {
+          return { ...templ };
+        }
+      });
+      selectedPage.templates = newTemplates;
+      state.pages.papers.pages[pageId] = selectedPage;
+    },
     //Добавить валидность страниц (заказать)-(Just frontend)
     handleSetTemplatesValidsPage(state, action) {
       const pagesTemplateValids = action.payload;
@@ -2527,6 +2725,7 @@ const constructorSlice = createSlice({
       state.pages = contsructorDefaultState.pages;
       state.pagesValid = contsructorDefaultState.pagesValid;
       state.size = contsructorDefaultState.size;
+      state.imageKeysToDelete=contsructorDefaultState.imageKeysToDelete;
     },
   },
   extraReducers: {
@@ -2567,8 +2766,11 @@ const constructorSlice = createSlice({
     //Получение альбома по id
     [getAlbumById.fulfilled.type]: (state, action) => {
       state.constructorLoading = false;
-      if (action.payload.data) {
-        let { data, images } = action.payload;
+
+      if (action.payload.fullData.data) {
+        if (!action.payload.justImages){
+
+        let { data, images } = action.payload.fullData;
         let { mainData, coverData, pagesData } = data;
         //MAIN
         state.header_content.albumId = mainData.albumId;
@@ -2726,6 +2928,95 @@ const constructorSlice = createSlice({
 
         state.pages.uploads = uploadImages;
       }
+      else{
+        let { images } = action.payload.fullData;
+        state.header_content.coverPreviewImage = String(
+          BASE_URL + images.cover_preview
+        );
+        if (images.eco_photobid) {
+          state.cover.types[0].features.decor[1].blobImage = String(
+            BASE_URL + images.eco_photobid
+          );
+        }
+
+        if (images.textile_photobid) {
+          state.cover.types[1].features.decor[1].blobImage = String(
+            BASE_URL + images.textile_photobid
+          );
+        }
+        if (images.photocover) {
+          state.cover.types[2].blobImage = String(BASE_URL + images.photocover);
+        }
+         let uploadImages = [];
+        for (let imageKey in images) {
+          if (
+            imageKey !== "textile_photobid" &&
+            imageKey !== "photocover" &&
+            imageKey !== "eco_photobid" &&
+            imageKey !== "cover_preview"
+          ) {
+            let id = imageKey.split("/")[2];
+            let fullOptions = imageKey.split("/")[1];
+            let splitOptions = fullOptions.split("-");
+            let imageWidth = splitOptions[0];
+            let imageHeight = splitOptions[1];
+            let newImg = {
+              blob: `${BASE_URL}${images[imageKey]}`,
+              id,
+              imageWidth,
+              imageHeight,
+            };
+            uploadImages.push(newImg);
+          }
+        }
+        let allPages = [...state.pages.papers.pages];
+        let needToChangeArray = [];
+        for (let i = 0; i < allPages.length; i++) {
+          for (let j = 0; j < allPages[i].templates.length; j++) {
+            if (Object.keys(allPages[i].templates[j].template).length !== 0) {
+              for (
+                let k = 0;
+                k < allPages[i].templates[j].template.elements.length;
+                k++
+              ) {
+                if (allPages[i].templates[j].template.elements[k].image) {
+                  if (
+                    Object.keys(
+                      allPages[i].templates[j].template.elements[k].image
+                    ).length !== 0
+                  ) {
+                    uploadImages.some((upload, idx) => {
+                      if (
+                        upload.id ===
+                        allPages[i].templates[j].template.elements[k].image.id
+                      ) {
+                        let objectToChange = {
+                          pagesIdx: i,
+                          templatesIdx: j,
+                          elementsIdx: k,
+                          blob: upload.blob,
+                        };
+                        needToChangeArray.push(objectToChange);
+                      }
+                    });
+                  }
+                }
+              }
+            }
+          }
+        }
+        for (let i = 0; i < needToChangeArray.length; i++) {
+          state.pages.papers.pages[needToChangeArray[i].pagesIdx].templates[
+            needToChangeArray[i].templatesIdx
+          ].template.elements[needToChangeArray[i].elementsIdx].image.blob =
+            needToChangeArray[i].blob;
+        }
+
+        state.pages.uploads = uploadImages;
+        
+      }
+      }
+      
     },
     [getAlbumById.pending.type]: (state) => {
       state.constructorLoading = true;
@@ -2762,6 +3053,7 @@ export const {
   handleChangeMetalplateText,
   handleChangePhotoCoverImage,
   handleChangePagesType,
+  deleteImageKeyFromImagesKey,
   handleAddImageToUploads,
   handleDeleteImageFromUploads,
   handleChangeSelectedPage,
@@ -2775,6 +3067,9 @@ export const {
   handleChangeDataPhone,
   handleSetTemplatesValidsPage,
   handleDeleteImageFromElementTemplate,
+  handleRotateImageInTemplateElement,
+  handleContainImageInTemplateElement,
+  handleChangeAxisValuesInTemplateElement,
   handleReloadConstructorConfig,
 } = constructorSlice.actions;
 export default constructorSlice.reducer;

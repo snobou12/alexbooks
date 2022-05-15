@@ -17,6 +17,7 @@ import {
   handleDecrementStep,
   handleChangeAlbumName,
   handleSetTemplatesValidsPage,
+  deleteImageKeyFromImagesKey,
   setAlbumId,
 } from "../../redux/reducers/constructor/constructorSlice";
 import "./Constructor.scss";
@@ -27,13 +28,12 @@ import { getAlbumById } from "../../redux/reducers/constructor/actionConstructor
 import { removeBasketData } from "../../redux/reducers/basket/basketSlice";
 import { BASE_URL } from "../../static/values";
 const Constructor = () => {
-  usePriceStatus();
   const dispatch = useDispatch();
   const params = useParams();
   //Пикчи в стейт
   const [orderLoading, setOrderLoading] = React.useState(false);
   const navigate = useNavigate();
-  const { size, header_content, cover, pages, pagesValid,constructorLoading } = useSelector(
+  const { size, header_content, cover, pages, pagesValid,constructorLoading,imageKeysToDelete } = useSelector(
     (state) => state.constructorSlice
   );
   //ref stage preview
@@ -420,6 +420,9 @@ const Constructor = () => {
       })
       .catch((e) => console.log(e));
   }
+
+
+
   const handleSaveAlbum = async (ordered) => {
     let formData = new FormData();
     //MAIN DATA
@@ -557,6 +560,7 @@ const Constructor = () => {
     };
     let jsonData = JSON.stringify(fullData);
     formData.append("request", jsonData);
+    await deleteImagesInKeysFromServer();
     axios({
       method: "post",
       url: `${BASE_URL}/designer/?controller=Album&method=save&album=${header_content.albumId}`,
@@ -565,6 +569,7 @@ const Constructor = () => {
     }).then((res) => {
       if (!ordered) {
         if (res.status === 200) {
+          
           toast.success("Альбом успешно сохранился!");
         } else {
           toast.error("Что-то пошло не так");
@@ -572,14 +577,48 @@ const Constructor = () => {
       }
     });
   };
+
+
+ async function deleteImageInKeysFromServer(imageKey){
+    return axios({
+      method: "post",
+      url: `${BASE_URL}/designer/?controller=Album&method=remove&album=${header_content.albumId}&image=${imageKey}`,
+      headers: { "Content-Type": "application/json" },
+    })
+      .then(async(res) => {
+        console.log(res);
+        if (res.status === 200) {
+          dispatch(deleteImageKeyFromImagesKey(imageKey));
+        }
+      })
+      
+ }
+
+  const deleteImagesInKeysFromServer=async()=>{
+    if(imageKeysToDelete.length > 0){
+      for(const imageKey of imageKeysToDelete){
+        try{
+          await deleteImageInKeysFromServer(imageKey);
+        }
+        catch(e){
+          toast.error("Что-то пошло не так");
+        }
+    
+      }
+    }
+    
+  }
   React.useEffect(() => {
-    dispatch(getAlbumById(params.albumId));
+    dispatch(getAlbumById([params.albumId,false]));
     dispatch(setAlbumId(params.albumId));
-  }, []);
+  }, [params.albumId]);
+
+  //Проверка цен
+  usePriceStatus();
 
   return (
     <>
-    {!constructorLoading ? <Spinner /> : <div className="cnsr">
+    {constructorLoading ? <Spinner /> : <div className="cnsr">
       <div className="cnsr__steps">{getStep(header_content.step)}</div>
       <div className="cnsr__content">
         <div className="cnsr__content_upper">
