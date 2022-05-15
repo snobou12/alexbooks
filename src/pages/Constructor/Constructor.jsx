@@ -11,7 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { getBasketAlbumsId } from "../../redux/reducers/basket/actionBasketCreator";
 import { toast } from "react-toastify";
-
+import {Spinner} from "../../components";
 import {
   handleIncrementStep,
   handleDecrementStep,
@@ -27,18 +27,18 @@ import { getAlbumById } from "../../redux/reducers/constructor/actionConstructor
 import { removeBasketData } from "../../redux/reducers/basket/basketSlice";
 import { BASE_URL } from "../../static/values";
 const Constructor = () => {
-  const priceStatus = usePriceStatus();
+  usePriceStatus();
   const dispatch = useDispatch();
   const params = useParams();
   //Пикчи в стейт
   const [orderLoading, setOrderLoading] = React.useState(false);
   const navigate = useNavigate();
-  const { size, header_content, cover, pages, pagesValid } = useSelector(
+  const { size, header_content, cover, pages, pagesValid,constructorLoading } = useSelector(
     (state) => state.constructorSlice
   );
   //ref stage preview
   let stageRef = React.useRef(null);
-  //Uploads инфа
+  
   
   //изменить имя альбома
   const handleChangeName = (value) => {
@@ -175,28 +175,9 @@ const Constructor = () => {
       });
   }
 
-  async function crementStep(str) {
-    switch (str) {
-      case "-":
-        dispatch(handleDecrementStep());
-        break;
-      case "+":
-        {
-          if (header_content.step === 1) {
-            if (header_content.albumName.length === 0) {
-              toast.error("Введите название альбома!");
-            } else {
-              dispatch(handleIncrementStep());
-            }
-          } else if (header_content.step === 2) {
-            let stageURI = stageRef.current.getStage().toDataURL();
-            const previewImage = await fetchImageFromServer(
-              stageURI,
-              "cover_preview"
-            );
-            uploadImageToServer("cover_preview", previewImage);
-          } else if (header_content.step === 3) {
-            let allPages = [...pages.papers.pages];
+
+  function checkValids(){
+    let allPages = [...pages.papers.pages];
 
             let emptyTemplatesChecker = false;
             let pagesTemplateValids = [];
@@ -339,10 +320,35 @@ const Constructor = () => {
                 handleSetTemplatesValidsPage(pagesTemplateImagesValidsResult)
               );
             }
+            return {emptyTemplatesChecker,emptyTemplateImagesChecker}
+  }
 
-            if (emptyTemplatesChecker) {
+  async function crementStep(str) {
+    switch (str) {
+      case "-":
+        dispatch(handleDecrementStep());
+        break;
+      case "+":
+        {
+          if (header_content.step === 1) {
+            if (header_content.albumName.length === 0) {
+              toast.error("Введите название альбома!");
+            } else {
+              dispatch(handleIncrementStep());
+            }
+          } else if (header_content.step === 2) {
+            let stageURI = stageRef.current.getStage().toDataURL();
+            const previewImage = await fetchImageFromServer(
+              stageURI,
+              "cover_preview"
+            );
+            uploadImageToServer("cover_preview", previewImage);
+          } else if (header_content.step === 3) {
+            const validsChecks = checkValids();
+
+            if (validsChecks.emptyTemplatesChecker) {
               toast.error("Заполните все страницы!");
-            } else if (emptyTemplateImagesChecker) {
+            } else if (validsChecks.emptyTemplateImagesChecker) {
               toast.error("Заполните все шаблоны изображениями!");
             } else {
               setOrderLoading(true);
@@ -572,7 +578,8 @@ const Constructor = () => {
   }, []);
 
   return (
-    <div className="cnsr">
+    <>
+    {!constructorLoading ? <Spinner /> : <div className="cnsr">
       <div className="cnsr__steps">{getStep(header_content.step)}</div>
       <div className="cnsr__content">
         <div className="cnsr__content_upper">
@@ -631,7 +638,9 @@ const Constructor = () => {
           {getPreview(header_content.step)}
         </div>
       </div>
-    </div>
+    </div>}
+    </>
+    
   );
 };
 

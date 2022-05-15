@@ -2426,8 +2426,8 @@ const constructorSlice = createSlice({
     },
     // добавить фото в элемент шаблона
     handleSetImageToTemplateElement(state, action) {
-      const { imageId, tmplElementId, sideToChange } = action.payload;
-
+      const { imageId, tmplElementId, sideToChange,imageOptions } = action.payload;
+      console.log(imageOptions); // width и heigth картинки
       let selectedPage = {
         ...current(state.pages.papers.pages[state.pages.papers.selectedPage]),
       };

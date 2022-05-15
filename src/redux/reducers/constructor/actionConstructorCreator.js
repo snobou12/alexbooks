@@ -54,6 +54,7 @@ export const getAlbumIDS = createAsyncThunk(
         const response = await ConstructorService.getAlbumById(albumId);
         if(response.data){
           let data = JSON.parse(response.data.data);
+        
           let images = JSON.parse(response.data.images);
           let fullData = {data,images};
           return fullData;

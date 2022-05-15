@@ -8,15 +8,16 @@ const DragImage = ({ img,isUploadingImages,deleteImageFromUploads,baseItem,uploa
   const dispatch = useDispatch();
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "TMPL_EL_BOX",
-    item: { name:img.id },
+    item: { imageId:img.id,imageOptions:{imageWidth:img.imageWidth,imageHeight:img.imageHeight} },
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult();
       if (item && dropResult) {
-        let imageId=item.name;
-        let dropBoxOptionsArr = dropResult.name.split("/");
-        let tmplElementId=Number(dropBoxOptionsArr[0]);
-        let sideToChange=dropBoxOptionsArr[1];
-        dispatch(handleSetImageToTemplateElement({imageId,tmplElementId,sideToChange}))
+        let imageId=item.imageId;
+        let imageOptions=item.imageOptions;
+        let dropBoxOptions = dropResult.options;
+        let tmplElementId=Number(dropBoxOptions.tmplElementId)
+        let sideToChange=dropBoxOptions.sideToChange;
+        dispatch(handleSetImageToTemplateElement({imageId,imageOptions,tmplElementId,sideToChange}))
       }
     },
     collect: (monitor) => ({

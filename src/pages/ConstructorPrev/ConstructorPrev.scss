@@ -1,88 +1,88 @@
 /** @format */
 
 .constructor__prev {
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  padding: 32px 55px 39px 58px;
-  background-color: rgb(228, 228, 228);
-  border-radius: 40px 9px;
-  transform: translate(-50%, -50%);
-  z-index: 60;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	padding: 32px 55px 39px 58px;
+	background-color: rgb(228, 228, 228);
+	border-radius: 40px 9px;
+	transform: translate(-50%, -50%);
+	z-index: 60;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 .cnsr__prev_title {
-  font-weight: 700;
-  font-size: 21px;
-  line-height: 26px;
-  text-align: center;
-  color: rgb(76 76 76);
-  margin-bottom: 10px;
+	font-weight: 700;
+	font-size: 21px;
+	line-height: 26px;
+	text-align: center;
+	color: rgb(76 76 76);
+	margin-bottom: 10px;
 }
 .cnsr__prev_features {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
-  button {
-    border: 0;
-    width: 178px;
-    height: 35px;
-    font-size: 14px;
-    font-family: "Raleway", sans-serif;
-    font-weight: 700;
-    color: rgb(255 255 255);
-    background-color: rgb(246 145 106);
-    cursor: pointer;
-  }
-  a {
-    border: 3px solid rgb(243 243 243);
-    background-color: #ffffff;
-    color: rgb(232 124 116);
-    width: 178px;
-    height: 35px;
-    font-size: 14px;
-    font-family: "Raleway", sans-serif;
-    font-weight: 700;
-    text-decoration: none;
-  }
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 40px;
+	button {
+		border: 0;
+		width: 178px;
+		height: 35px;
+		font-size: 14px;
+		font-family: "Raleway", sans-serif;
+		font-weight: 700;
+		color: rgb(255 255 255);
+		background-color: rgb(246 145 106);
+		cursor: pointer;
+	}
+	a {
+		border: 3px solid rgb(243 243 243);
+		background-color: #ffffff;
+		color: rgb(232 124 116);
+		width: 178px;
+		height: 35px;
+		font-size: 14px;
+		font-family: "Raleway", sans-serif;
+		font-weight: 700;
+		text-decoration: none;
+	}
 }
 
 .cnsr__prev_albums {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 10px;
 }
 
 .cnsr__prev_albums_item {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  button {
-    cursor: pointer;
-    border: 0;
-    width: 286px;
-    height: 32px;
-    font-size: 14px;
-    font-family: "Raleway", sans-serif;
-    font-weight: 700;
-    color: rgb(255 255 255);
-    background-color: rgb(246 145 106);
-    &:last-child {
-      border: 3px solid rgb(243 243 243);
-      background-color: #ffffff;
-      color: rgb(232 124 116);
-      width: 129px;
-      height: 34px;
-    }
-  }
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 20px;
+	button {
+		cursor: pointer;
+		border: 0;
+		width: 286px;
+		height: 32px;
+		font-size: 14px;
+		font-family: "Raleway", sans-serif;
+		font-weight: 700;
+		color: rgb(255 255 255);
+		background-color: rgb(246 145 106);
+		&:last-child {
+			border: 3px solid rgb(243 243 243);
+			background-color: #ffffff;
+			color: rgb(232 124 116);
+			width: 129px;
+			height: 34px;
+		}
+	}
 }
 .cnsr__prev_albums_item_title {
 }
