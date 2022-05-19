@@ -16,8 +16,8 @@ import {
 	handleChangeDeliveryAddress,
 	handleDecrementNavigation,
 } from "../../redux/reducers/checkout/checkoutSlice";
-import { BASE_URL } from "../../static/values";
-
+import { removeBasketData } from "../../redux/reducers/basket/basketSlice";
+import { BASE_URL } from "../../static/variables";
 import "./Checkout.scss";
 
 const Checkout = () => {
@@ -26,7 +26,6 @@ const Checkout = () => {
 	const { checkout } = useSelector(state => state.checkoutSlice);
 	const { size } = useSelector(state => state.constructorSlice);
 	const { basketAlbums } = useSelector(state => state.basketSlice);
-	const [successMsg, setSuccessMsg] = React.useState("");
 	const handleSetDataPhone = phoneValues => {
 		dispatch(handleChangeDataPhone(phoneValues));
 	};
@@ -119,7 +118,7 @@ const Checkout = () => {
 											<div className={`custom__checkbox`}></div>
 											{idx !== 2 ? (
 												<img
-													src={require(`../../assets/checkout_services/${service.title}_image.png`)}
+													src={`/checkout/images/checkout_services/${service.title}_image.png`}
 													alt="service_img"
 												/>
 											) : (
@@ -396,12 +395,16 @@ const Checkout = () => {
 			deliveryInfo,
 			albumsData,
 		};
+		let albumIdsArr = [];
+		albumsData.forEach(album => {
+			albumIdsArr.push(album.data.mainData.albumId);
+		});
+		let albumIds = albumIdsArr.join(",");
 		let jsonData = JSON.stringify(fullData);
-		console.log(jsonData);
 		formData.append("request", jsonData);
 		axios({
 			method: "post",
-			url: `${BASE_URL}/designer/?controller=Shop&method=save&mail=${deliveryInfo.email}`,
+			url: `${BASE_URL}/designer/?controller=Shop&method=save&albums=[${albumIds}]&email=${deliveryInfo.email}`,
 			data: formData,
 			headers: { "Content-Type": "application/json" },
 		}).then(res => {
@@ -415,10 +418,11 @@ const Checkout = () => {
 					headers: { "Content-Type": "application/json" },
 				})
 					.then(() => {
-						navigate("/constructor");
+						dispatch(removeBasketData());
+						navigate("/basket");
 					})
 					.catch(() => {
-						navigate("Не удалось создать корзину");
+						toast("Не удалось создать корзину");
 					});
 			}
 		});

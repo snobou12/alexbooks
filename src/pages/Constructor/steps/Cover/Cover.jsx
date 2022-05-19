@@ -23,7 +23,8 @@ import {
 	handleChangeMetalplateText,
 	handleChangePhotoCoverImage,
 } from "../../../../redux/reducers/constructor/constructorSlice";
-import { BASE_URL } from "../../../../static/values";
+import { BASE_URL } from "../../../../static/variables";
+import { pathTo } from "../../../../helps/pathes";
 
 import "./Cover.scss";
 //Это step слева (визуал)
@@ -203,7 +204,9 @@ const Cover = ({ albumId, selectedType, types }) => {
 										}`}
 									>
 										<img
-											src={require(`../../../../assets/eco_leather_colors/${color.title}_${color.id}.png`)}
+											src={pathTo(
+												`/images/eco_leather_colors/${color.title}_${color.id}.png`
+											)}
 											alt="eco_color"
 										/>
 									</div>
@@ -252,7 +255,9 @@ const Cover = ({ albumId, selectedType, types }) => {
 										}`}
 									>
 										<img
-											src={require(`../../../../assets/textile_colors/${color.title}_${color.id}.png`)}
+											src={pathTo(
+												`/images/textile_colors/${color.title}_${color.id}.png`
+											)}
 											alt="eco_color"
 										/>
 									</div>
@@ -306,7 +311,9 @@ const Cover = ({ albumId, selectedType, types }) => {
 											}`}
 										>
 											<img
-												src={require(`../../../../assets/eco_leather_colors/${color.title}_${color.id}.png`)}
+												src={pathTo(
+													`/images/eco_leather_colors/${color.title}_${color.id}.png`
+												)}
 												alt="eco_color"
 											/>
 										</div>
@@ -327,7 +334,9 @@ const Cover = ({ albumId, selectedType, types }) => {
 											}`}
 										>
 											<img
-												src={require(`../../../../assets/textile_colors/${color.title}_${color.id}.png`)}
+												src={pathTo(
+													`/images/textile_colors/${color.title}_${color.id}.png`
+												)}
 												alt="eco_color"
 											/>
 										</div>
@@ -496,7 +505,9 @@ const Cover = ({ albumId, selectedType, types }) => {
 											}`}
 										>
 											<img
-												src={require(`../../../../assets/eco_leather_lettering_colors/${color.title}.png`)}
+												src={pathTo(
+													`/images/eco_leather_lettering_colors/${color.title}.png`
+												)}
 												alt="lettering_color"
 											/>
 										</div>
@@ -514,7 +525,9 @@ const Cover = ({ albumId, selectedType, types }) => {
 											style={{
 												backgroundImage:
 													"url(" +
-													require(`../../../../assets/eco_leather_lettering_designs/${design.title}_colorless.png`) +
+													pathTo(
+														`/images/eco_leather_lettering_designs/${design.title}_colorless.png`
+													) +
 													")",
 												backgroundPosition: "center",
 												backgroundSize: "contain",
@@ -590,7 +603,9 @@ const Cover = ({ albumId, selectedType, types }) => {
 											}`}
 										>
 											<img
-												src={require(`../../../../assets/eco_metalplate_colors/${color.title}.png`)}
+												src={pathTo(
+													`/images/eco_metalplate_colors/${color.title}.png`
+												)}
 												alt="metal_plate_color"
 											/>
 										</div>
@@ -659,12 +674,14 @@ const Cover = ({ albumId, selectedType, types }) => {
 												style={{
 													backgroundImage:
 														"url(" +
-														require(`../../../../assets/eco_metalplate_decorations_${
-															types[0].features.decor[2].options[1]
-																.selectedSize === 0
-																? "quadratic"
-																: "rectangular"
-														}/${egs.title}.png`) +
+														pathTo(
+															`/images/eco_metalplate_decorations_${
+																types[0].features.decor[2].options[1]
+																	.selectedSize === 0
+																	? "quadratic"
+																	: "rectangular"
+															}/${egs.title}.png`
+														) +
 														")",
 													backgroundPosition: "center",
 													backgroundSize: "contain",
@@ -770,7 +787,9 @@ const Cover = ({ albumId, selectedType, types }) => {
 											}`}
 										>
 											<img
-												src={require(`../../../../assets/eco_leather_lettering_colors/${color.title}.png`)}
+												src={pathTo(
+													`/images/eco_leather_lettering_colors/${color.title}.png`
+												)}
 												alt="lettering_color"
 											/>
 										</div>
@@ -793,7 +812,9 @@ const Cover = ({ albumId, selectedType, types }) => {
 											style={{
 												backgroundImage:
 													"url(" +
-													require(`../../../../assets/eco_leather_lettering_designs/${design.title}_colorless.png`) +
+													pathTo(
+														`/images/eco_leather_lettering_designs/${design.title}_colorless.png`
+													) +
 													")",
 												backgroundPosition: "center",
 												backgroundSize: "contain",
@@ -864,7 +885,9 @@ const Cover = ({ albumId, selectedType, types }) => {
 											}`}
 										>
 											<img
-												src={require(`../../../../assets/eco_metalplate_colors/${color.title}.png`)}
+												src={pathTo(
+													`/images/eco_metalplate_colors/${color.title}.png`
+												)}
 												alt="metal_plate_color"
 											/>
 										</div>
@@ -935,12 +958,14 @@ const Cover = ({ albumId, selectedType, types }) => {
 												style={{
 													backgroundImage:
 														"url(" +
-														require(`../../../../assets/eco_metalplate_decorations_${
-															types[1].features.decor[2].options[1]
-																.selectedSize === 0
-																? "quadratic"
-																: "rectangular"
-														}/${egs.title}.png`) +
+														pathTo(
+															`/images/eco_metalplate_decorations_${
+																types[1].features.decor[2].options[1]
+																	.selectedSize === 0
+																	? "quadratic"
+																	: "rectangular"
+															}/${egs.title}.png`
+														) +
 														")",
 													backgroundPosition: "center",
 													backgroundSize: "contain",
@@ -1023,6 +1048,7 @@ const Cover = ({ albumId, selectedType, types }) => {
 				break;
 		}
 	}
+
 	return (
 		<div className="cnsr__cover">
 			<div className="cnsr__cover_leftside">

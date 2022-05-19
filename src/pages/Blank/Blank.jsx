@@ -1,4 +1,3 @@
-/** @format */
 
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,7 +7,7 @@ import {
 	handleChangeAlbumABlankId,
 	handleChangeSelectedPage,
 } from "../../redux/reducers/blank/blankSlice";
-import { BASE_URL } from "../../static/values";
+import { BASE_URL } from "../../static/variables";
 import { PagesPreview } from "../Constructor/steps";
 import "./Blank.scss";
 const Blank = () => {
@@ -16,9 +15,8 @@ const Blank = () => {
 	const params = useParams();
 	const { size } = useSelector(state => state.constructorSlice);
 
-	const { deliveryInfo, targetAlbum, isLoading } = useSelector(
-		state => state.blankSlice
-	);
+	const { deliveryInfo, targetAlbum, isLoading, blankId, albumId } =
+		useSelector(state => state.blankSlice);
 
 	React.useEffect(() => {
 		dispatch(
@@ -27,8 +25,12 @@ const Blank = () => {
 				albumId: params.albumId,
 			})
 		);
-		dispatch(getBlankInfo(params.blankId));
 	}, []);
+	React.useEffect(() => {
+		if (blankId && albumId) {
+			dispatch(getBlankInfo(blankId));
+		}
+	}, [blankId, albumId]);
 	function getPersonalisation(coverType) {
 		if (coverType === 0) {
 			switch (targetAlbum.data.coverData.ecoLeather.ecoLeatherSelectedDecor) {
@@ -151,6 +153,7 @@ const Blank = () => {
 									</span>
 								</div>
 							)}
+							<div className="next__step_btn blank__meta_link" onClick={()=>window.open(BASE_URL + `/designer/Album/zip/${targetAlbum.data.mainData.albumId}`,"_blank")}>Ссылка на скачивание альбома</div>
 						</div>
 						<div className="blank__meta_preview">
 							<img
@@ -158,6 +161,7 @@ const Blank = () => {
 								alt="blank_preview"
 							/>
 						</div>
+						
 					</div>
 					<div className="blank__pages">
 						<PagesPreview
@@ -171,7 +175,7 @@ const Blank = () => {
 				</div>
 			) : (
 				<div className="blank__empty_msg">
-					{!isLoading && "Заказ или альбом заказа не найден"}
+					"Заказ или альбом заказа не найден"
 				</div>
 			)}
 		</>

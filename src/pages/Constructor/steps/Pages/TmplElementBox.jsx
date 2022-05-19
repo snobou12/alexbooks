@@ -21,7 +21,7 @@ const TmplElementBox = ({
 	handleChangeAxisValues,
 }) => {
 	//justPreview
-	const [visibleControls, setVisibleControls] = React.useState(true);
+	const [visibleControls, setVisibleControls] = React.useState(false);
 	const [{ canDrop, isOver }, drop] = useDrop(() => ({
 		accept: "TMPL_EL_BOX",
 		drop: () => ({

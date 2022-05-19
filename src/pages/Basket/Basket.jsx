@@ -13,7 +13,7 @@ import {
 	removeAlbumFromBasket,
 	handleChangeBasketAlbums,
 } from "../../redux/reducers/basket/basketSlice";
-import { BASE_URL } from "../../static/values";
+import { BASE_URL } from "../../static/variables";
 import "./Basket.scss";
 const Basket = () => {
 	const dispatch = useDispatch();
@@ -126,7 +126,7 @@ const Basket = () => {
 				{basketAlbumsId.length == 0 && (
 					<div className="basket__features">
 						<button
-							onClick={() => navigate("/constructor")}
+							onClick={()=>window.open(BASE_URL + "/constructor","_self")}
 							className="next__step_btn"
 						>
 							Создать фотокнигу
@@ -261,9 +261,7 @@ const Basket = () => {
 									<div className="basket__books_changer">
 										<div
 											onClick={() =>
-												navigate(
-													`/constructor/album/${basketAlbum.data.mainData.albumId}`
-												)
+												window.open(BASE_URL + `/constructor/#/album/${basketAlbum.data.mainData.albumId}`,"_self")
 											}
 											className="basket__books_changer_edit_item basket__books_changer_edit"
 										>

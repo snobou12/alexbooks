@@ -21,6 +21,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css/grid";
 import "swiper/css";
 import "./PagesPreview.scss";
+import { pathTo } from "../../../../helps/pathes";
 
 const PagesPreview = ({
   albumId,
@@ -66,7 +67,7 @@ const PagesPreview = ({
       return pages.uploads;
     } else {
       let uploadPreview = {
-        blob: require("../../../../assets/pages_preview/upload_preview.jpg"),
+        blob: pathTo("/images/pages_preview/upload_preview.jpg"),
         id: null,
         uploadPercent,
       };
@@ -126,6 +127,15 @@ const PagesPreview = ({
       }
     }
     return false;
+  }
+  const handleWheel = (e)=>{
+    if(e.deltaY < 0 ){
+      swiperRef.current.swiper.slideNext();
+    }
+    else if(e.deltaY >0){
+      swiperRef.current.swiper.slidePrev();
+
+    }
   }
   return (
     <>
@@ -617,7 +627,7 @@ const PagesPreview = ({
               )}
           </div>
 
-          <div className={`pages__upload`}>
+          <div onWheel={(e)=>handleWheel(e)} className="pages__upload">
             <PagesUploader
             handleSaveAlbum={handleSaveAlbum}
               handleSwipeToEnd={handleSwipeToEnd}
@@ -641,7 +651,6 @@ const PagesPreview = ({
               {uploadsMap().map((img, idx) => (
                 <SwiperSlide key={`${img.id}:${idx}`}>
                   <DragImage
-                  
                     handleSetImgToTemplate={handleSetImgToTemplate}
                     uploadPercent={uploadPercent}
                     baseItem={img.id == null}
@@ -653,6 +662,7 @@ const PagesPreview = ({
               ))}
             </Swiper>
           </div>
+          
         </div>
       )}
     </>

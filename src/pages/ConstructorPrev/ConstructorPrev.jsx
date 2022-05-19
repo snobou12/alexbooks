@@ -11,7 +11,7 @@ import {
 } from "../../redux/reducers/constructor/actionConstructorCreator";
   
   import {handleReloadConstructorConfig} from "../../redux/reducers/constructor/constructorSlice";
-import { BASE_URL } from "../../static/values";
+import { BASE_URL } from "../../static/variables";
 import "./ConstructorPrev.scss";
 const ConstructorPrev = () => {
   const { albumsId} = useSelector(
@@ -27,7 +27,7 @@ const ConstructorPrev = () => {
     try{
       const response = await dispatch(newAlbum()).unwrap();
       dispatch(handleReloadConstructorConfig());
-      navigate(`/constructor/album/${response.album}`);
+      navigate(`/album/${response.album}`);
 
     }
     catch(e){
@@ -46,7 +46,7 @@ const ConstructorPrev = () => {
   };
   const handleNavigateToAlbum =(albumId)=>{
     dispatch(handleReloadConstructorConfig());
-    navigate(`/constructor/album/${albumId}`);
+    navigate(`/album/${albumId}`);
   }
 
   return (

@@ -20,22 +20,22 @@ import {
   deleteImageKeyFromImagesKey,
   setAlbumId,
 } from "../../redux/reducers/constructor/constructorSlice";
-import "./Constructor.scss";
-import { useNavigate, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import axios from "axios";
 import {usePriceStatus} from "../../hooks/priceStatus";
 import { getAlbumById } from "../../redux/reducers/constructor/actionConstructorCreator";
 import { removeBasketData } from "../../redux/reducers/basket/basketSlice";
-import { BASE_URL } from "../../static/values";
+import { BASE_URL } from "../../static/variables";
+import "./Constructor.scss";
 const Constructor = () => {
   const dispatch = useDispatch();
   const params = useParams();
-  //Пикчи в стейт
   const [orderLoading, setOrderLoading] = React.useState(false);
-  const navigate = useNavigate();
+  const [orderClicked,setOrderClicked]=React.useState(false);
+  const [saveAlbumLoading,setSaveAlbumLoading]=React.useState(false);
   const { size, header_content, cover, pages, pagesValid,constructorLoading,imageKeysToDelete } = useSelector(
     (state) => state.constructorSlice
-  );
+    );
   //ref stage preview
   let stageRef = React.useRef(null);
   
@@ -85,6 +85,7 @@ const Constructor = () => {
       case 3:
         return (
           <PagesPreview
+          
           handleSaveAlbum={handleSaveAlbum}
             pagesValid={pagesValid}
             albumId={header_content.albumId}
@@ -178,149 +179,8 @@ const Constructor = () => {
 
   function checkValids(){
     let allPages = [...pages.papers.pages];
-
-            let emptyTemplatesChecker = false;
-            let pagesTemplateValids = [];
-            for (let i = 0; i < allPages.length; i++) {
-              if (allPages[i].selectedSide === "lrside") {
-                if (
-                  emptyObjectChecker(allPages[i].templates[0].template) ||
-                  emptyObjectChecker(allPages[i].templates[1].template)
-                ) {
-                  emptyTemplatesChecker = true;
-                  pagesTemplateValids.push({ pageId: i, isValid: false });
-                } else {
-                  pagesTemplateValids.push({ pageId: i, isValid: true });
-                }
-              }
-              //cside
-              else {
-                if (emptyObjectChecker(allPages[i].templates[2].template)) {
-                  emptyTemplatesChecker = true;
-                  pagesTemplateValids.push({ pageId: i, isValid: false });
-                } else {
-                  pagesTemplateValids.push({ pageId: i, isValid: true });
-                }
-              }
-            }
-
-            let emptyTemplateImagesChecker = false;
-            let pagesTemplateImagesValids = [];
-            if (!emptyTemplatesChecker) {
-              for (let i = 0; i < allPages.length; i++) {
-                if (allPages[i].selectedSide === "lrside") {
-                  for (
-                    let j = 0;
-                    j < allPages[i].templates[0].template.elements.length;
-                    j++
-                  ) {
-                    if (!allPages[i].templates[0].template.elements[j].image) {
-                      pagesTemplateImagesValids.push({
-                        pageId: i,
-                        isValid: false,
-                      });
-                      emptyTemplateImagesChecker = true;
-                      break;
-                    }
-                    pagesTemplateImagesValids.push({
-                      pageId: i,
-                      isValid: true,
-                    });
-                  }
-
-                  for (
-                    let j = 0;
-                    j < allPages[i].templates[1].template.elements.length;
-                    j++
-                  ) {
-                    if (!allPages[i].templates[1].template.elements[j].image) {
-                      pagesTemplateImagesValids.push({
-                        pageId: i,
-                        isValid: false,
-                      });
-                      emptyTemplateImagesChecker = true;
-                      break;
-                    }
-                    pagesTemplateImagesValids.push({
-                      pageId: i,
-                      isValid: true,
-                    });
-                  }
-                }
-                //cside
-                else {
-                  for (
-                    let j = 0;
-                    j < allPages[i].templates[2].template.elements.length;
-                    j++
-                  ) {
-                    if (!allPages[i].templates[2].template.elements[j].image) {
-                      pagesTemplateImagesValids.push({
-                        pageId: i,
-                        isValid: false,
-                      });
-                      emptyTemplateImagesChecker = true;
-                      break;
-                    }
-                    pagesTemplateImagesValids.push({
-                      pageId: i,
-                      isValid: true,
-                    });
-                  }
-                }
-              }
-            }
-
-            let filteredTemplatesValid = pagesTemplateImagesValids.filter(
-              (page) => page.isValid === false
-            );
-
-            let templatesImagesValidNoDupl = removeDuplicates(
-              filteredTemplatesValid
-            );
-            let pagesTemplateImagesValidsNoHavent = [];
-            for (let i = 0; i < allPages.length; i++) {
-              if (!filteredTemplatesValid.some((vld) => vld.pageId === i)) {
-                pagesTemplateImagesValidsNoHavent.push({
-                  pageId: allPages[i].id,
-                  isValid: true,
-                });
-              }
-            }
-            let pagesTemplateImagesValidsResult = [
-              ...templatesImagesValidNoDupl,
-              ...pagesTemplateImagesValidsNoHavent,
-            ];
-            pagesTemplateImagesValidsResult.sort(function (a, b) {
-              if (a.pageId > b.pageId) {
-                return 1;
-              } else if (b.pageId > a.pageId) {
-                return -1;
-              } else {
-                return 0;
-              }
-            });
-
-            if (emptyTemplatesChecker) {
-              dispatch(handleSetTemplatesValidsPage(pagesTemplateValids));
-            } else {
-              let compareValids = [];
-              for (let i = 0; i < allPages.length; i++) {
-                if (
-                  !pagesTemplateValids[i].isValid ||
-                  !pagesTemplateImagesValidsResult[i].isValid
-                ) {
-                  compareValids.push({ pageId: i, isValid: false });
-                } else {
-                  compareValids.push({ pageId: i, isValid: true });
-                }
-              }
-
-              dispatch(
-                handleSetTemplatesValidsPage(pagesTemplateImagesValidsResult)
-              );
-            }
-            return {emptyTemplatesChecker,emptyTemplateImagesChecker}
+    // valid checker
+return false
   }
 
   async function crementStep(str) {
@@ -344,15 +204,15 @@ const Constructor = () => {
             );
             uploadImageToServer("cover_preview", previewImage);
           } else if (header_content.step === 3) {
+            setOrderClicked(true);
             const validsChecks = checkValids();
 
-            if (validsChecks.emptyTemplatesChecker) {
-              toast.error("Заполните все страницы!");
-            } else if (validsChecks.emptyTemplateImagesChecker) {
+            if (!validsChecks) {
               toast.error("Заполните все шаблоны изображениями!");
             } else {
-              setOrderLoading(true);
+              return
               await handleSaveAlbum(true);
+              setOrderLoading(true);
               let formData = new FormData();
               let basketAlbums = [];
               let prevBasketData = await dispatch(getBasketAlbumsId());
@@ -389,8 +249,8 @@ const Constructor = () => {
               }).then((res) => {
                 if (res.status === 200) {
                   dispatch(removeBasketData());
-                  navigate("/basket");
                   setOrderLoading(false);
+                  window.open (BASE_URL + "/basket",'_self');
                 } else {
                   toast.error("Что-то пошло не так");
                   setOrderLoading(false);
@@ -424,6 +284,7 @@ const Constructor = () => {
 
 
   const handleSaveAlbum = async (ordered) => {
+    setSaveAlbumLoading(true);
     let formData = new FormData();
     //MAIN DATA
     let headerContentASizeData = { ...header_content, ...size };
@@ -432,6 +293,8 @@ const Constructor = () => {
     delete headerContentASizeData.types;
     headerContentASizeData.selectedQuadraticSize = selectedQuadraticSize;
     headerContentASizeData.selectedLandscapeSize = selectedLandscapeSize;
+    //Количество заюзанных картинок
+    
 
     //COVER
     let coverSelectedType = cover.selectedType;
@@ -567,6 +430,8 @@ const Constructor = () => {
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     }).then((res) => {
+      setSaveAlbumLoading(false);
+
       if (!ordered) {
         if (res.status === 200) {
           
@@ -575,7 +440,11 @@ const Constructor = () => {
           toast.error("Что-то пошло не так");
         }
       }
-    });
+    }).catch(()=>{
+      setSaveAlbumLoading(false);
+          toast.error("Что-то пошло не так");
+
+    })
   };
 
 
@@ -612,13 +481,17 @@ const Constructor = () => {
     dispatch(getAlbumById([params.albumId,false]));
     dispatch(setAlbumId(params.albumId));
   }, [params.albumId]);
-
+  React.useEffect(()=>{
+    if(orderClicked){
+      checkValids();
+    }
+  },[...pages.papers.pages])
   //Проверка цен
   usePriceStatus();
 
   return (
     <>
-    {constructorLoading ? <Spinner /> : <div className="cnsr">
+    {constructorLoading  || saveAlbumLoading ? <Spinner /> : <div className="cnsr">
       <div className="cnsr__steps">{getStep(header_content.step)}</div>
       <div className="cnsr__content">
         <div className="cnsr__content_upper">
@@ -645,7 +518,14 @@ const Constructor = () => {
             <span>
               итого:<span>{header_content.price} руб.</span>
             </span>
-
+              <div className="cover__size_title">
+				{
+					size.types[size.selectedType].sizes[
+						size.types[size.selectedType].selectedSize
+					].size
+				}{" "}
+				см
+			</div>
             <button
               disabled={orderLoading}
               onClick={() => crementStep("+")}

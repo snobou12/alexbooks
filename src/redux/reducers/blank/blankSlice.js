@@ -5,8 +5,8 @@ import { getBlankInfo } from "./actionBlankCreator";
 const blankSlice = createSlice({
   name: "blank",
   initialState: {
-    blankId:0,
-    albumId:0,
+    blankId:null,
+    albumId:null,
     blankAlbums:[],
     deliveryInfo:{},
     targetAlbum:{},
@@ -33,9 +33,11 @@ const blankSlice = createSlice({
   extraReducers: {
     [getBlankInfo.fulfilled.type]: (state, action) => {
       const {deliveryInfo,albumsData}=action.payload;
+      console.log(albumsData,deliveryInfo);
         state.isLoading = false;
         state.deliveryInfo=deliveryInfo
         state.blankAlbums=albumsData
+        
         albumsData.forEach((album)=>{
           if(album.data.mainData.albumId === state.albumId){
             state.targetAlbum=album;

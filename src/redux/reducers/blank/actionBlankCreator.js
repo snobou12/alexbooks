@@ -6,8 +6,7 @@ export const getBlankInfo = createAsyncThunk(
     "blank/getInfo",
     async (blankId, thunkApi) => {
       try {
-        //   const response = await BlankService.getBlankInfo(blankId);
-        const response = await BlankService.getBlankInfo();
+        const response = await BlankService.getBlankInfo(blankId);
         if(response.data){
           if(response.data.data){
               let data = response.data.data;

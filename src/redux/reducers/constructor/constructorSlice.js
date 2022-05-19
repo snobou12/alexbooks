@@ -1,7 +1,7 @@
 
 import { createSlice, current } from "@reduxjs/toolkit";
 
-import { BASE_URL } from "../../../static/values";
+import { BASE_URL } from "../../../static/variables";
 import { contsructorDefaultState } from "./contsructorDefaultState";
 import {
   getAlbumIDS,
@@ -48,7 +48,7 @@ const constructorSlice = createSlice({
           transl: "Альбомная",
           sizes: [
             { id: 0, size: "15x22,5", price: 2490 },
-            { id: 1, size: "20x32", price: 5290 },
+            { id: 1, size: "20x30", price: 5290 },
             { id: 2, size: "30x40", price: 8890 },
           ],
           selectedSize: 0,
@@ -2294,6 +2294,8 @@ const constructorSlice = createSlice({
      
  let prevImageKeysToDelete = [...current(state.imageKeysToDelete)];
       let newImageKeysToDelete = [...prevImageKeysToDelete,imageKey];
+
+      
        state.pages.uploads = newUploads;
       state.imageKeysToDelete=newImageKeysToDelete;
     },
@@ -2438,7 +2440,6 @@ const constructorSlice = createSlice({
     // добавить фото в элемент шаблона
     handleSetImageToTemplateElement(state, action) {
       const { imageId, tmplElementId, sideToChange,imageOptions } = action.payload;
-      console.log(imageOptions); // width и heigth картинки
       let selectedPage = {
         ...current(state.pages.papers.pages[state.pages.papers.selectedPage]),
       };
@@ -2480,12 +2481,17 @@ const constructorSlice = createSlice({
         }
       });
       selectedPage.templates = newTemplates;
+
+      
+
+      
+      
+
       state.pages.papers.pages[state.pages.papers.selectedPage] = selectedPage;
     },
     //Удалить фото из элемента шаблона
     handleDeleteImageFromElementTemplate(state, action) {
       const { pageId, sideToChange, tmplElementId } = action.payload;
-
       let selectedPage = {
         ...current(state.pages.papers.pages[pageId]),
       };
@@ -2505,6 +2511,7 @@ const constructorSlice = createSlice({
       let tmplNewElements = tmplElements.map((elem) => {
         if (elem.id === tmplElementId) {
           let prevElem = { ...elem };
+          
           delete prevElem["image"];
           return { ...prevElem };
         } else {
@@ -2687,7 +2694,6 @@ const { pageId, sideToChange, tmplElementId } = action.payload;
              }
           }
           }
-          console.log(prevAxisX,prevAxisY);
         
           
           let newDirectionOptions={...prevDirectionOptions,axisY:prevAxisY,axisX:prevAxisX};
@@ -2769,7 +2775,6 @@ const { pageId, sideToChange, tmplElementId } = action.payload;
 
       if (action.payload.fullData.data) {
         if (!action.payload.justImages){
-
         let { data, images } = action.payload.fullData;
         let { mainData, coverData, pagesData } = data;
         //MAIN
@@ -2928,6 +2933,7 @@ const { pageId, sideToChange, tmplElementId } = action.payload;
 
         state.pages.uploads = uploadImages;
       }
+      //Если только картинки
       else{
         let { images } = action.payload.fullData;
         state.header_content.coverPreviewImage = String(

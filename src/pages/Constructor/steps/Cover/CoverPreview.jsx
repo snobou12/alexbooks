@@ -2,6 +2,8 @@
 
 import React from "react";
 import { Stage, Layer, Image, Text } from "react-konva";
+import { pathTo } from "../../../../helps/pathes";
+
 import "./CoverPreview.scss";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -22,6 +24,7 @@ const CoverPreview = ({ stageRef }) => {
 	const [ecoMetalplate, setEcoMetalplate] = React.useState(null);
 	const [textileMetalplate, setTextileMetalplate] = React.useState(null);
 	const [ecoMetalplateText, setEcoMetalplateText] = React.useState(null);
+
 	const [textileMetalplateText, setTextileMetalplateText] =
 		React.useState(null);
 
@@ -38,13 +41,18 @@ const CoverPreview = ({ stageRef }) => {
 				let ecoColorObj = cover.types[0].features.colors.find(
 					color => color.id === cover.types[0].selectedColor
 				);
-				return require(`../../../../assets/eco_leather_colors/${ecoColorObj.title}_${ecoColorObj.id}.png`);
+				return pathTo(
+					`/images/eco_leather_colors/${ecoColorObj.title}_${ecoColorObj.id}.png`
+				);
 			//Кожа
 			case 1:
 				let textileColorObj = cover.types[1].features.colors.find(
 					color => color.id === cover.types[1].selectedColor
 				);
-				return require(`../../../../assets/textile_colors/${textileColorObj.title}_${textileColorObj.id}.png`);
+				return pathTo(
+					`/images/textile_colors/${textileColorObj.title}_${textileColorObj.id}.png`
+				);
+
 			//Фотообложка
 			//Можно сделать как выше, можно брать id вручную
 			case 2:
@@ -56,9 +64,14 @@ const CoverPreview = ({ stageRef }) => {
 					];
 				switch (colorType) {
 					case 0:
-						return require(`../../../../assets/eco_leather_colors/${photoCoverColorObj.title}_${photoCoverColorObj.id}.png`);
+						return pathTo(
+							`/images/eco_leather_colors/${photoCoverColorObj.title}_${photoCoverColorObj.id}.png`
+						);
+
 					case 1:
-						return require(`../../../../assets/textile_colors/${photoCoverColorObj.title}_${photoCoverColorObj.id}.png`);
+						return pathTo(
+							`/images/textile_colors/${photoCoverColorObj.title}_${photoCoverColorObj.id}.png`
+						);
 					default:
 						break;
 				}
@@ -98,7 +111,9 @@ const CoverPreview = ({ stageRef }) => {
 					cover.types[0].features.decor[0].options[0].colors[
 						cover.types[0].features.decor[0].options[0].selectedColor
 					];
-				let ecoSrc = require(`../../../../assets/eco_leather_lettering_designs/${ecoLetteringDesignObj.title}_${ecoLetteringDesignColorObj.title}.png`);
+				let ecoSrc = pathTo(
+					`/images/eco_leather_lettering_designs/${ecoLetteringDesignObj.title}_${ecoLetteringDesignColorObj.title}.png`
+				);
 				let ecoPosition = ecoLetteringDesignObj.position;
 				return { src: ecoSrc, position: ecoPosition };
 			//Ткань
@@ -112,7 +127,9 @@ const CoverPreview = ({ stageRef }) => {
 					cover.types[1].features.decor[0].options[0].colors[
 						cover.types[1].features.decor[0].options[0].selectedColor
 					];
-				let textileSrc = require(`../../../../assets/eco_leather_lettering_designs/${textileLetteringDesignObj.title}_${textileLetteringDesignColorObj.title}.png`);
+				let textileSrc = pathTo(
+					`/images/eco_leather_lettering_designs/${textileLetteringDesignObj.title}_${textileLetteringDesignColorObj.title}.png`
+				);
 				let textilePosition = textileLetteringDesignObj.position;
 				return { src: textileSrc, position: textilePosition };
 			default:
@@ -410,7 +427,9 @@ const CoverPreview = ({ stageRef }) => {
 							break;
 					}
 
-					metalplate.src = require(`../../../../assets/eco_metalplate_colors/${ecoMetalplateColorObj.title}.png`);
+					metalplate.src = pathTo(
+						`/images/eco_metalplate_colors/${ecoMetalplateColorObj.title}.png`
+					);
 					metalplate.onload = () => {
 						setEcoMetalplate({ metalplate, position: ecoMetalplatePosition });
 					};
@@ -447,7 +466,9 @@ const CoverPreview = ({ stageRef }) => {
 							break;
 					}
 
-					metalplate.src = require(`../../../../assets/eco_metalplate_colors/${textileMetalplateColorObj.title}.png`);
+					metalplate.src = pathTo(
+						`/images/eco_metalplate_colors/${textileMetalplateColorObj.title}.png`
+					);
 
 					metalplate.onload = () => {
 						setTextileMetalplate({
@@ -519,7 +540,9 @@ const CoverPreview = ({ stageRef }) => {
 						default:
 							break;
 					}
-					metalPlateImage.src = require(`../../../../assets/eco_metalplate_decorations_${ecoMetalPlateSelectedSizeObj.title}/${ecoMetalPlateSelectedImgObj.title}.png`);
+					metalPlateImage.src = pathTo(
+						`/images/eco_metalplate_decorations_${ecoMetalPlateSelectedSizeObj.title}/${ecoMetalPlateSelectedImgObj.title}.png`
+					);
 					metalPlateImage.onload = () => {
 						setEcoMetalplateImg({
 							metalPlateImage,
@@ -561,7 +584,9 @@ const CoverPreview = ({ stageRef }) => {
 						default:
 							break;
 					}
-					metalPlateImage.src = require(`../../../../assets/eco_metalplate_decorations_${textileMetalPlateSelectedSizeObj.title}/${textileMetalPlateSelectedImgObj.title}.png`);
+					metalPlateImage.src = pathTo(
+						`/images/eco_metalplate_decorations_${textileMetalPlateSelectedSizeObj.title}/${textileMetalPlateSelectedImgObj.title}.png`
+					);
 					metalPlateImage.onload = () => {
 						setTextileMetalplateImg({
 							metalPlateImage,
@@ -909,15 +934,6 @@ const CoverPreview = ({ stageRef }) => {
 					)}
 				</Layer>
 			</Stage>
-
-			<div className="cover__size_title">
-				{
-					size.types[size.selectedType].sizes[
-						size.types[size.selectedType].selectedSize
-					].size
-				}{" "}
-				см
-			</div>
 		</div>
 	);
 };

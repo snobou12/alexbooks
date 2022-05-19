@@ -12,6 +12,10 @@
     display: flex;
     justify-content: center;
     gap:30px;
+
+    .blank__meta_link{
+        
+    }
 }
 .blank__meta_information{
     flex:0 0 600px;
@@ -56,4 +60,15 @@
 
 .blank__pages{
     width: 100%;
+}
+
+.blank__meta_link{
+    width: 100%;
+    cursor: pointer;
+    font-size: 14px;
+		font-family: "Raleway", sans-serif;
+
+		font-weight: 700;
+		color: rgb(255 255 255);
+		background-color: rgb(246 145 106);
 }

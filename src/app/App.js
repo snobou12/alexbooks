@@ -9,12 +9,12 @@ function App() {
   return (
     <div className="app">
      <div className='app__content'>
-       <Routes>
-         <Route path='/constructor/album/:albumId' element={<Constructor />} />
-         <Route path="/constructor" element={<ConstructorPrev />} />
+       <Routes  >
+         <Route path='/album/:albumId' element={<Constructor />} />
+         <Route path="/" element={<ConstructorPrev />} />
          <Route path='/basket' element={<Basket />} />
          <Route path='/checkout' element={<Checkout />} />
-         <Route path='/blank/:blankId/:albumId' element={<Blank />} />
+         <Route path='/:blankId/:albumId' element={<Blank />} />
        </Routes>
      <ToastContainer />
      </div>
@@ -22,5 +22,7 @@ function App() {
     </div>
   );
 }
+//Баг с блоб
+
 
 export default App;

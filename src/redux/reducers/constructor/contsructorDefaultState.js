@@ -14,6 +14,7 @@ export const contsructorDefaultState = {
     },
     constructorLoading: false,
     newAlbumLoading: false,
+    imageUsedCounter:[],
     size: {
       selectedType: 0,
       scale: 0.75,
@@ -36,7 +37,7 @@ export const contsructorDefaultState = {
           transl: "Альбомная",
           sizes: [
             { id: 0, size: "15x22,5", price: 2490 },
-            { id: 1, size: "20x32", price: 5290 },
+            { id: 1, size: "20x30", price: 5290 },
             { id: 2, size: "30x40", price: 8890 },
           ],
           selectedSize: 0,
