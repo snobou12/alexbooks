@@ -1,6 +1,6 @@
 
 export const contsructorDefaultState = {
- albumsId: {
+  albumsId: {
       isLoading: true,
       ids: [],
     },
@@ -14,7 +14,6 @@ export const contsructorDefaultState = {
     },
     constructorLoading: false,
     newAlbumLoading: false,
-    imageUsedCounter:[],
     size: {
       selectedType: 0,
       scale: 0.75,
@@ -459,6 +458,7 @@ export const contsructorDefaultState = {
         },
       ],
     },
+    imagesCounter:[],
     imageKeysToDelete:[],
     pagesValid: [],
     pages: {

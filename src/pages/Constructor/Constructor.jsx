@@ -16,24 +16,30 @@ import {
   handleIncrementStep,
   handleDecrementStep,
   handleChangeAlbumName,
-  handleSetTemplatesValidsPage,
   deleteImageKeyFromImagesKey,
   setAlbumId,
 } from "../../redux/reducers/constructor/constructorSlice";
 import {  useParams } from "react-router-dom";
 import axios from "axios";
-import {usePriceStatus} from "../../hooks/priceStatus";
+import {usePriceStatus} from "../../hooks/usePriceStatus";
+import {usePagesValids} from "../../hooks/usePagesValids";
+import {useImagesCounter} from "../../hooks/useImagesCounter";
 import { getAlbumById } from "../../redux/reducers/constructor/actionConstructorCreator";
 import { removeBasketData } from "../../redux/reducers/basket/basketSlice";
 import { BASE_URL } from "../../static/variables";
 import "./Constructor.scss";
 const Constructor = () => {
   const dispatch = useDispatch();
+  const [showValids,setShowValids]=React.useState(false);
+  //Проверка цен
+  usePriceStatus();
+  //counter  картинок для каждой
+  useImagesCounter();
+  const validCheck = usePagesValids(showValids);
   const params = useParams();
   const [orderLoading, setOrderLoading] = React.useState(false);
-  const [orderClicked,setOrderClicked]=React.useState(false);
   const [saveAlbumLoading,setSaveAlbumLoading]=React.useState(false);
-  const { size, header_content, cover, pages, pagesValid,constructorLoading,imageKeysToDelete } = useSelector(
+  const { size, header_content, cover, pages, pagesValid,constructorLoading,imageKeysToDelete,imagesCounter } = useSelector(
     (state) => state.constructorSlice
     );
   //ref stage preview
@@ -85,7 +91,7 @@ const Constructor = () => {
       case 3:
         return (
           <PagesPreview
-          
+          imagesCounter={imagesCounter}
           handleSaveAlbum={handleSaveAlbum}
             pagesValid={pagesValid}
             albumId={header_content.albumId}
@@ -111,49 +117,8 @@ const Constructor = () => {
         break;
     }
   }
-  function emptyObjectChecker(obj) {
-    return Object.keys(obj).length == 0;
-  }
-  function removeDuplicates(arr) {
-    const result = [];
-    const duplicatesIndices = [];
-
-    arr.forEach((current, index) => {
-      if (duplicatesIndices.includes(index)) return;
-
-      result.push(current);
-
-      for (
-        let comparisonIndex = index + 1;
-        comparisonIndex < arr.length;
-        comparisonIndex++
-      ) {
-        const comparison = arr[comparisonIndex];
-        const currentKeys = Object.keys(current);
-        const comparisonKeys = Object.keys(comparison);
-
-        if (currentKeys.length !== comparisonKeys.length) continue;
-
-        const currentKeysString = currentKeys.sort().join("").toLowerCase();
-        const comparisonKeysString = comparisonKeys
-          .sort()
-          .join("")
-          .toLowerCase();
-        if (currentKeysString !== comparisonKeysString) continue;
-
-        let valuesEqual = true;
-        for (let i = 0; i < currentKeys.length; i++) {
-          const key = currentKeys[i];
-          if (current[key] !== comparison[key]) {
-            valuesEqual = false;
-            break;
-          }
-        }
-        if (valuesEqual) duplicatesIndices.push(comparisonIndex);
-      }
-    });
-    return result;
-  }
+ 
+  
 
   function uploadImageToServer(keyImg, file) {
     let formData = new FormData();
@@ -177,11 +142,7 @@ const Constructor = () => {
   }
 
 
-  function checkValids(){
-    let allPages = [...pages.papers.pages];
-    // valid checker
-return false
-  }
+  
 
   async function crementStep(str) {
     switch (str) {
@@ -197,20 +158,18 @@ return false
               dispatch(handleIncrementStep());
             }
           } else if (header_content.step === 2) {
-            let stageURI = stageRef.current.getStage().toDataURL();
-            const previewImage = await fetchImageFromServer(
-              stageURI,
-              "cover_preview"
-            );
-            uploadImageToServer("cover_preview", previewImage);
+            // let stageURI = stageRef.current.getStage().toDataURL();
+            // const previewImage = await fetchImageFromServer(
+            //   stageURI,
+            //   "cover_preview"
+            // );
+            // uploadImageToServer("cover_preview", previewImage);
+             dispatch(handleIncrementStep());
           } else if (header_content.step === 3) {
-            setOrderClicked(true);
-            const validsChecks = checkValids();
-
-            if (!validsChecks) {
+            setShowValids(true);
+            if (!validCheck) {
               toast.error("Заполните все шаблоны изображениями!");
             } else {
-              return
               await handleSaveAlbum(true);
               setOrderLoading(true);
               let formData = new FormData();
@@ -293,7 +252,6 @@ return false
     delete headerContentASizeData.types;
     headerContentASizeData.selectedQuadraticSize = selectedQuadraticSize;
     headerContentASizeData.selectedLandscapeSize = selectedLandscapeSize;
-    //Количество заюзанных картинок
     
 
     //COVER
@@ -455,7 +413,6 @@ return false
       headers: { "Content-Type": "application/json" },
     })
       .then(async(res) => {
-        console.log(res);
         if (res.status === 200) {
           dispatch(deleteImageKeyFromImagesKey(imageKey));
         }
@@ -481,13 +438,8 @@ return false
     dispatch(getAlbumById([params.albumId,false]));
     dispatch(setAlbumId(params.albumId));
   }, [params.albumId]);
-  React.useEffect(()=>{
-    if(orderClicked){
-      checkValids();
-    }
-  },[...pages.papers.pages])
-  //Проверка цен
-  usePriceStatus();
+  
+  
 
   return (
     <>

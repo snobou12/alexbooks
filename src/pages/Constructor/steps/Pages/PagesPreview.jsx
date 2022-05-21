@@ -1,6 +1,8 @@
 
 import React from "react";
 import { useDispatch } from "react-redux";
+import ReactTooltip from "react-tooltip";
+
 import {
   handleChangeSelectedPage,
   handleAddPageToPages,
@@ -32,11 +34,14 @@ const PagesPreview = ({
   handleSaveAlbum,
   handleChangePage,
   pagesValid,
+  imagesCounter
 }) => {
   const dispatch = useDispatch();
   const swiperRef = React.useRef();
+  const pageUploadRef = React.useRef();
   const [isUploadingImages, setIsUploadingImages] = React.useState(false);
   const [uploadPercent, setUploadPercent] = React.useState(0);
+  
   const handleSetIsUploadingImages = (bool) => {
     setIsUploadingImages(bool);
   };
@@ -129,6 +134,7 @@ const PagesPreview = ({
     return false;
   }
   const handleWheel = (e)=>{
+    e.preventDefault();
     if(e.deltaY < 0 ){
       swiperRef.current.swiper.slideNext();
     }
@@ -137,6 +143,48 @@ const PagesPreview = ({
 
     }
   }
+
+  React.useEffect(()=>{
+    pageUploadRef.current.addEventListener(`wheel`,handleWheel,{passive:false});
+  },[pageUploadRef])
+ 
+  const [uploadImagePreview,setUploadImagePreview]=React.useState({show:false,img:{}})
+  const [delayHandler,setDelayHandler]=React.useState(null);
+  const [isDraggingImage,setIsDraggingImage]=React.useState(false);
+  
+  const handleDraggingImage =(bool)=>{
+setIsDraggingImage(bool);
+  }
+  const onImageMouseEnter=(isDragging,obj)=>{
+    if(!isUploadingImages ){
+      setDelayHandler(setTimeout(()=>{
+        const img = obj.blob;
+        setUploadImagePreview({show:true,img})
+      },800))
+
+    }
+  }
+  const onImageMouseLeave =(isDragging,obj)=>{
+    
+    if(!isUploadingImages ){
+        setUploadImagePreview((prev)=>({
+      ...prev,
+      show:false
+    }))
+
+    }
+    clearTimeout(delayHandler);
+    
+  }
+
+
+
+ 
+  
+  //rebuild tooltip
+  React.useEffect(()=>{
+    ReactTooltip.rebuild();
+  },[imagesCounter])
   return (
     <>
       {justPreview ? (
@@ -339,6 +387,10 @@ const PagesPreview = ({
         </div>
       ) : (
         <div className="pages__preview">
+          <div className={`pages__image_preview ${(!uploadImagePreview.show || isDraggingImage) && "pages__image_preview--hidden"}`}>
+            <img src={uploadImagePreview.img} alt="" />
+          </div>
+          
           <div className="pages__selector">
             <Swiper
               modules={[Scrollbar, Autoplay, Grid, Navigation]}
@@ -416,6 +468,7 @@ const PagesPreview = ({
                       ].templates[0].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          
                           handleChangeAxisValues={handleChangeAxisValues}
                           handleRotateImage={handleRotateImage}
                           handleSetContainToImage={handleSetContainToImage}
@@ -447,6 +500,7 @@ const PagesPreview = ({
                       ].templates[1].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          
                           handleChangeAxisValues={handleChangeAxisValues}
                           handleRotateImage={handleRotateImage}
                           handleSetContainToImage={handleSetContainToImage}
@@ -493,6 +547,7 @@ const PagesPreview = ({
                       ].templates[2].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          
                           handleChangeAxisValues={handleChangeAxisValues}
                           handleRotateImage={handleRotateImage}
                           handleSetContainToImage={handleSetContainToImage}
@@ -531,6 +586,7 @@ const PagesPreview = ({
                       ].templates[0].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          
                           handleChangeAxisValues={handleChangeAxisValues}
                           handleRotateImage={handleRotateImage}
                           handleSetContainToImage={handleSetContainToImage}
@@ -561,6 +617,7 @@ const PagesPreview = ({
                       ].templates[1].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          
                           handleChangeAxisValues={handleChangeAxisValues}
                           handleRotateImage={handleRotateImage}
                           handleSetContainToImage={handleSetContainToImage}
@@ -627,7 +684,8 @@ const PagesPreview = ({
               )}
           </div>
 
-          <div onWheel={(e)=>handleWheel(e)} className="pages__upload">
+          <div ref={pageUploadRef}   className="pages__upload">  
+          {/* onWheel={(e)=>handleWheel(e)} */}
             <PagesUploader
             handleSaveAlbum={handleSaveAlbum}
               handleSwipeToEnd={handleSwipeToEnd}
@@ -651,6 +709,10 @@ const PagesPreview = ({
               {uploadsMap().map((img, idx) => (
                 <SwiperSlide key={`${img.id}:${idx}`}>
                   <DragImage
+handleDraggingImage={handleDraggingImage}
+                  onImageMouseLeave={onImageMouseLeave}
+                  onImageMouseEnter={onImageMouseEnter}
+                  imagesCounter={imagesCounter}
                     handleSetImgToTemplate={handleSetImgToTemplate}
                     uploadPercent={uploadPercent}
                     baseItem={img.id == null}
@@ -665,6 +727,14 @@ const PagesPreview = ({
           
         </div>
       )}
+       <ReactTooltip
+            id="tooltip_id"
+            place="bottom"
+            type="light"
+            effect="float"
+            multiline={true}
+          />
+        
     </>
   );
 };

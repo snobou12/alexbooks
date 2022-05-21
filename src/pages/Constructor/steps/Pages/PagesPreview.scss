@@ -46,6 +46,9 @@
 			background-color: #dde4ee;
 		}
 	}
+	&--behavior {
+		overscroll-behavior: none;
+	}
 }
 
 .pages__uploader {
@@ -150,17 +153,24 @@
 		color: white;
 	}
 }
-
+// .swiper-slide {
+// 	position: relative !important;
+// 	top: 0 !important;
+// 	left: 0 !important;
+// 	right: 0 !important;
+// 	bottom: 0 !important;
+// 	z-index: 1001 !important;
+// }
 .pages__uploads_item {
-	position: relative;
+	position: static;
 	top: 0;
 	left: 0;
 	right: 0;
 	bottom: 0;
 	z-index: 101;
 	cursor: pointer;
-	height: 70px;
-	width: 70px;
+	height: 80px;
+	width: 80px;
 	border-radius: 7px;
 	transition: ease all 0.3s;
 
@@ -170,9 +180,10 @@
 		opacity: 0.3 !important;
 	}
 	img {
-		width: 70px;
-		height: 70px;
+		width: 80px;
+		height: 80px;
 		object-fit: cover;
+		object-position: center;
 		border-radius: 7px;
 	}
 }
@@ -320,10 +331,25 @@
 	background-color: rgb(225 225 225);
 	border: 0;
 	outline: none;
-	overflow: hidden;
 	user-select: none;
-
 	z-index: 101;
+}
+
+@-webkit-keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
 }
 
 .tmpl__image_controls {
@@ -333,14 +359,46 @@
 	bottom: 0;
 	right: 0;
 	border: 0;
+	display: block;
+	-webkit-animation: fadeIn 0.6s;
+	animation: fadeIn 0.6s;
 	outline: none;
-	overflow: hidden;
+	width: 50%;
+	height: 50%;
 	z-index: 2000;
-	opacity: 1;
-	transition: ease 0.2s all;
 	&--hidden {
-		visibility: hidden;
+		transition: opacity 0.6s ease-out;
+		display: none;
+	}
+}
+
+.pages__image_preview {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	bottom: 0;
+	right: 0;
+	z-index: 1001;
+	height: 600px;
+	width: 600px;
+	box-sizing: border-size;
+	opacity: 1;
+	transition: ease 0.3s all;
+	border-radius: 20px;
+	img {
+		border-radius: 20px;
+
+		transition: ease 0.3s all;
+
+		object-fit: cover;
+		height: 600px;
+		width: 600px;
+	}
+
+	&--hidden {
 		opacity: 0;
+		visibility: hidden;
 	}
 }
 
@@ -437,8 +495,6 @@
 		}
 	}
 	@media (max-width: 1404px) {
-		.pages__paper_quadratic_ls_element {
-		}
 		svg {
 			width: 10px;
 			height: 10px;
@@ -537,7 +593,6 @@
 	background-color: rgb(225 225 225);
 	border: 0;
 	outline: none;
-	overflow: hidden;
 	user-select: none;
 }
 
@@ -603,7 +658,6 @@
 	background-color: rgb(225 225 225);
 	border: 0;
 	outline: none;
-	overflow: hidden;
 	user-select: none;
 }
 
@@ -684,7 +738,6 @@
 	background-color: rgb(225 225 225);
 	border: 0;
 	outline: none;
-	overflow: hidden;
 	user-select: none;
 }
 
@@ -703,8 +756,8 @@
 	}
 }
 
-#image-tooltip {
-	font-size: 10px;
+#tooltip_id {
+	font-size: 14px;
 	color: rgb(104, 114, 129);
 	font-weight: 500;
 	padding: 5px;

@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useDrag } from "react-dnd";
-const DragImage = ({img,isUploadingImages,deleteImageFromUploads,baseItem,uploadPercent,handleSetImgToTemplate }) => {
+const DragImage = ({img,handleDraggingImage,isUploadingImages,deleteImageFromUploads,baseItem,uploadPercent,handleSetImgToTemplate,imagesCounter,onImageMouseLeave,onImageMouseEnter }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "TMPL_EL_BOX",
     canDrag:!isUploadingImages,
@@ -28,12 +28,27 @@ const DragImage = ({img,isUploadingImages,deleteImageFromUploads,baseItem,upload
       
       deleteImageFromUploads({imageId:img.id,imageWidth:img.imageWidth,imageHeight:img.imageHeight})
   }
+  function getUsedCount(){
+    let count = 0;
+    if(imagesCounter.length !== 0){
+      imagesCounter.forEach((imageCountData)=>{
+        if(imageCountData.imageId === img.id){
+          count = imageCountData.countUsed;
+        }
+      })
+    }
+    return count;
+  }
   
   const opacity = isDragging ? 0.4 : 1;
-  
+
+  React.useEffect(()=>{
+    handleDraggingImage(isDragging);
+	},[isDragging])
   return (
     <>
-    <div style={{opacity}} ref={drag}  className={`pages__uploads_item ${isUploadingImages && "pages__uploads_item--disabled"}`}>
+    
+    <div onMouseEnter={()=>onImageMouseEnter(isDragging,img)} onMouseLeave={()=>onImageMouseLeave(isDragging,img)}  style={{opacity}} ref={drag}  className={`pages__uploads_item ${isUploadingImages && "pages__uploads_item--disabled"}`}>
                           <img src={img.blob} alt="image" />
       {!isUploadingImages && <div
         className="pages__uploads_item_delete"
@@ -49,7 +64,9 @@ const DragImage = ({img,isUploadingImages,deleteImageFromUploads,baseItem,upload
         </svg>
         
       </div>}
-      {true && <div className="pages__uploads_item_uploaded">
+      {getUsedCount() !== 0 && <div data-for="tooltip_id"
+              data-tip={`Иcпользуется ${getUsedCount()} раз(а)`}
+              data-iscapture="true" className="pages__uploads_item_uploaded">
         <svg
       xmlns="http://www.w3.org/2000/svg"
       width="14"
@@ -69,9 +86,11 @@ const DragImage = ({img,isUploadingImages,deleteImageFromUploads,baseItem,upload
       <span style={{width:`${uploadPercent}%`}} className="pages__uploads_item_percent_value">
       </span>
          </div>}
+         
 
     </div>
     
+   
     </>
   );
 };

@@ -8,6 +8,8 @@ import {
 	BsFillArrowLeftCircleFill,
 	BsFillArrowRightCircleFill,
 } from "react-icons/bs";
+import TmplElmBoxComponent from "./ui/TmplElmBoxComponent/TmplElmBoxComponent";
+
 const TmplElementBox = ({
 	pageId,
 	justPreview,
@@ -62,31 +64,22 @@ const TmplElementBox = ({
 			direction,
 		});
 	};
+
+	const onMouseEnterHandler = () => {
+		setVisibleControls(true);
+	};
+
 	return (
 		<>
-			<div
-				ref={drop}
-				onMouseOver={() => setVisibleControls(true)}
-				style={{
-					width: tmplElement.position.w,
-					height: tmplElement.position.h,
-					left: tmplElement.position.l,
-					top: tmplElement.position.t,
-					backgroundColor,
-					userSelect: "none",
-					transform: `rotate(${
-						image?.directionOptions.rotate ? "180deg" : "0deg"
-					})`,
-					backgroundImage: tmplElement.image && `url(${image.blob})`,
-					backgroundPosition: image?.directionOptions.contain
-						? "center"
-						: `${image?.directionOptions.axisX}% ${image?.directionOptions.axisY}%`,
-					backgroundSize: image?.directionOptions.contain ? "contain" : "cover",
-					backgroundRepeat: "no-repeat",
-					transition: "ease all .3s",
-				}}
-				className={cn}
-			></div>
+			<TmplElmBoxComponent
+				refer={drop}
+				cn={cn}
+				onMouseEnterHandler={onMouseEnterHandler}
+				tmplElement={tmplElement}
+				backgroundColor={backgroundColor}
+				image={image}
+			/>
+
 			<div
 				onMouseLeave={() => setVisibleControls(false)}
 				style={{

@@ -4,10 +4,12 @@ import {Constructor,Basket,Checkout,ConstructorPrev, Blank} from '../pages';
 import "react-toastify/dist/ReactToastify.css";
 
 import './App.scss';
+import { Header } from '../components';
 
 function App() {
   return (
     <div className="app">
+      {/* <Header /> */}
      <div className='app__content'>
        <Routes  >
          <Route path='/album/:albumId' element={<Constructor />} />

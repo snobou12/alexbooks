@@ -470,6 +470,7 @@ const constructorSlice = createSlice({
         },
       ],
     },
+    imagesCounter:[],
     imageKeysToDelete:[],
     pagesValid: [],
     pages: {
@@ -2466,7 +2467,7 @@ const constructorSlice = createSlice({
       let tmplElements = [...tmplTemplate.elements];
       let tmplNewElements = tmplElements.map((elem) => {
         if (elem.id === tmplElementId) {
-          return { ...elem,image: {...neededImageObj,directionOptions:{contain:false,axisY:50,axisX:50,rotate:false,},imageOptions} };
+          return { ...elem,image: {...neededImageObj,directionOptions:{contain:false,axisY:50,axisX:50,rotate:"up",},imageOptions} };
         } else {
           return { ...elem };
         }
@@ -2600,7 +2601,20 @@ const { pageId, sideToChange, tmplElementId } = action.payload;
           let prevElem = { ...elem };
           let prevImage={...prevElem.image};
           let prevDirectionOptions={...prevImage.directionOptions};
-          let newDirectionOptions={...prevDirectionOptions,rotate:!prevDirectionOptions.rotate};
+          let newRotate="";
+          if(prevDirectionOptions.rotate === "up"){
+            newRotate="right"
+          }
+          else if(prevDirectionOptions.rotate === "right"){
+            newRotate="down"
+          }
+          else if(prevDirectionOptions.rotate === "down"){
+            newRotate="left";
+          }
+          else {
+            newRotate="up"
+          }
+          let newDirectionOptions={...prevDirectionOptions,rotate:newRotate};
           let newImage={...prevElem.image,directionOptions:newDirectionOptions};
           let newElem={...elem,image:newImage};
           return { ...newElem };
@@ -2648,7 +2662,7 @@ const { pageId, sideToChange, tmplElementId } = action.payload;
           let prevAxisY=prevDirectionOptions.axisY;
           let prevAxisX=prevDirectionOptions.axisX;
           let rotated = prevDirectionOptions.rotate;
-          if(!rotated){
+          if(rotated === "up"){
             if(direction === "up"){
              if(prevAxisY > 0){
               prevAxisY-=10;
@@ -2733,6 +2747,9 @@ const { pageId, sideToChange, tmplElementId } = action.payload;
       state.size = contsructorDefaultState.size;
       state.imageKeysToDelete=contsructorDefaultState.imageKeysToDelete;
     },
+    handleUpdateImagesCounter(state,action){
+      state.imagesCounter=action.payload;
+    }
   },
   extraReducers: {
     //Получить все id альбомов
@@ -3076,6 +3093,7 @@ export const {
   handleRotateImageInTemplateElement,
   handleContainImageInTemplateElement,
   handleChangeAxisValuesInTemplateElement,
+  handleUpdateImagesCounter,
   handleReloadConstructorConfig,
 } = constructorSlice.actions;
 export default constructorSlice.reducer;
