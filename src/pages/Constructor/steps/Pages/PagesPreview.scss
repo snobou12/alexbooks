@@ -227,8 +227,12 @@
 	border-radius: 50%;
 	background-color: rgb(175, 175, 175);
 	fill: rgb(0 0 0);
-	transition: 0.3s ease all;
+	transition: ease all 0.3s;
 	cursor: pointer;
+
+	svg {
+		transition: ease all 0.3s;
+	}
 	&:hover {
 		background-color: black;
 		svg {

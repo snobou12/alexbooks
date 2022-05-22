@@ -85,7 +85,10 @@
   width: 50px;
   height: 50px;
   cursor: pointer;
+
   img {
+    transition: none;
+
     border-radius: 7px;
     width: 50px;
     height: 50px;

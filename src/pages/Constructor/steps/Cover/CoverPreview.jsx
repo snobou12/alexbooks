@@ -1,23 +1,35 @@
-/** @format */
 
 import React from "react";
-import { Stage, Layer, Image, Text } from "react-konva";
 import { pathTo } from "../../../../helps/pathes";
-
+import {
+	BsFillArrowUpCircleFill,
+	BsFillArrowDownCircleFill,
+	BsFillArrowLeftCircleFill,
+	BsFillArrowRightCircleFill,
+} from "react-icons/bs";
+import {
+	handleRemoveCoverPhoto,
+	handleChangeAxisOptionsCoverPhoto,
+} from "../../../../redux/reducers/constructor/constructorSlice";
 import "./CoverPreview.scss";
 import { useDispatch, useSelector } from "react-redux";
+import { BASE_URL } from "../../../../static/variables";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-const CoverPreview = ({ stageRef }) => {
+const CoverPreview = ({ stageRef, header_content }) => {
 	const dispatch = useDispatch();
-	const [coverImage, setCoverImage] = React.useState(null);
-	//Тиснение
+	//Обложка +
+	const [coverColorSrc, setCoverColorSrc] = React.useState(null);
+	//Тиснение+
 	const [ecoLetteringImg, setEcoLetteringImg] = React.useState(null);
 	const [textileLetteringImg, setTextileEcoLetteringImg] = React.useState(null);
-	//Фотовставка
+	//Фотовставка+
+	const [photobidDefaults, setPhotobidDefaults] = React.useState(null);
+	const [showPhotobidDefaults, setShowPhotobidDefaults] = React.useState(false);
 	const [ecoPhotoBidImg, setEcoPhotoBidImg] = React.useState(null);
 	const [textilePhotoBidImg, setTextilePhotoBidImg] = React.useState(null);
-	const [showPhotobidDefault, setShowPhotobidDefault] = React.useState(false);
-	const [photobidOptions, setPhotobidOptions] = React.useState({});
+
 	//Металлическая пластина
 	const [ecoMetalplateImg, setEcoMetalplateImg] = React.useState(null);
 	const [textileMetalplateImg, setTextileMetalplateImg] = React.useState(null);
@@ -28,8 +40,9 @@ const CoverPreview = ({ stageRef }) => {
 	const [textileMetalplateText, setTextileMetalplateText] =
 		React.useState(null);
 
-	//Фотообложка
+	//Фотообложка+
 	const [photoCoverImg, setPhotoCoverImg] = React.useState(null);
+	const [photoCoverDefault, setPhotoCoverDefault] = React.useState(false);
 
 	const { cover, size } = useSelector(state => state.constructorSlice);
 
@@ -82,12 +95,8 @@ const CoverPreview = ({ stageRef }) => {
 
 	//Подгрузить обложку
 	React.useEffect(() => {
-		const coverImage = new window.Image();
-		let src = getCoverColorSrc(cover.selectedType);
-		coverImage.src = src;
-		coverImage.onload = () => {
-			setCoverImage(coverImage);
-		};
+		let colorSrc = getCoverColorSrc(cover.selectedType);
+		setCoverColorSrc(colorSrc);
 	}, [
 		cover.selectedType,
 		cover.types[0].selectedColor,
@@ -114,7 +123,10 @@ const CoverPreview = ({ stageRef }) => {
 				let ecoSrc = pathTo(
 					`/images/eco_leather_lettering_designs/${ecoLetteringDesignObj.title}_${ecoLetteringDesignColorObj.title}.png`
 				);
-				let ecoPosition = ecoLetteringDesignObj.position;
+				let ecoPosition =
+					size.selectedType === 0
+						? ecoLetteringDesignObj.position
+						: ecoLetteringDesignObj.rectanglePosition;
 				return { src: ecoSrc, position: ecoPosition };
 			//Ткань
 			case 1:
@@ -130,7 +142,11 @@ const CoverPreview = ({ stageRef }) => {
 				let textileSrc = pathTo(
 					`/images/eco_leather_lettering_designs/${textileLetteringDesignObj.title}_${textileLetteringDesignColorObj.title}.png`
 				);
-				let textilePosition = textileLetteringDesignObj.position;
+				let textilePosition =
+					size.selectedType === 0
+						? textileLetteringDesignObj.position
+						: textileLetteringDesignObj.rectanglePosition;
+
 				return { src: textileSrc, position: textilePosition };
 			default:
 				break;
@@ -142,27 +158,24 @@ const CoverPreview = ({ stageRef }) => {
 			(cover.types[0].selectedDecor === 0 && cover.selectedType === 0) ||
 			(cover.types[1].selectedDecor === 0 && cover.selectedType === 1)
 		) {
-			let letteringImage = new window.Image();
 			let imageData = getLetteringDesignSrcAPosition(cover.selectedType);
-			letteringImage.src = imageData.src;
-			letteringImage.onload = () => {
-				switch (cover.selectedType) {
-					case 0:
-						setEcoLetteringImg({
-							image: letteringImage,
-							position: imageData.position,
-						});
-						break;
-					case 1:
-						setTextileEcoLetteringImg({
-							image: letteringImage,
-							position: imageData.position,
-						});
-						break;
-					default:
-						break;
-				}
-			};
+
+			switch (cover.selectedType) {
+				case 0:
+					setEcoLetteringImg({
+						image: imageData.src,
+						position: imageData.position,
+					});
+					break;
+				case 1:
+					setTextileEcoLetteringImg({
+						image: imageData.src,
+						position: imageData.position,
+					});
+					break;
+				default:
+					break;
+			}
 		} else {
 			setEcoLetteringImg(null);
 			setTextileEcoLetteringImg(null);
@@ -176,6 +189,7 @@ const CoverPreview = ({ stageRef }) => {
 		cover.types[0].features.decor[0].options[0].selectedColor,
 		cover.types[1].features.decor[0].options[0].selectedColor,
 	]);
+	const [visibleControls, setVisibleControls] = React.useState(false);
 
 	//Фотовставка
 	React.useEffect(() => {
@@ -183,32 +197,33 @@ const CoverPreview = ({ stageRef }) => {
 			(cover.types[0].selectedDecor === 1 && cover.selectedType === 0) ||
 			(cover.types[1].selectedDecor === 1 && cover.selectedType === 1)
 		) {
+			setShowPhotobidDefaults(true);
 			switch (cover.selectedType) {
 				case 0:
 					switch (cover.types[0].features.decor[1].selectedSize) {
 						case 0:
-							setPhotobidOptions({
-								w: size.selectedType === 0 ? 560 : 960,
-								h: 440,
-								x: 38,
-								y: 80,
+							setPhotobidDefaults({
+								width: 98.75,
+								height: 68.75,
+								left: 0.625,
+								top: 15.625,
 							});
 							break;
 						case 1:
-							setPhotobidOptions({
-								w: 300,
-								h: 598,
-								x: size.selectedType === 0 ? 240 : 440,
-								y: 1,
+							setPhotobidDefaults({
+								width: 56.25,
+								height: 100,
+								left: 31.25,
+								top: 0,
 							});
 
 							break;
 						case 2:
-							setPhotobidOptions({
-								w: 270,
-								h: 270,
-								x: size.selectedType === 0 ? 175 : 375,
-								y: 160,
+							setPhotobidDefaults({
+								width: 43.75,
+								height: 43.75,
+								left: 28.125,
+								top: 28.125,
 							});
 							break;
 
@@ -220,28 +235,28 @@ const CoverPreview = ({ stageRef }) => {
 				case 1:
 					switch (cover.types[1].features.decor[1].selectedSize) {
 						case 0:
-							setPhotobidOptions({
-								w: size.selectedType === 0 ? 560 : 960,
-								h: 440,
-								x: 38,
-								y: 80,
+							setPhotobidDefaults({
+								width: 98.75,
+								height: 68.75,
+								left: 0.625,
+								top: 15.625,
 							});
 							break;
 						case 1:
-							setPhotobidOptions({
-								w: 300,
-								h: 598,
-								x: size.selectedType === 0 ? 240 : 440,
-								y: 1,
+							setPhotobidDefaults({
+								width: 56.25,
+								height: 100,
+								left: 31.25,
+								top: 0,
 							});
 
 							break;
 						case 2:
-							setPhotobidOptions({
-								w: 270,
-								h: 270,
-								x: size.selectedType === 0 ? 175 : 375,
-								y: 160,
+							setPhotobidDefaults({
+								width: 43.75,
+								height: 43.75,
+								left: 28.125,
+								top: 28.125,
 							});
 							break;
 
@@ -256,29 +271,27 @@ const CoverPreview = ({ stageRef }) => {
 					cover.types[0].features.decor[1].blobImage) ||
 				(cover.selectedType === 1 && cover.types[1].features.decor[1].blobImage)
 			) {
-				let photobidImage = new window.Image();
 				switch (cover.selectedType) {
 					case 0:
-						photobidImage.src = cover.types[0].features.decor[1].blobImage;
-						photobidImage.onload = () => {
-							setEcoPhotoBidImg(photobidImage);
-						};
+						setEcoPhotoBidImg(cover.types[0].features.decor[1].blobImage);
+						setTextilePhotoBidImg(null);
 						break;
 					case 1:
-						photobidImage.src = cover.types[1].features.decor[1].blobImage;
-						photobidImage.onload = () => {
-							setTextilePhotoBidImg(photobidImage);
-						};
+						setTextilePhotoBidImg(cover.types[1].features.decor[1].blobImage);
+						setEcoPhotoBidImg(null);
 						break;
 					default:
 						break;
 				}
-				setShowPhotobidDefault(false);
+				setShowPhotobidDefaults(false);
 			} else {
-				setShowPhotobidDefault(true);
+				setEcoPhotoBidImg(null);
+				setTextilePhotoBidImg(null);
+				setShowPhotobidDefaults(true);
 			}
 		} else {
-			setShowPhotobidDefault(false);
+			setPhotobidDefaults(null);
+			setShowPhotobidDefaults(false);
 			setEcoPhotoBidImg(null);
 			setTextilePhotoBidImg(null);
 		}
@@ -291,109 +304,16 @@ const CoverPreview = ({ stageRef }) => {
 		cover.types[0].features.decor[1].selectedSize,
 		cover.types[1].features.decor[1].selectedSize,
 	]);
+	///////////////////////////////////////////////////////////////////////////////
+	//           \/
 
-	function getPhotobidDefault() {
-		switch (cover.selectedType) {
-			case 0:
-				switch (cover.types[0].features.decor[1].selectedSize) {
-					case 0:
-						return (
-							<Image
-								width={size.selectedType === 0 ? 560 : 960}
-								height={440}
-								x={38}
-								y={80}
-								fill="#FFFFFF"
-								dash={[5, 5]}
-								strokeWidth={0.5}
-								stroke={"dae4f2"}
-							/>
-						);
-					case 1:
-						return (
-							<Image
-								fill="#FFFFFF"
-								width={300}
-								height={598}
-								x={size.selectedType === 0 ? 240 : 440}
-								y={1}
-								dash={[5, 5]}
-								strokeWidth={0.5}
-								stroke={"dae4f2"}
-							/>
-						);
-					case 2:
-						return (
-							<Image
-								fill="#FFFFFF"
-								width={270}
-								height={270}
-								x={size.selectedType === 0 ? 175 : 375}
-								y={160}
-								dash={[5, 5]}
-								strokeWidth={0.5}
-								stroke={"dae4f2"}
-							/>
-						);
-					default:
-						break;
-				}
-				break;
-			case 1:
-				switch (cover.types[1].features.decor[1].selectedSize) {
-					case 0:
-						return (
-							<Image
-								width={size.selectedType === 0 ? 560 : 960}
-								height={440}
-								x={38}
-								y={80}
-								fill="#FFFFFF"
-								dash={[5, 5]}
-								strokeWidth={0.5}
-								stroke={"dae4f2"}
-							/>
-						);
-					case 1:
-						return (
-							<Image
-								fill="#FFFFFF"
-								width={300}
-								height={598}
-								x={size.selectedType === 0 ? 240 : 440}
-								y={1}
-								dash={[5, 5]}
-								strokeWidth={0.5}
-								stroke={"dae4f2"}
-							/>
-						);
-					case 2:
-						return (
-							<Image
-								fill="#FFFFFF"
-								width={270}
-								height={270}
-								x={size.selectedType === 0 ? 175 : 375}
-								y={160}
-								dash={[5, 5]}
-								strokeWidth={0.5}
-								stroke={"dae4f2"}
-							/>
-						);
-					default:
-						break;
-				}
-			default:
-				break;
-		}
-	}
 	//Металлическая пластина(эмблема)
 	React.useEffect(() => {
 		if (
 			(cover.types[0].selectedDecor === 2 && cover.selectedType === 0) ||
 			(cover.types[1].selectedDecor === 2 && cover.selectedType === 1)
 		) {
-			let metalplate = new window.Image();
+			let metalplateSrc = "";
 			switch (cover.selectedType) {
 				case 0:
 					let ecoMetalplateColorObj =
@@ -409,30 +329,33 @@ const CoverPreview = ({ stageRef }) => {
 					switch (ecoMetalPlateSelectedSizeObj.id) {
 						case 0:
 							ecoMetalplatePosition = {
-								x: size.selectedType === 0 ? 200 : 400,
-								y: 125,
-								w: 200,
-								h: 200,
+								width: size.selectedType === 0 ? 28.5714 : 21.2766,
+								height: size.selectedType === 0 ? 28.5714 : 31.25,
+								left: size.selectedType === 0 ? 35.7143 : 39.3617,
+								top: size.selectedType === 0 ? 21.4286 : 18.75,
 							};
 							break;
 						case 1:
 							ecoMetalplatePosition = {
-								x: size.selectedType === 0 ? 270 : 470,
-								y: 420,
-								w: 270,
-								h: 120,
+								width: size.selectedType === 0 ? 38.0952 : 34.0426,
+								height: size.selectedType === 0 ? 21.4286 : 25,
+								left: size.selectedType === 0 ? 50 : 51.0638,
+								top: size.selectedType === 0 ? 66.6667 : 53.125,
 							};
 							break;
 						default:
 							break;
 					}
 
-					metalplate.src = pathTo(
+					metalplateSrc = pathTo(
 						`/images/eco_metalplate_colors/${ecoMetalplateColorObj.title}.png`
 					);
-					metalplate.onload = () => {
-						setEcoMetalplate({ metalplate, position: ecoMetalplatePosition });
-					};
+					setTextileMetalplate(null);
+					setEcoMetalplate({
+						metalplateSrc,
+						position: ecoMetalplatePosition,
+					});
+
 					break;
 				case 1:
 					let textileMetalplateColorObj =
@@ -448,34 +371,33 @@ const CoverPreview = ({ stageRef }) => {
 					switch (textileMetalPlateSelectedSizeObj.id) {
 						case 0:
 							textileMetalplatePosition = {
-								x: size.selectedType === 0 ? 200 : 400,
-								y: 125,
-								w: 200,
-								h: 200,
+								width: size.selectedType === 0 ? 28.5714 : 21.2766,
+								height: size.selectedType === 0 ? 28.5714 : 31.25,
+								left: size.selectedType === 0 ? 35.7143 : 39.3617,
+								top: size.selectedType === 0 ? 21.4286 : 18.75,
 							};
 							break;
 						case 1:
 							textileMetalplatePosition = {
-								x: size.selectedType === 0 ? 270 : 470,
-								y: 420,
-								w: 270,
-								h: 120,
+								width: size.selectedType === 0 ? 38.0952 : 34.0426,
+								height: size.selectedType === 0 ? 21.4286 : 25,
+								left: size.selectedType === 0 ? 50 : 51.0638,
+								top: size.selectedType === 0 ? 66.6667 : 53.125,
 							};
 							break;
 						default:
 							break;
 					}
 
-					metalplate.src = pathTo(
+					metalplateSrc = pathTo(
 						`/images/eco_metalplate_colors/${textileMetalplateColorObj.title}.png`
 					);
+					setEcoMetalplate(null);
+					setTextileMetalplate({
+						metalplateSrc,
+						position: textileMetalplatePosition,
+					});
 
-					metalplate.onload = () => {
-						setTextileMetalplate({
-							metalplate,
-							position: textileMetalplatePosition,
-						});
-					};
 					break;
 				default:
 					break;
@@ -505,7 +427,7 @@ const CoverPreview = ({ stageRef }) => {
 				cover.selectedType === 1 &&
 				cover.types[1].features.decor[2].options[2].selectedDecoration === 0)
 		) {
-			let metalPlateImage = new window.Image();
+			let metalPlateImageSrc = "";
 			//Размер
 			switch (cover.selectedType) {
 				case 0:
@@ -514,41 +436,38 @@ const CoverPreview = ({ stageRef }) => {
 							cover.types[0].features.decor[2].options[2].decors[0]
 								.selectedEngrave
 						];
-
+					console.log(ecoMetalPlateSelectedImgObj);
 					let ecoMetalPlateSelectedSizeObj =
 						cover.types[0].features.decor[2].options[1].sizes[
 							cover.types[0].features.decor[2].options[1].selectedSize
 						];
+
 					let ecoMetalplateImagePosition = {};
 					switch (ecoMetalPlateSelectedSizeObj.id) {
 						case 0:
 							ecoMetalplateImagePosition = {
-								x: size.selectedType === 0 ? 210 : 410,
-								y: 140,
-								w: 180,
-								h: 180,
+								width: ecoMetalPlateSelectedImgObj.quadraticOptions.width,
+								height: ecoMetalPlateSelectedImgObj.quadraticOptions.height,
 							};
 							break;
 						case 1:
 							ecoMetalplateImagePosition = {
-								x: size.selectedType === 0 ? 280 : 480,
-								y: 425,
-								w: 250,
-								h: 110,
+								width: ecoMetalPlateSelectedImgObj.rectangleOptions.width,
+								height: ecoMetalPlateSelectedImgObj.rectangleOptions.height,
 							};
 							break;
 						default:
 							break;
 					}
-					metalPlateImage.src = pathTo(
+					metalPlateImageSrc = pathTo(
 						`/images/eco_metalplate_decorations_${ecoMetalPlateSelectedSizeObj.title}/${ecoMetalPlateSelectedImgObj.title}.png`
 					);
-					metalPlateImage.onload = () => {
-						setEcoMetalplateImg({
-							metalPlateImage,
-							position: ecoMetalplateImagePosition,
-						});
-					};
+
+					setEcoMetalplateImg({
+						metalPlateImageSrc,
+						position: ecoMetalplateImagePosition,
+					});
+
 					setTextileMetalplateImg(null);
 
 					break;
@@ -567,32 +486,28 @@ const CoverPreview = ({ stageRef }) => {
 					switch (textileMetalPlateSelectedSizeObj.id) {
 						case 0:
 							textileMetalplateImagePosition = {
-								x: size.selectedType === 0 ? 210 : 410,
-								y: 140,
-								w: 180,
-								h: 180,
+								width: textileMetalPlateSelectedImgObj.quadraticOptions.width,
+								height: textileMetalPlateSelectedImgObj.quadraticOptions.height,
 							};
 							break;
 						case 1:
 							textileMetalplateImagePosition = {
-								x: size.selectedType === 0 ? 280 : 480,
-								y: 425,
-								w: 250,
-								h: 110,
+								width: textileMetalPlateSelectedImgObj.rectangleOptions.width,
+								height: textileMetalPlateSelectedImgObj.rectangleOptions.height,
 							};
 							break;
 						default:
 							break;
 					}
-					metalPlateImage.src = pathTo(
+					metalPlateImageSrc = pathTo(
 						`/images/eco_metalplate_decorations_${textileMetalPlateSelectedSizeObj.title}/${textileMetalPlateSelectedImgObj.title}.png`
 					);
-					metalPlateImage.onload = () => {
-						setTextileMetalplateImg({
-							metalPlateImage,
-							position: textileMetalplateImagePosition,
-						});
-					};
+
+					setTextileMetalplateImg({
+						metalPlateImageSrc,
+						position: textileMetalplateImagePosition,
+					});
+
 					setEcoMetalplateImg(null);
 
 					break;
@@ -627,31 +542,11 @@ const CoverPreview = ({ stageRef }) => {
 		) {
 			switch (cover.selectedType) {
 				case 0:
-					let ecoMetalplateSizeObj =
-						cover.types[0].features.decor[2].options[1].sizes[
-							cover.types[0].features.decor[2].options[1].selectedSize
-						];
-					let ecoMetalplateTextPosition;
-					switch (ecoMetalplateSizeObj.id) {
-						case 0:
-							ecoMetalplateTextPosition = {
-								x: size.selectedType === 0 ? 205 : 405,
-								y: 125,
-								w: 190,
-								h: 200,
-							};
-							break;
-						case 1:
-							ecoMetalplateTextPosition = {
-								x: size.selectedType === 0 ? 275 : 475,
-								y: 420,
-								w: 260,
-								h: 120,
-							};
-							break;
-						default:
-							break;
-					}
+					// let ecoMetalplateSizeObj =
+					// 	cover.types[0].features.decor[2].options[1].sizes[
+					// 		cover.types[0].features.decor[2].options[1].selectedSize
+					// 	];
+
 					let ecoMetalplateTextSizeObj =
 						cover.types[0].features.decor[2].options[2].decors[1].sizes[
 							cover.types[0].features.decor[2].options[2].decors[1].selectedSize
@@ -662,45 +557,21 @@ const CoverPreview = ({ stageRef }) => {
 						];
 					let ecoMetalplateText =
 						cover.types[0].features.decor[2].options[2].decors[1].typedText;
-					let ecoTextProps = {
+					let ecoTextObj = {
 						text: ecoMetalplateText,
 						fontSize: Number(ecoMetalplateTextSizeObj.value),
 						fontFamily: ecoMetalplateTextFontObj.value,
-						x: ecoMetalplateTextPosition.x,
-						y: ecoMetalplateTextPosition.y,
-						width: ecoMetalplateTextPosition.w,
-						height: ecoMetalplateTextPosition.h,
 					};
 
-					let ecoText = <Text align="center" {...ecoTextProps} />;
-					setEcoMetalplateText(ecoText);
+					setEcoMetalplateText(ecoTextObj);
+					setTextileMetalplateText(null);
 					break;
 				case 1:
-					let textileMetalplateSizeObj =
-						cover.types[1].features.decor[2].options[1].sizes[
-							cover.types[1].features.decor[2].options[1].selectedSize
-						];
-					let textileMetalplateTextPosition;
-					switch (textileMetalplateSizeObj.id) {
-						case 0:
-							textileMetalplateTextPosition = {
-								x: size.selectedType === 0 ? 205 : 405,
-								y: 125,
-								w: 190,
-								h: 200,
-							};
-							break;
-						case 1:
-							textileMetalplateTextPosition = {
-								x: size.selectedType === 0 ? 275 : 475,
-								y: 420,
-								w: 260,
-								h: 120,
-							};
-							break;
-						default:
-							break;
-					}
+					// let textileMetalplateSizeObj =
+					// 	cover.types[1].features.decor[2].options[1].sizes[
+					// 		cover.types[1].features.decor[2].options[1].selectedSize
+					// 	];
+
 					let textileMetalplateTextSizeObj =
 						cover.types[1].features.decor[2].options[2].decors[1].sizes[
 							cover.types[1].features.decor[2].options[2].decors[1].selectedSize
@@ -711,18 +582,14 @@ const CoverPreview = ({ stageRef }) => {
 						];
 					let textileMetalplateText =
 						cover.types[1].features.decor[2].options[2].decors[1].typedText;
-					let textileTextProps = {
+					let textileTextObj = {
 						text: textileMetalplateText,
 						fontSize: Number(textileMetalplateTextSizeObj.value),
 						fontFamily: textileMetalplateTextFontObj.value,
-						x: textileMetalplateTextPosition.x,
-						y: textileMetalplateTextPosition.y,
-						width: textileMetalplateTextPosition.w,
-						height: textileMetalplateTextPosition.h,
 					};
 
-					let textileText = <Text align="center" {...textileTextProps} />;
-					setTextileMetalplateText(textileText);
+					setTextileMetalplateText(textileTextObj);
+					setEcoMetalplateText(null);
 					break;
 				default:
 					break;
@@ -754,186 +621,450 @@ const CoverPreview = ({ stageRef }) => {
 
 	//Фотообложка
 	React.useEffect(() => {
-		if (cover.selectedType === 2 && cover.types[2].blobImage) {
-			let photoCoverImage = new window.Image();
-			photoCoverImage.src = cover.types[2].blobImage;
-			photoCoverImage.onload = () => {
-				setPhotoCoverImg(photoCoverImage);
-			};
+		if (cover.selectedType === 2) {
+			setPhotoCoverDefault(true);
+			if (cover.types[2].blobImage) {
+				setPhotoCoverDefault(false);
+				setPhotoCoverImg(cover.types[2].blobImage);
+			} else {
+				setPhotoCoverImg(null);
+				setPhotoCoverDefault(true);
+			}
 		} else {
 			setPhotoCoverImg(null);
+			setPhotoCoverDefault(false);
 		}
 	}, [cover.selectedType, cover.types[2].blobImage]);
 
+	//Удаление изображения из eco photobid, textile photobid,photocover
+	const handleRemovePhoto = type => {
+		let imageKey = "";
+		if (type === "eco") {
+			imageKey = "eco_photobid";
+		} else if (type === "textile") {
+			imageKey = "textile_photobid";
+		} else {
+			imageKey = "photocover";
+		}
+
+		axios({
+			method: "post",
+			url: `${BASE_URL}/designer/?controller=Album&method=remove&album=${header_content.albumId}&image=${imageKey}`,
+			headers: { "Content-Type": "application/json" },
+		})
+			.then(async res => {
+				if (res.status === 200) {
+					dispatch(handleRemoveCoverPhoto(type));
+				}
+			})
+			.catch(e => {
+				console.log(e);
+				toast.error("Что-то пошло не так");
+			});
+	};
+	//Поменять position фоток для eco photobid, textile photobid,photocover
+	const handleChangeAxisVls = (axis, type) => {
+		dispatch(handleChangeAxisOptionsCoverPhoto({ axis, type }));
+	};
 	return (
 		<div className="cover__preview">
-			<Stage
+			<div
 				ref={stageRef}
-				width={size.selectedType === 0 ? 600 : 1000}
-				height={600}
-				style={{ borderRadius: "8px", overflow: "hidden" }}
+				style={{
+					width: `${size.selectedType === 0 ? "790px" : "1160.31px"}`,
+					transform: `scale(${
+						size.selectedType === 0 ? size.scale : size.scale - 0.15
+					})`,
+				}}
+				className="cover"
 			>
-				<Layer>
-					{/* Обложка книги */}
-					<Image
-						shadowBlur={10}
-						shadowOffset={{ x: 0, y: 0 }}
-						shadowOpacity={1}
-						shadowColor={"#dfdfdf"}
-						x={0}
-						y={4}
-						width={35}
-						height={594}
-						image={coverImage}
-					/>
-					<Image
-						shadowBlur={5}
-						shadowOffset={{ x: 0, y: 6 }}
-						shadowOpacity={1}
-						shadowColor={"#ffffff"}
-						x={35}
-						width={size.selectedType === 0 ? 600 : 1000}
-						height={600}
-						image={coverImage}
-					/>
-					{/*Тиснение */}
+				<div
+					style={{ backgroundImage: `url(${coverColorSrc})` }}
+					className="cover__binding"
+				></div>
+				<div
+					style={{ backgroundImage: `url(${coverColorSrc})` }}
+					className="cover__book"
+				>
+					{/* Тиснение */}
 					{ecoLetteringImg && (
-						<Image
-							x={
-								ecoLetteringImg.position
-									? size.selectedType === 0
-										? ecoLetteringImg.position.x
-										: ecoLetteringImg.position.x + 200
-									: size.selectedType === 0
-									? 175
-									: 375
-							}
-							y={ecoLetteringImg.position ? ecoLetteringImg.position.y : 150}
-							width={
-								ecoLetteringImg.position ? ecoLetteringImg.position.w : 250
-							}
-							height={
-								ecoLetteringImg.position ? ecoLetteringImg.position.h : 250
-							}
-							image={ecoLetteringImg.image}
-						/>
-					)}
-					{textileLetteringImg && (
-						<Image
-							x={
-								textileLetteringImg.position
-									? size.selectedType === 0
-										? textileLetteringImg.position.x
-										: textileLetteringImg.position.x + 200
-									: size.selectedType === 0
-									? 175
-									: 375
-							}
-							y={
-								textileLetteringImg.position
-									? textileLetteringImg.position.y
-									: 150
-							}
-							width={
-								textileLetteringImg.position
-									? textileLetteringImg.position.w
-									: 250
-							}
-							height={
-								textileLetteringImg.position
-									? textileLetteringImg.position.h
-									: 250
-							}
-							image={textileLetteringImg.image}
-						/>
-					)}
-					{/*Фотовставка */}
-					{showPhotobidDefault && getPhotobidDefault()}
-					{cover.selectedType === 0 && ecoPhotoBidImg && (
-						<Image
-							x={photobidOptions.x}
-							width={photobidOptions.w}
-							height={photobidOptions.h}
-							y={photobidOptions.y}
-							image={ecoPhotoBidImg}
-						/>
+						<div className="cover__embossing">
+							<img
+								style={{
+									width: `${ecoLetteringImg?.position?.width}%`,
+									height: `${ecoLetteringImg?.position?.height}%`,
+									left: `${ecoLetteringImg?.position?.left}%`,
+									top: `${ecoLetteringImg?.position?.top}%`,
+								}}
+								src={ecoLetteringImg.image}
+								alt="eco_lettering_img"
+							/>
+						</div>
 					)}
 
-					{cover.selectedType === 1 && textilePhotoBidImg && (
-						<Image
-							x={photobidOptions.x}
-							width={photobidOptions.w}
-							height={photobidOptions.h}
-							y={photobidOptions.y}
-							image={textilePhotoBidImg}
-						/>
+					{textileLetteringImg && (
+						<div className="cover__embossing">
+							<img
+								style={{
+									width: `${textileLetteringImg?.position.width}%`,
+									height: `${textileLetteringImg?.position.height}%`,
+									left: `${textileLetteringImg?.position.left}%`,
+									top: `${textileLetteringImg?.position.top}%`,
+								}}
+								src={textileLetteringImg.image}
+								alt=""
+							/>
+						</div>
 					)}
-					{/* Метал пластина гравировка*/}
-					{/*Метал пластина  Пластина */}
-					{cover.selectedType === 0 && ecoMetalplate && (
-						<Image
-							x={ecoMetalplate.position.x}
-							y={ecoMetalplate.position.y}
-							width={ecoMetalplate.position.w}
-							height={ecoMetalplate.position.h}
-							image={ecoMetalplate.metalplate}
-						/>
+					{/* Фотовставка дефолтные темы */}
+					{showPhotobidDefaults && photobidDefaults && (
+						<div
+							style={{
+								width: `${photobidDefaults.width}%`,
+								height: `${photobidDefaults.height}%`,
+								left: `${photobidDefaults?.left}%`,
+								top: `${photobidDefaults.top}%`,
+							}}
+							className="cover__photobid_default"
+						></div>
 					)}
-					{cover.selectedType === 1 && textileMetalplate && (
-						<Image
-							x={textileMetalplate.position.x}
-							y={textileMetalplate.position.y}
-							width={textileMetalplate.position.w}
-							height={textileMetalplate.position.h}
-							image={textileMetalplate.metalplate}
-						/>
+					{/* Фотовставка */}
+					{ecoPhotoBidImg && (
+						<div
+							style={{
+								width: `${photobidDefaults.width}%`,
+								height: `${photobidDefaults.height}%`,
+								left: `${photobidDefaults.left}%`,
+								top: `${photobidDefaults.top}%`,
+							}}
+							onMouseEnter={() => setVisibleControls(true)}
+							onMouseLeave={() => setVisibleControls(false)}
+							className="cover__photobid"
+						>
+							<img
+								style={{
+									objectFit: "cover",
+									objectPosition: `${cover.types[0].features.decor[1].directionOptions.axisX}% ${cover.types[0].features.decor[1].directionOptions.axisY}%`,
+									transition: "all ease 0.5s",
+								}}
+								src={ecoPhotoBidImg}
+								alt="photobid_img"
+							/>
+							<div
+								style={{
+									width: photobidDefaults.width,
+									height: photobidDefaults.height,
+									left: photobidDefaults.left,
+									top: photobidDefaults.top,
+								}}
+								className={`photobid_image_controls ${
+									(!visibleControls || !ecoPhotoBidImg) &&
+									"photobid_image_controls--hidden"
+								}`}
+							>
+								<div className="photobid_image_control photobid_image_control--dragging">
+									<div
+										onClick={() => handleChangeAxisVls("up", "eco")}
+										className="tmpl__dragging_part tmpl__dragging_part--up"
+									>
+										<BsFillArrowUpCircleFill />
+									</div>
+									<div className="tmpl__dragging_row">
+										<div
+											onClick={() => handleChangeAxisVls("left", "eco")}
+											className="tmpl__dragging_part tmpl__dragging_part--left"
+										>
+											<BsFillArrowLeftCircleFill />
+										</div>
+										<div
+											onClick={() => handleChangeAxisVls("right", "eco")}
+											className="tmpl__dragging_part tmpl__dragging_part--right"
+										>
+											<BsFillArrowRightCircleFill />
+										</div>
+									</div>
+									<div
+										onClick={() => handleChangeAxisVls("down", "eco")}
+										className="tmpl__dragging_part tmpl__dragging_part--down"
+									>
+										<BsFillArrowDownCircleFill />
+									</div>
+								</div>
+
+								<div
+									className="photobid_image_control photobid_image_control--delete"
+									onClick={() => handleRemovePhoto("eco")}
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="20"
+										height="20"
+										fill="none"
+										viewBox="0 0 10 12"
+									>
+										<path
+											fill="#393939"
+											fillRule="evenodd"
+											d="M1.82 11.185S2 12 2.92 12h4.16a1.09 1.09 0 001.098-.815L9 3.2H1l.82 7.985zM6.6 4.4a.4.4 0 11.8 0l-.4 6a.4.4 0 11-.8 0l.4-6zm-2 0a.4.4 0 11.8 0v6a.4.4 0 11-.8 0v-6zM3 4c.22 0 .4.18.4.4l.4 6a.4.4 0 01-.8 0l-.4-6c0-.22.179-.4.4-.4zm5.76-2.4H7V.8c0-.607-.197-.8-.8-.8H3.8c-.554 0-.8.268-.8.8v.8H1.24c-.354 0-.64.27-.64.601 0 .332.286.6.64.6h7.52c.353 0 .64-.268.64-.6 0-.332-.287-.6-.64-.6zm-2.56 0H3.8V.8h2.4v.8z"
+											clipRule="evenodd"
+										></path>
+									</svg>
+								</div>
+							</div>
+						</div>
 					)}
-					{/* Картинка */}
-					{cover.selectedType === 0 && ecoMetalplateImg && (
-						<Image
-							x={ecoMetalplateImg.position.x}
-							y={ecoMetalplateImg.position.y}
-							width={ecoMetalplateImg.position.w}
-							height={ecoMetalplateImg.position.h}
-							image={ecoMetalplateImg.metalPlateImage}
-						/>
+
+					{textilePhotoBidImg && (
+						<div
+							onMouseEnter={() => setVisibleControls(true)}
+							onMouseLeave={() => setVisibleControls(false)}
+							style={{
+								width: `${photobidDefaults.width}%`,
+								height: `${photobidDefaults.height}%`,
+								left: `${photobidDefaults.left}%`,
+								top: `${photobidDefaults.top}%`,
+							}}
+							className="cover__photobid"
+						>
+							<img
+								style={{
+									objectFit: "cover",
+									objectPosition: `${cover.types[1].features.decor[1].directionOptions.axisX}% ${cover.types[1].features.decor[1].directionOptions.axisY}%`,
+									transition: "all ease 0.5s",
+								}}
+								src={textilePhotoBidImg}
+								alt="photobid_img"
+							/>
+							<div
+								style={{
+									width: photobidDefaults.width,
+									height: photobidDefaults.height,
+									left: photobidDefaults.left,
+									top: photobidDefaults.top,
+								}}
+								className={`photobid_image_controls ${
+									(!visibleControls || !textilePhotoBidImg) &&
+									"photobid_image_controls--hidden"
+								}`}
+							>
+								<div className="photobid_image_control photobid_image_control--dragging">
+									<div
+										onClick={() => handleChangeAxisVls("up", "textile")}
+										className="tmpl__dragging_part tmpl__dragging_part--up"
+									>
+										<BsFillArrowUpCircleFill />
+									</div>
+									<div className="tmpl__dragging_row">
+										<div
+											onClick={() => handleChangeAxisVls("left", "textile")}
+											className="tmpl__dragging_part tmpl__dragging_part--left"
+										>
+											<BsFillArrowLeftCircleFill />
+										</div>
+										<div
+											onClick={() => handleChangeAxisVls("right", "textile")}
+											className="tmpl__dragging_part tmpl__dragging_part--right"
+										>
+											<BsFillArrowRightCircleFill />
+										</div>
+									</div>
+									<div
+										onClick={() => handleChangeAxisVls("down", "textile")}
+										className="tmpl__dragging_part tmpl__dragging_part--down"
+									>
+										<BsFillArrowDownCircleFill />
+									</div>
+								</div>
+
+								<div
+									className="photobid_image_control photobid_image_control--delete"
+									onClick={() => handleRemovePhoto("textile")}
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="20"
+										height="20"
+										fill="none"
+										viewBox="0 0 10 12"
+									>
+										<path
+											fill="#393939"
+											fillRule="evenodd"
+											d="M1.82 11.185S2 12 2.92 12h4.16a1.09 1.09 0 001.098-.815L9 3.2H1l.82 7.985zM6.6 4.4a.4.4 0 11.8 0l-.4 6a.4.4 0 11-.8 0l.4-6zm-2 0a.4.4 0 11.8 0v6a.4.4 0 11-.8 0v-6zM3 4c.22 0 .4.18.4.4l.4 6a.4.4 0 01-.8 0l-.4-6c0-.22.179-.4.4-.4zm5.76-2.4H7V.8c0-.607-.197-.8-.8-.8H3.8c-.554 0-.8.268-.8.8v.8H1.24c-.354 0-.64.27-.64.601 0 .332.286.6.64.6h7.52c.353 0 .64-.268.64-.6 0-.332-.287-.6-.64-.6zm-2.56 0H3.8V.8h2.4v.8z"
+											clipRule="evenodd"
+										></path>
+									</svg>
+								</div>
+							</div>
+						</div>
 					)}
-					{cover.selectedType === 1 && textileMetalplateImg && (
-						<Image
-							x={textileMetalplateImg.position.x}
-							y={textileMetalplateImg.position.y}
-							width={textileMetalplateImg.position.w}
-							height={textileMetalplateImg.position.h}
-							image={textileMetalplateImg.metalPlateImage}
-						/>
+
+					{/* Фотообложка */}
+					{photoCoverDefault && <div className="photocover_default"> </div>}
+					{photoCoverImg && (
+						<div
+							onMouseEnter={() => setVisibleControls(true)}
+							onMouseLeave={() => setVisibleControls(false)}
+							style={{
+								width: "100%",
+								height: "100%",
+							}}
+							className="cover__photocover"
+						>
+							<img
+								style={{
+									objectFit: "cover",
+									objectPosition: `${cover.types[2].directionOptions.axisX}% ${cover.types[2].directionOptions.axisY}%`,
+									transition: "all ease 0.5s",
+								}}
+								src={photoCoverImg}
+								alt="photocover_img"
+							/>
+							<div
+								style={{
+									width: "100%",
+									height: "100%",
+									left: "0",
+									top: "0",
+								}}
+								className={`photobid_image_controls ${
+									(!visibleControls || !photoCoverImg) &&
+									"photobid_image_controls--hidden"
+								}`}
+							>
+								<div className="photobid_image_control photobid_image_control--dragging">
+									<div
+										onClick={() => handleChangeAxisVls("up", "photocover")}
+										className="tmpl__dragging_part tmpl__dragging_part--up"
+									>
+										<BsFillArrowUpCircleFill />
+									</div>
+									<div className="tmpl__dragging_row">
+										<div
+											onClick={() => handleChangeAxisVls("left", "photocover")}
+											className="tmpl__dragging_part tmpl__dragging_part--left"
+										>
+											<BsFillArrowLeftCircleFill />
+										</div>
+										<div
+											onClick={() => handleChangeAxisVls("right", "photocover")}
+											className="tmpl__dragging_part tmpl__dragging_part--right"
+										>
+											<BsFillArrowRightCircleFill />
+										</div>
+									</div>
+									<div
+										onClick={() => handleChangeAxisVls("down", "photocover")}
+										className="tmpl__dragging_part tmpl__dragging_part--down"
+									>
+										<BsFillArrowDownCircleFill />
+									</div>
+								</div>
+
+								<div
+									className="photobid_image_control photobid_image_control--delete"
+									onClick={() => handleRemovePhoto("photocover")}
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="20"
+										height="20"
+										fill="none"
+										viewBox="0 0 10 12"
+									>
+										<path
+											fill="#393939"
+											fillRule="evenodd"
+											d="M1.82 11.185S2 12 2.92 12h4.16a1.09 1.09 0 001.098-.815L9 3.2H1l.82 7.985zM6.6 4.4a.4.4 0 11.8 0l-.4 6a.4.4 0 11-.8 0l.4-6zm-2 0a.4.4 0 11.8 0v6a.4.4 0 11-.8 0v-6zM3 4c.22 0 .4.18.4.4l.4 6a.4.4 0 01-.8 0l-.4-6c0-.22.179-.4.4-.4zm5.76-2.4H7V.8c0-.607-.197-.8-.8-.8H3.8c-.554 0-.8.268-.8.8v.8H1.24c-.354 0-.64.27-.64.601 0 .332.286.6.64.6h7.52c.353 0 .64-.268.64-.6 0-.332-.287-.6-.64-.6zm-2.56 0H3.8V.8h2.4v.8z"
+											clipRule="evenodd"
+										></path>
+									</svg>
+								</div>
+							</div>
+						</div>
 					)}
-					{/*Метал пластина  Текст*/}
-					{cover.selectedType === 0 && ecoMetalplateText && ecoMetalplateText}
-					{cover.selectedType === 1 &&
-						textileMetalplateText &&
-						textileMetalplateText}
-					{/*Фотообложка */}
-					{cover.selectedType === 2 && (
-						<Image
-							x={35}
-							width={size.selectedType === 0 ? 565 : 965}
-							height={600}
-							fill="#FFFFFF"
-							dash={[5, 5]}
-							strokeWidth={photoCoverImg ? 0 : 0.5}
-							stroke={"dae4f2"}
-						/>
+					{/* Металлическая пластина (эмблема,гравировка,текст) эко-кожа */}
+					{ecoMetalplate && (
+						<div
+							style={{
+								width: `${ecoMetalplate.position.width}%`,
+								height: `${ecoMetalplate.position.height}%`,
+								left: `${ecoMetalplate.position.left}%`,
+								top: `${ecoMetalplate.position.top}%`,
+								backgroundImage: `url(${ecoMetalplate.metalplateSrc})`,
+							}}
+							className="metalplate"
+						>
+							{ecoMetalplateImg && (
+								<div className="plate_etching">
+									<img
+										src={ecoMetalplateImg.metalPlateImageSrc}
+										style={{
+											width: `${ecoMetalplateImg.position.width}%`,
+											height: `${ecoMetalplateImg.position.height}%`,
+										}}
+										alt="metalplate_engrave_img"
+									/>
+								</div>
+							)}
+							{ecoMetalplateText && (
+								<div className="plate__text_container">
+									<div
+										style={{
+											fontSize: `${ecoMetalplateText.fontSize}px`,
+											fontFamily: `${ecoMetalplateText.fontFamily}`,
+										}}
+										className="plate__text"
+									>
+										{ecoMetalplateText.text}
+									</div>
+								</div>
+							)}
+						</div>
 					)}
-					{cover.selectedType === 2 && photoCoverImg && (
-						<Image
-							x={35}
-							width={size.selectedType === 0 ? 565 : 965}
-							height={600}
-							image={photoCoverImg}
-						/>
+
+					{/* Металлическая пластина (эмблема,гравировка,текст) ткань */}
+
+					{textileMetalplate && (
+						<div
+							style={{
+								width: `${textileMetalplate.position.width}%`,
+								height: `${textileMetalplate.position.height}%`,
+								left: `${textileMetalplate.position.left}%`,
+								top: `${textileMetalplate.position.top}%`,
+								backgroundImage: `url(${textileMetalplate.metalplateSrc})`,
+							}}
+							className="metalplate"
+						>
+							{textileMetalplateImg && (
+								<div className="plate_etching">
+									<img
+										src={textileMetalplateImg.metalPlateImageSrc}
+										style={{
+											width: `${textileMetalplateImg.position.width}%`,
+											height: `${textileMetalplateImg.position.height}%`,
+										}}
+										alt="metalplate_engrave_img"
+									/>
+								</div>
+							)}
+							{textileMetalplateText && (
+								<div className="plate__text_container">
+									<div
+										style={{
+											fontSize: `${textileMetalplateText.fontSize}px`,
+											fontFamily: `${textileMetalplateText.fontFamily}`,
+										}}
+										className="plate__text"
+									>
+										{textileMetalplateText.text}
+									</div>
+								</div>
+							)}
+						</div>
 					)}
-				</Layer>
-			</Stage>
+				</div>
+			</div>
 		</div>
 	);
 };

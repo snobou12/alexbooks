@@ -13,6 +13,7 @@ import {
   handleContainImageInTemplateElement,
   handleRotateImageInTemplateElement,
   handleChangeAxisValuesInTemplateElement,
+  handleSwapImagesInTemplates
 } from "../../../../redux/reducers/constructor/constructorSlice";
 import DragImage from "./DragImage";
 import PagesUploader from "./PagesUploader";
@@ -144,6 +145,9 @@ const PagesPreview = ({
     }
   }
 
+  const handleSwapImages=(obj)=>{
+    dispatch(handleSwapImagesInTemplates(obj));
+  }
   React.useEffect(()=>{
     pageUploadRef.current.addEventListener(`wheel`,handleWheel,{passive:false});
   },[pageUploadRef])
@@ -160,7 +164,7 @@ setIsDraggingImage(bool);
       setDelayHandler(setTimeout(()=>{
         const img = obj.blob;
         setUploadImagePreview({show:true,img})
-      },800))
+      },1000))
 
     }
   }
@@ -468,6 +472,8 @@ setIsDraggingImage(bool);
                       ].templates[0].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          isUploadingImages={isUploadingImages}
+                          handleSwapImages={handleSwapImages}
                           
                           handleChangeAxisValues={handleChangeAxisValues}
                           handleRotateImage={handleRotateImage}
@@ -500,6 +506,8 @@ setIsDraggingImage(bool);
                       ].templates[1].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          isUploadingImages={isUploadingImages}
+                          handleSwapImages={handleSwapImages}
                           
                           handleChangeAxisValues={handleChangeAxisValues}
                           handleRotateImage={handleRotateImage}
@@ -547,6 +555,8 @@ setIsDraggingImage(bool);
                       ].templates[2].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          isUploadingImages={isUploadingImages}
+                          handleSwapImages={handleSwapImages}
                           
                           handleChangeAxisValues={handleChangeAxisValues}
                           handleRotateImage={handleRotateImage}
@@ -586,6 +596,8 @@ setIsDraggingImage(bool);
                       ].templates[0].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          isUploadingImages={isUploadingImages}
+                          handleSwapImages={handleSwapImages}
                           
                           handleChangeAxisValues={handleChangeAxisValues}
                           handleRotateImage={handleRotateImage}
@@ -617,6 +629,8 @@ setIsDraggingImage(bool);
                       ].templates[1].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          isUploadingImages={isUploadingImages}
+                          handleSwapImages={handleSwapImages}
                           
                           handleChangeAxisValues={handleChangeAxisValues}
                           handleRotateImage={handleRotateImage}
@@ -665,6 +679,8 @@ setIsDraggingImage(bool);
                       ].templates[2].template.elements?.map(
                         (tmplElement, idx) => (
                           <TmplElementBox
+                          isUploadingImages={isUploadingImages}
+                          handleSwapImages={handleSwapImages}
                           handleChangeAxisValues={handleChangeAxisValues}
                           handleRotateImage={handleRotateImage}
                           handleSetContainToImage={handleSetContainToImage}
@@ -685,7 +701,7 @@ setIsDraggingImage(bool);
           </div>
 
           <div ref={pageUploadRef}   className="pages__upload">  
-          {/* onWheel={(e)=>handleWheel(e)} */}
+          
             <PagesUploader
             handleSaveAlbum={handleSaveAlbum}
               handleSwipeToEnd={handleSwipeToEnd}
@@ -709,7 +725,7 @@ setIsDraggingImage(bool);
               {uploadsMap().map((img, idx) => (
                 <SwiperSlide key={`${img.id}:${idx}`}>
                   <DragImage
-handleDraggingImage={handleDraggingImage}
+                  handleDraggingImage={handleDraggingImage}
                   onImageMouseLeave={onImageMouseLeave}
                   onImageMouseEnter={onImageMouseEnter}
                   imagesCounter={imagesCounter}

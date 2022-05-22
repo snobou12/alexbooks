@@ -41,3 +41,217 @@
 }
 
 
+.cover{
+  height: 790px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+    background: linear-gradient(89.68deg, rgb(244 246 247) 0.22%, rgb(220 220 222) 2.93%, rgb(231 233 235) 4.22%, rgb(231 233 235) 99.81%);
+    border-radius: 5px 3px 3px 5px;
+    box-shadow: 0px 6px 11px #d7dae1;
+}
+
+.cover__binding{
+position: absolute;
+    top: 50%;
+    left: -5%;
+    width: 5%;
+    height: 99%;
+    box-shadow: 0 0 10px rgb(0 0 0 / 15%);
+    border-radius: 5px 0 0 5px;
+    transform: translateY(-50%);
+    background-size: auto 100%;
+    background-size: cover;
+}
+
+.cover__book{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+
+
+}
+
+.cover__embossing{
+      position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1001;
+    img{
+          position: absolute;
+      
+    }
+    
+}
+
+.cover__photobid_default{
+       position: absolute;
+    background-color: rgb(255 255 255);
+    border: 5px dashed rgb(218 228 242);
+    border-radius: 5px;
+    overflow: hidden;
+    z-index: 101;
+
+}
+
+.photocover_default{
+  position: absolute;
+    background-color: rgb(255 255 255);
+    border: 5px dashed rgb(218 228 242);
+    border-radius: 5px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 101;
+}
+
+.cover__photocover{
+   position: absolute;
+   
+    border-radius: 5px;
+    overflow: hidden;
+    z-index: 101;
+    user-select: none;
+    img{
+      
+      width: 100%;
+      height: 100%;
+      
+    }
+}
+
+
+.cover__photobid{
+   position: absolute;
+   
+    border-radius: 5px;
+    overflow: hidden;
+    z-index: 101;
+    user-select: none;
+    img{
+      width: 100%;
+      height: 100%;
+      
+    }
+}
+
+.photobid_image_controls{
+  transition: ease all .3s;
+  &--hidden{
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+
+.photobid_image_control{
+  position: absolute;
+	background-color: rgb(214 239 252);
+	padding: 3%;
+	border-radius: 50%;
+	z-index: 2000;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: ease all 0.3s;
+
+	cursor: pointer;
+	svg {
+		width: 20px;
+		height: 20px;
+	}
+
+
+
+	&--delete {
+		right: 20px;
+		top: 20px;
+	}
+
+	&--dragging {
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		gap: 0px;
+		cursor: default;
+		background-color: unset !important;
+		.tmpl__dragging_part {
+			cursor: pointer;
+			transition: ease all 0.3s;
+			svg {
+				width: 100%;
+				min-height: 40px;
+				transition: ease all 0.3s;
+				fill: rgb(214 239 252);
+				
+			}
+			&:hover {
+				fill: #fff;
+			}
+		}
+		.tmpl__dragging_row {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 40px;
+		}
+		&:hover {
+			background-color: unset !important;
+		}
+	}
+
+	&:hover {
+		background-color: #fff;
+	}
+
+	
+}
+
+
+.metalplate{
+  position: absolute;
+    border-radius: 10%;
+    -webkit-background-size: cover;
+    background-size: cover;
+    z-index: 105;
+    
+}
+
+.plate_etching{
+      position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.plate__text_container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+    width: 100%;
+    height: 100%;
+  overflow: hidden;
+
+}
+
+.plate__text{
+  
+    
+      white-space:pre-wrap;
+
+}

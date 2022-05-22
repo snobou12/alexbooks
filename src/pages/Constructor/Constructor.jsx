@@ -1,5 +1,6 @@
 
 import React from "react";
+import html2canvas from 'html2canvas';
 import {
   Size,
   SizePreview,
@@ -87,7 +88,7 @@ const Constructor = () => {
           />
         );
       case 2:
-        return <CoverPreview stageRef={stageRef} />;
+        return <CoverPreview header_content={header_content} stageRef={stageRef} />;
       case 3:
         return (
           <PagesPreview
@@ -120,7 +121,7 @@ const Constructor = () => {
  
   
 
-  function uploadImageToServer(keyImg, file) {
+  function uploadPreviewImageToServer(keyImg, file) {
     let formData = new FormData();
     if (keyImg === "cover_preview") {
       formData.append("cover_preview", file);
@@ -158,13 +159,16 @@ const Constructor = () => {
               dispatch(handleIncrementStep());
             }
           } else if (header_content.step === 2) {
+            const element=stageRef.current;
+            const canvasPreview =await html2canvas(element);
+            const data=canvasPreview.toDataURL("image/jpg");
+            
             // let stageURI = stageRef.current.getStage().toDataURL();
-            // const previewImage = await fetchImageFromServer(
-            //   stageURI,
-            //   "cover_preview"
-            // );
-            // uploadImageToServer("cover_preview", previewImage);
-             dispatch(handleIncrementStep());
+            const previewImage = await fetchImageFromServer(
+              data,
+              "cover_preview"
+            );
+            uploadPreviewImageToServer("cover_preview", previewImage);
           } else if (header_content.step === 3) {
             setShowValids(true);
             if (!validCheck) {
@@ -253,10 +257,25 @@ const Constructor = () => {
     headerContentASizeData.selectedQuadraticSize = selectedQuadraticSize;
     headerContentASizeData.selectedLandscapeSize = selectedLandscapeSize;
     
+    
 
     //COVER
+
+
+
     let coverSelectedType = cover.selectedType;
     let coverData = { ...cover };
+    // Опции для фотовставки Эко кожа
+    let ecoPhotobidOptions ={...coverData.types[0].features.decor[1].directionOptions};
+    // Опции для фотовставки Ткань
+
+    let textilePhotobidOptions={...coverData.types[1].features.decor[1].directionOptions}
+
+    // Опции для фотообложки
+
+    let photocoverOptions={...coverData.types[2].directionOptions};
+
+
     //Эко кожа
     let ecoLeatherData = { ...coverData.types[0] };
     //цвет обложки
@@ -353,6 +372,7 @@ const Constructor = () => {
         ecoLeatherMetalPlateText,
         ecoLeatherMetalPlateTextFont,
         ecoLeatherMetalPlateTextSize,
+        ecoPhotobidOptions,
       },
       textile: {
         textileSelectedColor,
@@ -367,10 +387,12 @@ const Constructor = () => {
         textileMetalPlateText,
         textileMetalPlateTextFont,
         textileMetalPlateTextSize,
+        textilePhotobidOptions
       },
       photoCover: {
         photoCoverColor,
         photoCoverSelectedType,
+        photocoverOptions
       },
     };
     let fullPagesData = { ...pages.papers, selectedType: pages.selectedType };

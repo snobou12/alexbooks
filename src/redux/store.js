@@ -1,11 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { combineReducers } from "@reduxjs/toolkit";
-
+import { setAutoFreeze } from 'immer';
 import constructorSlice from "./reducers/constructor/constructorSlice";
 import checkoutSlice from "./reducers/checkout/checkoutSlice";
 import basketSlice from "./reducers/basket/basketSlice";
 import blankSlice from "./reducers/blank/blankSlice";
 
+setAutoFreeze(false);
 
 
 const rootReducer=combineReducers({

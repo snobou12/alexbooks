@@ -1,7 +1,7 @@
 /** @format */
 
 import React from "react";
-import { useDrop } from "react-dnd";
+import { useDrop, useDrag } from "react-dnd";
 import {
 	BsFillArrowUpCircleFill,
 	BsFillArrowDownCircleFill,
@@ -11,6 +11,7 @@ import {
 import TmplElmBoxComponent from "./ui/TmplElmBoxComponent/TmplElmBoxComponent";
 
 const TmplElementBox = ({
+	isUploadingImages,
 	pageId,
 	justPreview,
 	tmplElement,
@@ -21,15 +22,17 @@ const TmplElementBox = ({
 	handleSetContainToImage,
 	handleRotateImage,
 	handleChangeAxisValues,
+	handleSwapImages,
 }) => {
 	//justPreview
 	const [visibleControls, setVisibleControls] = React.useState(false);
-	const [{ canDrop, isOver }, drop] = useDrop(() => ({
+	const [{ canDrop, isOver }, dropRef] = useDrop(() => ({
 		accept: "TMPL_EL_BOX",
 		drop: () => ({
 			options: {
 				tmplElementId: tmplElement.id,
 				sideToChange,
+				pageId,
 			},
 		}),
 		//
@@ -38,6 +41,38 @@ const TmplElementBox = ({
 			canDrop: monitor.canDrop(),
 		}),
 	}));
+	const [{ isDragging }, dragRef] = useDrag(
+		{
+			type: "TMPL_EL_BOX",
+			canDrag: !!image && !isUploadingImages,
+
+			item: { pageId, tmplElementId: tmplElement.id, sideToChange },
+			end: (item, monitor) => {
+				const dropResult = monitor.getDropResult();
+				if (item && dropResult) {
+					let triggerInfo = {
+						pageId: item.pageId,
+						sideToChange: item.sideToChange,
+						tmplElementId: item.tmplElementId,
+					};
+					let targetInfo = {
+						pageId: dropResult.options.pageId,
+						sideToChange: dropResult.options.sideToChange,
+						tmplElementId: dropResult.options.tmplElementId,
+					};
+					if (
+						triggerInfo.pageId === targetInfo.pageId &&
+						triggerInfo.sideToChange === targetInfo.sideToChange &&
+						triggerInfo.tmplElementId === targetInfo.tmplElementId
+					) {
+					} else {
+						handleSwapImages({ triggerInfo, targetInfo });
+					}
+				}
+			},
+		},
+		[isUploadingImages, image]
+	);
 	const isActive = canDrop && isOver;
 	let backgroundColor = "rgb(225, 225, 225)";
 	if (isActive) {
@@ -69,10 +104,11 @@ const TmplElementBox = ({
 		setVisibleControls(true);
 	};
 
+	const ref = React.useRef(null);
+	const dragDropRef = dragRef(dropRef(ref));
 	return (
-		<>
+		<div ref={dragDropRef}>
 			<TmplElmBoxComponent
-				refer={drop}
 				cn={cn}
 				onMouseEnterHandler={onMouseEnterHandler}
 				tmplElement={tmplElement}
@@ -178,7 +214,7 @@ const TmplElementBox = ({
 					</svg>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };
 

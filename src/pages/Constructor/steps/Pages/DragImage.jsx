@@ -50,7 +50,11 @@ const DragImage = ({img,handleDraggingImage,isUploadingImages,deleteImageFromUpl
     
     <div onMouseEnter={()=>onImageMouseEnter(isDragging,img)} onMouseLeave={()=>onImageMouseLeave(isDragging,img)}  style={{opacity}} ref={drag}  className={`pages__uploads_item ${isUploadingImages && "pages__uploads_item--disabled"}`}>
                           <img src={img.blob} alt="image" />
-      {!isUploadingImages && <div
+     
+         
+
+    </div>
+     {!isUploadingImages && <div
         className="pages__uploads_item_delete"
         onClick={()=>deleteImage(img)}
       >
@@ -86,10 +90,6 @@ const DragImage = ({img,handleDraggingImage,isUploadingImages,deleteImageFromUpl
       <span style={{width:`${uploadPercent}%`}} className="pages__uploads_item_percent_value">
       </span>
          </div>}
-         
-
-    </div>
-    
    
     </>
   );

@@ -104,41 +104,153 @@ const constructorSlice = createSlice({
                         id: 0,
                         title: "heart",
                         position: {
-                          x: 235,
-                          y: 225,
-                          w: 150,
-                          h: 150,
+                          width: 25,
+                          height: 25,
+                          left: 37.5,
+                          top: 37.5,
                         },
+                        rectanglePosition:{
+                          width: 17.0213,
+                      height: 25,
+                    left: 41.4894,
+                      top: 37.5,
+                        }
                       },
-                      { id: 1, title: "baptism", position: null },
-                      { id: 2, title: "cats", position: null },
-                      { id: 3, title: "dream", position: null },
-                      { id: 4, title: "wood", position: null },
+                      { id: 1, title: "baptism",position: {
+                          width: 50,
+                          height: 50,
+                          left: 25,
+                          top: 25,
+                        },rectanglePosition:{
+                          width: 34.0426,
+                      height: 50,
+                    left: 32.9787,
+                      top: 25,
+                        } },
+                      { id: 2, title: "cats", position: {
+                          width: 37.5,
+                          height: 43.75,
+                          left: 31.25,
+                          top: 28.125,
+                        }, rectanglePosition:{
+                          width: 25.5319,
+                      height: 43.75,
+                    left: 37.234,
+                      top: 28.125,
+                        } },
+                      { id: 3, title: "dream", position: {
+                          width: 50,
+                          height: 53.125,
+                          left: 25,
+                          top: 23.4375,
+                        },rectanglePosition:{
+                          width: 34.0426,
+                      height: 53.125,
+                    left: 37.9787,
+                      top: 23.4375,
+                        }  },
+                      { id: 4, title: "wood", position: {
+                          width: 50,
+                          height: 50,
+                          left: 25,
+                          top: 25,
+                        }, rectanglePosition:{
+                          width: 34.0426,
+                      height: 50,
+                    left: 32.9787,
+                      top: 25,
+                        } },
                       {
                         id: 5,
                         title: "ourWeddingDay",
                         position: {
-                          x: 192.5,
-                          y: 275,
-                          w: 250,
-                          h: 35,
+                          width: 46.875,
+                          height: 6.25,
+                          left: 26.5625,
+                          top: 46.875,
                         },
+                        rectanglePosition:{
+                          width: 31.9149,
+                      height: 6.25,
+                    left: 34.0426,
+                      top: 46.875,
+                        } 
                       },
                       {
                         id: 6,
                         title: "family",
                         position: {
-                          x: 165.5,
-                          y: 250,
-                          w: 300,
-                          h: 70,
+                          width: 57.5,
+                          height: 13.75,
+                          left: 21.25,
+                          top: 43.125,
                         },
+                        rectanglePosition:{
+                          width: 39.1489,
+                          height: 13.75,
+                          left: 30.4255,
+                          top: 43.125,
+                        }
                       },
-                      { id: 7, title: "weddingDay", position: null },
-                      { id: 8, title: "buggy", position: null },
-                      { id: 9, title: "owl", position: null },
-                      { id: 10, title: "helloWorld", position: null },
-                      { id: 11, title: "elephant", position: null },
+                      { id: 7, title: "weddingDay", position: {
+                          width: 62.5,
+                          height: 40.625,
+                          left: 18.75,
+                          top: 29.6875,
+                        },rectanglePosition:{
+                          width: 42.5532,
+                      height: 40.625,
+                    left: 28.7234,
+                      top: 29.6875,
+                        }  },
+                      { id: 8, title: "buggy", position: {
+                          width: 40.625,
+                          height: 53.125,
+                          left: 29.6875,
+                          top: 23.4375,
+                        },
+                      rectanglePosition:{
+                          width: 27.6596,
+                      height: 53.125,
+                    left: 36.1702,
+                      top: 23.4375,
+                        }  },
+                      { id: 9, title: "owl", position: {
+                          width: 40.625,
+                          height: 53.125,
+                          left: 29.6875,
+                          top: 23.4375,
+                        },
+                      rectanglePosition:{
+                          width: 27.6596,
+                          height: 53.125,
+                          left: 36.1702,
+                          top: 23.4375,
+                      } },
+                      { id: 10, title: "helloWorld", position: {
+                          width: 50,
+                          height: 50.5625,
+                          left: 25,
+                          top: 24.7188,
+                        },
+                      
+                      rectanglePosition:{
+                          width: 34.0426,
+                          height: 50.5625,
+                          left: 32.9787,
+                          top: 24.7188,
+                      } },
+                      { id: 11, title: "elephant", position: {
+                          width: 50,
+                          height: 50,
+                          left: 25,
+                          top: 25,
+                        },rectanglePosition:{
+                          width: 34.0426,
+                          height: 50,
+                          left: 32.9787,
+                          top: 25,
+                      }  },
                     ],
                   },
                 ],
@@ -155,6 +267,10 @@ const constructorSlice = createSlice({
                   { id: 2, title: "quadratic" },
                 ],
                 blobImage: null,
+                directionOptions:{
+                  axisX:50,
+                  axisY:50,
+                }
               },
               {
                 id: 2,
@@ -193,24 +309,115 @@ const constructorSlice = createSlice({
                         transl: "Гравировка",
                         selectedEngrave: 0,
                         engraves: [
-                          { id: 0, title: "justMarried" },
-                          { id: 1, title: "happyBirthdayToYou" },
-                          { id: 2, title: "iLoveYou" },
-                          { id: 3, title: "summer" },
-                          { id: 4, title: "weddingDay" },
-                          { id: 5, title: "newBaby" },
-                          { id: 6, title: "mountains" },
-                          { id: 7, title: "happyBirthday" },
-                          { id: 8, title: "happyNewYear" },
-                          { id: 9, title: "family" },
-                          { id: 10, title: "bunny" },
-                          { id: 11, title: "ship" },
-                          { id: 12, title: "timeToTravel" },
-                          { id: 13, title: "love" },
-                          { id: 14, title: "happyBirthdaySecond" },
-                          { id: 15, title: "airplane" },
-                          { id: 16, title: "flight" },
-                          { id: 17, title: "tree" },
+                          { id: 0, title: "justMarried",quadraticOptions:{width:90.75,height:52.25}
+                        ,rectangleOptions:{width:84.2,height:80.666}
+                      
+                      
+                      
+                      },
+                          { id: 1, title: "happyBirthdayToYou",quadraticOptions:{width:84.25,height:67.25}
+                        ,rectangleOptions:{width:60.66,height:80.666}
+                      
+                      
+                      
+                      },
+                          { id: 2, title: "iLoveYou",quadraticOptions:{width:85.125,height:53.5}
+                        ,rectangleOptions:{width:79.4,height:83}
+                      
+                      
+                      
+                      },
+                          { id: 3, title: "summer",quadraticOptions:{width:84.625,height:37.25}
+                        ,rectangleOptions:{width:75.7,height:55.833}
+                      
+                      
+                      
+                      },
+                          { id: 4, title: "weddingDay",quadraticOptions:{width:89.75,height:22.375}
+                        ,rectangleOptions:{width:87.7,height:36.666}
+                      
+                      
+                      
+                      },
+                          { id: 5, title: "newBaby",quadraticOptions:{width:89.375,height:16.5}
+                        ,rectangleOptions:{width:84.7,height:26}
+                      
+                      
+                      
+                      },
+                          { id: 6, title: "mountains",quadraticOptions:{width:89.375,height:33.5} 
+                        ,rectangleOptions:{width:85.9,height:53.333}
+                      
+                      
+                      
+                      },
+                          { id: 7, title: "happyBirthday",quadraticOptions:{width:90.375,height:74.5}
+                        ,rectangleOptions:{width:64.3,height:88.33}
+                      
+                      
+                      
+                      },
+                          { id: 8, title: "happyNewYear",quadraticOptions:{width:84.625,height:70.25} 
+                        ,rectangleOptions:{width:62.5,height:85.833}
+                      
+                      
+                      
+                      },
+                          { id: 9, title: "family",quadraticOptions:{width:89.375,height:30.5} 
+                        ,rectangleOptions:{width:80.5,height:85.833}
+                        // family need resize
+                      
+                      
+                      
+                      },
+                          { id: 10, title: "bunny",quadraticOptions:{width:53.75,height:89.5}
+                        ,rectangleOptions:{width:32,height:89.166}
+                      
+                      
+                      
+                      },
+                          { id: 11, title: "ship",quadraticOptions:{width:72.875,height:75.75}
+                        ,rectangleOptions:{width:46.2,height:80.5}
+                      
+                      
+                      
+                      },
+                          { id: 12, title: "timeToTravel",quadraticOptions:{width:86.375,height:85.875}
+                        ,rectangleOptions:{width:52.3,height:83.333}
+                      
+                      
+                      
+                      },
+                          { id: 13, title: "love",quadraticOptions:{width:87.625,height:62}
+                        ,rectangleOptions:{width:68.9,height:81.333}
+                      
+                      
+                      
+                      },
+                          { id: 14, title: "happyBirthdaySecond",quadraticOptions:{width:88.75,height:54.375}
+                        ,rectangleOptions:{width:77.9,height:79.666}
+                      
+                      
+                      
+                      },
+                          { id: 15, title: "airplane",quadraticOptions:{width:75.125,height:84.875}
+                        ,rectangleOptions:{width:42.2,height:79}
+                      
+                      
+                      
+                      },
+                          { id: 16, title: "flight",quadraticOptions:{width:80,height:41.875} 
+                        ,rectangleOptions:{width:83.7,height:72.833}
+                      
+                      
+                      
+                      },
+                          { id: 17, title: "tree",quadraticOptions:{width:65.875,height:81.75} 
+                        ,rectangleOptions:{width:41.1,height:84.666}
+                      
+                      
+                      
+                      },
                         ],
                       },
                       {
@@ -282,46 +489,158 @@ const constructorSlice = createSlice({
                     title: "design",
                     transl: "Узор",
                     selectedDesign: 5,
-                    designs: [
+                     designs:[
                       {
                         id: 0,
                         title: "heart",
                         position: {
-                          x: 235,
-                          y: 225,
-                          w: 150,
-                          h: 150,
+                          width: 25,
+                          height: 25,
+                          left: 37.5,
+                          top: 37.5,
                         },
+                        rectanglePosition:{
+                          width: 17.0213,
+                      height: 25,
+                    left: 41.4894,
+                      top: 37.5,
+                        }
                       },
-                      { id: 1, title: "baptism", position: null },
-                      { id: 2, title: "cats", position: null },
-                      { id: 3, title: "dream", position: null },
-                      { id: 4, title: "wood", position: null },
+                      { id: 1, title: "baptism",position: {
+                          width: 50,
+                          height: 50,
+                          left: 25,
+                          top: 25,
+                        },rectanglePosition:{
+                          width: 34.0426,
+                      height: 50,
+                    left: 32.9787,
+                      top: 25,
+                        } },
+                      { id: 2, title: "cats", position: {
+                          width: 37.5,
+                          height: 43.75,
+                          left: 31.25,
+                          top: 28.125,
+                        }, rectanglePosition:{
+                          width: 25.5319,
+                      height: 43.75,
+                    left: 37.234,
+                      top: 28.125,
+                        } },
+                      { id: 3, title: "dream", position: {
+                          width: 50,
+                          height: 53.125,
+                          left: 25,
+                          top: 23.4375,
+                        },rectanglePosition:{
+                          width: 34.0426,
+                      height: 53.125,
+                    left: 37.9787,
+                      top: 23.4375,
+                        }  },
+                      { id: 4, title: "wood", position: {
+                          width: 50,
+                          height: 50,
+                          left: 25,
+                          top: 25,
+                        }, rectanglePosition:{
+                          width: 34.0426,
+                      height: 50,
+                    left: 32.9787,
+                      top: 25,
+                        } },
                       {
                         id: 5,
                         title: "ourWeddingDay",
                         position: {
-                          x: 192.5,
-                          y: 275,
-                          w: 250,
-                          h: 35,
+                          width: 46.875,
+                          height: 6.25,
+                          left: 26.5625,
+                          top: 46.875,
                         },
+                        rectanglePosition:{
+                          width: 31.9149,
+                      height: 6.25,
+                    left: 34.0426,
+                      top: 46.875,
+                        } 
                       },
                       {
                         id: 6,
                         title: "family",
                         position: {
-                          x: 165.5,
-                          y: 250,
-                          w: 300,
-                          h: 70,
+                          width: 57.5,
+                          height: 13.75,
+                          left: 21.25,
+                          top: 43.125,
                         },
+                        rectanglePosition:{
+                          width: 39.1489,
+                          height: 13.75,
+                          left: 30.4255,
+                          top: 43.125,
+                        }
                       },
-                      { id: 7, title: "weddingDay", position: null },
-                      { id: 8, title: "buggy", position: null },
-                      { id: 9, title: "owl", position: null },
-                      { id: 10, title: "helloWorld", position: null },
-                      { id: 11, title: "elephant", position: null },
+                      { id: 7, title: "weddingDay", position: {
+                          width: 62.5,
+                          height: 40.625,
+                          left: 18.75,
+                          top: 29.6875,
+                        },rectanglePosition:{
+                          width: 42.5532,
+                      height: 40.625,
+                    left: 28.7234,
+                      top: 29.6875,
+                        }  },
+                      { id: 8, title: "buggy", position: {
+                          width: 40.625,
+                          height: 53.125,
+                          left: 29.6875,
+                          top: 23.4375,
+                        },
+                      rectanglePosition:{
+                          width: 27.6596,
+                      height: 53.125,
+                    left: 36.1702,
+                      top: 23.4375,
+                        }  },
+                      { id: 9, title: "owl", position: {
+                          width: 40.625,
+                          height: 53.125,
+                          left: 29.6875,
+                          top: 23.4375,
+                        },
+                      rectanglePosition:{
+                          width: 27.6596,
+                          height: 53.125,
+                          left: 36.1702,
+                          top: 23.4375,
+                      } },
+                      { id: 10, title: "helloWorld", position: {
+                          width: 50,
+                          height: 50.5625,
+                          left: 25,
+                          top: 24.7188,
+                        },
+                      
+                      rectanglePosition:{
+                          width: 34.0426,
+                          height: 50.5625,
+                          left: 32.9787,
+                          top: 24.7188,
+                      } },
+                      { id: 11, title: "elephant", position: {
+                          width: 50,
+                          height: 50,
+                          left: 25,
+                          top: 25,
+                        },rectanglePosition:{
+                          width: 34.0426,
+                          height: 50,
+                          left: 32.9787,
+                          top: 25,
+                      }  },
                     ],
                   },
                 ],
@@ -338,6 +657,10 @@ const constructorSlice = createSlice({
                   { id: 2, title: "quadratic" },
                 ],
                 blobImage: null,
+                directionOptions:{
+                  axisX:50,
+                  axisY:50,
+                }
               },
               {
                 id: 2,
@@ -376,24 +699,115 @@ const constructorSlice = createSlice({
                         transl: "Гравировка",
                         selectedEngrave: 0,
                         engraves: [
-                          { id: 0, title: "justMarried" },
-                          { id: 1, title: "happyBirthdayToYou" },
-                          { id: 2, title: "iLoveYou" },
-                          { id: 3, title: "summer" },
-                          { id: 4, title: "weddingDay" },
-                          { id: 5, title: "newBaby" },
-                          { id: 6, title: "mountains" },
-                          { id: 7, title: "happyBirthday" },
-                          { id: 8, title: "happyNewYear" },
-                          { id: 9, title: "family" },
-                          { id: 10, title: "bunny" },
-                          { id: 11, title: "ship" },
-                          { id: 12, title: "timeToTravel" },
-                          { id: 13, title: "love" },
-                          { id: 14, title: "happyBirthdaySecond" },
-                          { id: 15, title: "airplane" },
-                          { id: 16, title: "flight" },
-                          { id: 17, title: "tree" },
+                          { id: 0, title: "justMarried",quadraticOptions:{width:90.75,height:52.25}
+                        ,rectangleOptions:{width:84.2,height:80.666}
+                      
+                      
+                      
+                      },
+                          { id: 1, title: "happyBirthdayToYou",quadraticOptions:{width:84.25,height:67.25}
+                        ,rectangleOptions:{width:60.66,height:80.666}
+                      
+                      
+                      
+                      },
+                          { id: 2, title: "iLoveYou",quadraticOptions:{width:85.125,height:53.5}
+                        ,rectangleOptions:{width:79.4,height:83}
+                      
+                      
+                      
+                      },
+                          { id: 3, title: "summer",quadraticOptions:{width:84.625,height:37.25}
+                        ,rectangleOptions:{width:75.7,height:55.833}
+                      
+                      
+                      
+                      },
+                          { id: 4, title: "weddingDay",quadraticOptions:{width:89.75,height:22.375}
+                        ,rectangleOptions:{width:87.7,height:36.666}
+                      
+                      
+                      
+                      },
+                          { id: 5, title: "newBaby",quadraticOptions:{width:89.375,height:16.5}
+                        ,rectangleOptions:{width:84.7,height:26}
+                      
+                      
+                      
+                      },
+                          { id: 6, title: "mountains",quadraticOptions:{width:89.375,height:33.5} 
+                        ,rectangleOptions:{width:85.9,height:53.333}
+                      
+                      
+                      
+                      },
+                          { id: 7, title: "happyBirthday",quadraticOptions:{width:90.375,height:74.5}
+                        ,rectangleOptions:{width:64.3,height:88.33}
+                      
+                      
+                      
+                      },
+                          { id: 8, title: "happyNewYear",quadraticOptions:{width:84.625,height:70.25} 
+                        ,rectangleOptions:{width:62.5,height:85.833}
+                      
+                      
+                      
+                      },
+                          { id: 9, title: "family",quadraticOptions:{width:89.375,height:30.5} 
+                        ,rectangleOptions:{width:80.5,height:85.833}
+                        // family need resize
+                      
+                      
+                      
+                      },
+                          { id: 10, title: "bunny",quadraticOptions:{width:53.75,height:89.5}
+                        ,rectangleOptions:{width:32,height:89.166}
+                      
+                      
+                      
+                      },
+                          { id: 11, title: "ship",quadraticOptions:{width:72.875,height:75.75}
+                        ,rectangleOptions:{width:46.2,height:80.5}
+                      
+                      
+                      
+                      },
+                          { id: 12, title: "timeToTravel",quadraticOptions:{width:86.375,height:85.875}
+                        ,rectangleOptions:{width:52.3,height:83.333}
+                      
+                      
+                      
+                      },
+                          { id: 13, title: "love",quadraticOptions:{width:87.625,height:62}
+                        ,rectangleOptions:{width:68.9,height:81.333}
+                      
+                      
+                      
+                      },
+                          { id: 14, title: "happyBirthdaySecond",quadraticOptions:{width:88.75,height:54.375}
+                        ,rectangleOptions:{width:77.9,height:79.666}
+                      
+                      
+                      
+                      },
+                          { id: 15, title: "airplane",quadraticOptions:{width:75.125,height:84.875}
+                        ,rectangleOptions:{width:42.2,height:79}
+                      
+                      
+                      
+                      },
+                          { id: 16, title: "flight",quadraticOptions:{width:80,height:41.875} 
+                        ,rectangleOptions:{width:83.7,height:72.833}
+                      
+                      
+                      
+                      },
+                          { id: 17, title: "tree",quadraticOptions:{width:65.875,height:81.75} 
+                        ,rectangleOptions:{width:41.1,height:84.666}
+                      
+                      
+                      
+                      },
                         ],
                       },
                       {
@@ -437,6 +851,10 @@ const constructorSlice = createSlice({
           selectedType: 0,
           selectedColor: 0,
           blobImage: null,
+          directionOptions:{
+                  axisX:50,
+                  axisY:50,
+                },
           options: [
             {
               id: 0,
@@ -2167,10 +2585,118 @@ const constructorSlice = createSlice({
     },
     //PHOTOBID FOR ALL //////////////
     handleChangePhotoBidBlobImage(state, action) {
+      let defaultOptions= {
+        axisY:50,
+        axisX:50
+      }
       if (action.payload.type === "eco") {
+        state.cover.types[0].features.decor[1].directionOptions=defaultOptions;
         state.cover.types[0].features.decor[1].blobImage = action.payload.blob;
       } else {
+        state.cover.types[1].features.decor[1].directionOptions=defaultOptions;
         state.cover.types[1].features.decor[1].blobImage = action.payload.blob;
+      }
+    },
+    handleRemoveCoverPhoto(state,action){
+      const type = action.payload;
+      
+      let defaultOptions= {
+        axisY:50,
+        axisX:50
+      }
+      if(type === "eco"){
+       
+        state.cover.types[0].features.decor[1].blobImage=null;
+        state.cover.types[0].features.decor[1].directionOptions=defaultOptions;
+      }
+      else if(type==="textile"){
+        state.cover.types[1].features.decor[1].blobImage=null;
+        state.cover.types[1].features.decor[1].directionOptions=defaultOptions;
+
+
+      }
+      //photocover
+      else{
+        state.cover.types[2].blobImage=null;
+        state.cover.types[2].directionOptions=defaultOptions;
+      }
+    },
+    handleChangeAxisOptionsCoverPhoto(state,action){
+      const {axis,type}=action.payload;
+      let axisXDiff = 0;
+      let axisYDiff=0;
+      if(axis === "up"){
+        axisYDiff=-10;
+      }
+      else if(axis==="right"){
+        axisXDiff=10;
+      }
+      else if(axis==="down"){
+        axisYDiff=10;
+      }
+      // axis ==="left"
+      else{
+        axisXDiff=-10;
+      }
+      if(type === "eco"){
+        let prevDirectionOptions  = {...current(state.cover.types[0].features.decor[1].directionOptions)};
+        let newAxisX=prevDirectionOptions.axisX + axisXDiff;
+        let newAxisY=prevDirectionOptions.axisY + axisYDiff;
+        if(newAxisX < 0){
+          newAxisX=0
+        }
+        if(newAxisX > 100){
+          newAxisX=100;
+        }
+        if(newAxisY < 0){
+          newAxisY=0;
+        }
+        if(newAxisY > 100){
+          newAxisY=100;
+        }
+        
+        let newDirectionOptions = {axisX:newAxisX,axisY:newAxisY};
+        state.cover.types[0].features.decor[1].directionOptions=newDirectionOptions;
+        
+      }
+      else if(type==="textile"){
+        let prevDirectionOptions  = {...current(state.cover.types[1].features.decor[1].directionOptions)};
+        let newAxisX=prevDirectionOptions.axisX + axisXDiff;
+        let newAxisY=prevDirectionOptions.axisY + axisYDiff;
+if(newAxisX < 0){
+          newAxisX=0
+        }
+        if(newAxisX > 100){
+          newAxisX=100;
+        }
+        if(newAxisY < 0){
+          newAxisY=0;
+        }
+        if(newAxisY > 100){
+          newAxisY=100;
+        }
+        let newDirectionOptions = {axisX:newAxisX,axisY:newAxisY};
+        state.cover.types[1].features.decor[1].directionOptions=newDirectionOptions;
+      }
+      //photocover
+      else{
+        let prevDirectionOptions  = {...current(state.cover.types[2].directionOptions)};
+        let newAxisX=prevDirectionOptions.axisX + axisXDiff;
+        let newAxisY=prevDirectionOptions.axisY + axisYDiff;
+if(newAxisX < 0){
+          newAxisX=0
+        }
+        if(newAxisX > 100){
+          newAxisX=100;
+        }
+        if(newAxisY < 0){
+          newAxisY=0;
+        }
+        if(newAxisY > 100){
+          newAxisY=100;
+        }
+        let newDirectionOptions = {axisX:newAxisX,axisY:newAxisY};
+        state.cover.types[2].directionOptions=newDirectionOptions;
       }
     },
     //TEXT SIZE AND FONT METALPLATE//////////////////
@@ -2205,6 +2731,11 @@ const constructorSlice = createSlice({
       }
     },
     handleChangePhotoCoverImage(state, action) {
+      let defaultOptions={
+        axisX:50,
+        axisY:50
+      }
+      state.cover.types[2].directionOptions=defaultOptions;
       state.cover.types[2].blobImage = action.payload;
     },
     // PAGES////////////////////////
@@ -2735,6 +3266,198 @@ const { pageId, sideToChange, tmplElementId } = action.payload;
       const pagesTemplateValids = action.payload;
       state.pagesValid = pagesTemplateValids;
     },
+    //Swap двух картинок или картинка на темплейт
+    handleSwapImagesInTemplates(state,action){
+      const {targetInfo,triggerInfo}=action.payload;
+      
+       if(triggerInfo.sideToChange !== targetInfo.sideToChange){
+      let selectedPage = {
+        ...current(state.pages.papers.pages[state.pages.papers.selectedPage]),
+      };
+      let templatesOfSelectedPage = [...selectedPage.templates];
+      let sideIdxTrigger;
+      if (triggerInfo.sideToChange === "leftside") {
+        sideIdxTrigger = 0;
+      } else if (triggerInfo.sideToChange === "rightside") {
+        sideIdxTrigger = 1;
+      } else {
+        sideIdxTrigger = 2;
+      }
+      let templateTrigger = { ...templatesOfSelectedPage[sideIdxTrigger] };
+      let tmplTemplateTrigger = { ...templateTrigger.template };
+      let tmplElementsTrigger = [...tmplTemplateTrigger.elements];
+      
+
+      
+      
+      let newImageForTarget=tmplElementsTrigger[triggerInfo.tmplElementId].image;
+      
+      
+
+
+      let sideIdxTarget;
+      if (targetInfo.sideToChange === "leftside") {
+        sideIdxTarget = 0;
+      } else if (targetInfo.sideToChange === "rightside") {
+        sideIdxTarget = 1;
+      } else {
+        sideIdxTarget = 2;
+      }
+      let templateTarget = { ...templatesOfSelectedPage[sideIdxTarget] };
+      let tmplTemplateTarget = { ...templateTarget.template };
+      let tmplElementsTarget = [...tmplTemplateTarget.elements];
+
+
+      let newImageForTrigger=null;
+      if(tmplElementsTarget[targetInfo.tmplElementId].image){
+        newImageForTrigger=tmplElementsTarget[targetInfo.tmplElementId].image;
+      }
+
+
+      
+
+      //swapping
+      
+       let tmplNewElementsTrigger = tmplElementsTrigger.map((elem) => {
+        if (elem.id === triggerInfo.tmplElementId) {
+          if(newImageForTrigger){
+            return { ...elem,image:{...newImageForTrigger} };
+
+          }
+          else{
+          let prevElem = { ...elem };
+          delete prevElem["image"];
+          return { ...prevElem };
+          }
+        } else {
+          return { ...elem };
+        }
+      });
+
+      let tmplNewElementsTarget = tmplElementsTarget.map((elem) => {
+        if (elem.id === targetInfo.tmplElementId) {
+          
+            return { ...elem,image:{...newImageForTarget} };
+
+          }
+         else {
+          return { ...elem };
+        }
+      });
+
+
+
+
+
+
+
+      tmplTemplateTrigger.elements=tmplNewElementsTrigger;
+      templateTrigger.template=tmplTemplateTrigger;
+
+ tmplTemplateTarget.elements=tmplNewElementsTarget;
+      templateTarget.template=tmplTemplateTarget;
+
+     
+          let newTemplatesTrigger = templatesOfSelectedPage.map((templ) => {
+        if (templ.title === triggerInfo.sideToChange) {
+          return { ...templateTrigger };
+        } else {
+          return { ...templ };
+        }
+        
+      });
+
+     
+
+      let newTemplatesWithTarget=newTemplatesTrigger.map((templ)=>{
+        if(templ.title=== targetInfo.sideToChange){
+          return {...templateTarget}
+        }
+        else{
+          return {...templ}
+        }
+      })
+
+
+       selectedPage.templates = newTemplatesWithTarget;
+        state.pages.papers.pages[triggerInfo.pageId] = selectedPage;
+      
+      }
+      else{
+        let selectedPage = {
+        ...current(state.pages.papers.pages[state.pages.papers.selectedPage]),
+      };
+      let templatesOfSelectedPage = [...selectedPage.templates];
+      let sideIdx;
+      if (triggerInfo.sideToChange === "leftside") {
+        sideIdx = 0;
+      } else if (triggerInfo.sideToChange === "rightside") {
+        sideIdx = 1;
+      } else {
+        sideIdx = 2;
+      }
+      let template = { ...templatesOfSelectedPage[sideIdx] };
+      let tmplTemplate = { ...template.template };
+      let tmplElements = [...tmplTemplate.elements];
+      let prevTriggerElem;
+      let prevTargetElem;
+      tmplElements.forEach((elem)=>{
+        if(elem.id === triggerInfo.tmplElementId){
+          prevTriggerElem=elem;
+        }
+        else if(elem.id === targetInfo.tmplElementId){
+          prevTargetElem=elem;
+        }
+      })
+
+      let tmplNewElements = tmplElements.map((elem)=>{
+        if(elem.id === triggerInfo.tmplElementId){
+          if(prevTargetElem.image){
+            
+          return {...elem,image:prevTargetElem.image}
+
+          }
+          else{
+            let prevElem = {...elem};
+            delete prevElem.image;
+            return {...prevElem}
+          }
+        } 
+        else if(elem.id === targetInfo.tmplElementId){
+          return {...elem,image:prevTriggerElem.image}
+        }
+        else{
+          return {...elem}
+        }
+      })
+
+      console.log(tmplNewElements);
+      tmplTemplate.elements=tmplNewElements;
+      template.template=tmplTemplate;
+
+      let newTemplates = templatesOfSelectedPage.map((templ) => {
+        if (templ.title === triggerInfo.sideToChange) {
+          return { ...template };
+        } else {
+          return { ...templ };
+        }
+      });
+      
+      selectedPage.templates = newTemplates;
+      state.pages.papers.pages[triggerInfo.pageId] = selectedPage;
+       
+
+      }
+      
+      
+      
+      
+
+
+
+
+
+    },
     //UPDATE TO DEFAULT
     handleReloadConstructorConfig(state) {
       state.albumsId = contsructorDefaultState.albumsId;
@@ -2820,6 +3543,7 @@ const { pageId, sideToChange, tmplElementId } = action.payload;
           ecoLeather.ecoLeatherLetteringDesign;
         state.cover.types[0].features.decor[1].selectedSize =
           ecoLeather.ecoLeatherPhotoBidSize;
+        state.cover.types[0].features.decor[1].directionOptions=ecoLeather.ecoPhotobidOptions; 
         // photobid image
         if (images.eco_photobid) {
           state.cover.types[0].features.decor[1].blobImage = String(
@@ -2852,6 +3576,8 @@ const { pageId, sideToChange, tmplElementId } = action.payload;
           textile.textileLetteringDesign;
         state.cover.types[1].features.decor[1].selectedSize =
           textile.textilePhotoBidSize;
+        state.cover.types[1].features.decor[1].directionOptions=textile.textilePhotobidOptions;
+
         //photobid image
         if (images.textile_photobid) {
           state.cover.types[1].features.decor[1].blobImage = String(
@@ -2876,6 +3602,7 @@ const { pageId, sideToChange, tmplElementId } = action.payload;
         //photoCover
         state.cover.types[2].selectedType = photoCover.photoCoverSelectedType;
         state.cover.types[2].selectedColor = photoCover.photoCoverColor;
+        state.cover.types[2].directionOptions=photoCover.photocoverOptions;
         if (images.photocover) {
           state.cover.types[2].blobImage = String(BASE_URL + images.photocover);
         }
@@ -3062,6 +3789,8 @@ export const {
   handleChangeCoverType,
   handleChangeCoverEcoColor,
   handleChangeCoverDecor,
+  handleRemoveCoverPhoto,
+  handleChangeAxisOptionsCoverPhoto,
   handleChangeCoverEcoLetteringColor,
   handleChangeCoverEcoDesign,
   handleChangeEcoPhotoBidSize,
@@ -3095,5 +3824,6 @@ export const {
   handleChangeAxisValuesInTemplateElement,
   handleUpdateImagesCounter,
   handleReloadConstructorConfig,
+  handleSwapImagesInTemplates
 } = constructorSlice.actions;
 export default constructorSlice.reducer;
