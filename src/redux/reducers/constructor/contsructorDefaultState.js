@@ -1,8 +1,9 @@
 
 export const contsructorDefaultState = {
-  albumsId: {
+    albumsId: {
       isLoading: true,
       ids: [],
+      error:"",
     },
     header_content: {
       step: 1,
@@ -35,9 +36,7 @@ export const contsructorDefaultState = {
           title: "landscape",
           transl: "Альбомная",
           sizes: [
-            { id: 0, size: "15x22,5", price: 2490 },
-            { id: 1, size: "20x30", price: 5290 },
-            { id: 2, size: "30x40", price: 8890 },
+            { id: 0, size: "20x30", price: 5290 },
           ],
           selectedSize: 0,
         },
@@ -1108,26 +1107,26 @@ export const contsructorDefaultState = {
                 id: 14,
                 title: "template",
                 elements: [
-                  { id: 0, position: { w: "32%", h: "48%", l: "0%", t: "0%" } },
+                  { id: 0, position: { w: "32%", h: "49%", l: "0%", t: "0%" } },
                   {
                     id: 1,
-                    position: { w: "32%", h: "48%", l: "34%", t: "0%" },
+                    position: { w: "32%", h: "49%", l: "34%", t: "0%" },
                   },
                   {
                     id: 2,
-                    position: { w: "32%", h: "48%", l: "68%", t: "0%" },
+                    position: { w: "32%", h: "49%", l: "68%", t: "0%" },
                   },
                   {
                     id: 3,
-                    position: { w: "32%", h: "50%", l: "0%", t: "50%" },
+                    position: { w: "32%", h: "49%", l: "0%", t: "51%" },
                   },
                   {
                     id: 4,
-                    position: { w: "32%", h: "50%", l: "34%", t: "50%" },
+                    position: { w: "32%", h: "49%", l: "34%", t: "51%" },
                   },
                   {
                     id: 5,
-                    position: { w: "32%", h: "50%", l: "68%", t: "50%" },
+                    position: { w: "32%", h: "49%", l: "68%", t: "51%" },
                   },
                 ],
               },
@@ -1377,30 +1376,30 @@ export const contsructorDefaultState = {
                   },
                 ],
               },
-              {
+             {
                 id: 14,
                 title: "template",
                 elements: [
-                  { id: 0, position: { w: "32%", h: "48%", l: "0%", t: "0%" } },
+                  { id: 0, position: { w: "32%", h: "49%", l: "0%", t: "0%" } },
                   {
                     id: 1,
-                    position: { w: "32%", h: "48%", l: "34%", t: "0%" },
+                    position: { w: "32%", h: "49%", l: "34%", t: "0%" },
                   },
                   {
                     id: 2,
-                    position: { w: "32%", h: "48%", l: "68%", t: "0%" },
+                    position: { w: "32%", h: "49%", l: "68%", t: "0%" },
                   },
                   {
                     id: 3,
-                    position: { w: "32%", h: "50%", l: "0%", t: "50%" },
+                    position: { w: "32%", h: "49%", l: "0%", t: "51%" },
                   },
                   {
                     id: 4,
-                    position: { w: "32%", h: "50%", l: "34%", t: "50%" },
+                    position: { w: "32%", h: "49%", l: "34%", t: "51%" },
                   },
                   {
                     id: 5,
-                    position: { w: "32%", h: "50%", l: "68%", t: "50%" },
+                    position: { w: "32%", h: "49%", l: "68%", t: "51%" },
                   },
                 ],
               },
@@ -2267,9 +2266,27 @@ export const contsructorDefaultState = {
             templateIsValid: true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: {} },
+              { id: 0, title: "leftside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Правая страница
-              { id: 1, title: "rightside", template: {} },
+              { id: 1, title: "rightside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Разворот
               { id: 2, title: "centerside", template: {} },
             ],
@@ -2283,9 +2300,27 @@ export const contsructorDefaultState = {
             templateIsValid: true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: {} },
+              { id: 0, title: "leftside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Правая страница
-              { id: 1, title: "rightside", template: {} },
+              { id: 1, title: "rightside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Разворот
               { id: 2, title: "centerside", template: {} },
             ],
@@ -2299,9 +2334,27 @@ export const contsructorDefaultState = {
             templateIsValid: true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: {} },
+              { id: 0, title: "leftside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Правая страница
-              { id: 1, title: "rightside", template: {} },
+              { id: 1, title: "rightside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Разворот
               { id: 2, title: "centerside", template: {} },
             ],
@@ -2315,9 +2368,27 @@ export const contsructorDefaultState = {
             templateIsValid: true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: {} },
+              { id: 0, title: "leftside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Правая страница
-              { id: 1, title: "rightside", template: {} },
+              { id: 1, title: "rightside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Разворот
               { id: 2, title: "centerside", template: {} },
             ],
@@ -2331,9 +2402,27 @@ export const contsructorDefaultState = {
             templateIsValid: true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: {} },
+              { id: 0, title: "leftside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Правая страница
-              { id: 1, title: "rightside", template: {} },
+              { id: 1, title: "rightside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Разворот
               { id: 2, title: "centerside", template: {} },
             ],
@@ -2346,9 +2435,27 @@ export const contsructorDefaultState = {
             templateIsValid: true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: {} },
+              { id: 0, title: "leftside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Правая страница
-              { id: 1, title: "rightside", template: {} },
+              { id: 1, title: "rightside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Разворот
               { id: 2, title: "centerside", template: {} },
             ],
@@ -2362,9 +2469,27 @@ export const contsructorDefaultState = {
             templateIsValid: true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: {} },
+              { id: 0, title: "leftside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Правая страница
-              { id: 1, title: "rightside", template: {} },
+              { id: 1, title: "rightside", template:{
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Разворот
               { id: 2, title: "centerside", template: {} },
             ],
@@ -2378,9 +2503,27 @@ export const contsructorDefaultState = {
             templateIsValid: true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: {} },
+              { id: 0, title: "leftside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              }},
               //Правая страница
-              { id: 1, title: "rightside", template: {} },
+              { id: 1, title: "rightside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Разворот
               { id: 2, title: "centerside", template: {} },
             ],
@@ -2394,9 +2537,27 @@ export const contsructorDefaultState = {
             templateIsValid: true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: {} },
+              { id: 0, title: "leftside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Правая страница
-              { id: 1, title: "rightside", template: {} },
+              { id: 1, title: "rightside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Разворот
               { id: 2, title: "centerside", template: {} },
             ],
@@ -2410,9 +2571,27 @@ export const contsructorDefaultState = {
             templateIsValid: true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: {} },
+              { id: 0, title: "leftside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Правая страница
-              { id: 1, title: "rightside", template: {} },
+              { id: 1, title: "rightside", template:{
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Разворот
               { id: 2, title: "centerside", template: {} },
             ],
@@ -2421,4 +2600,4 @@ export const contsructorDefaultState = {
       },
       uploads: [],
     },
-};
+  }

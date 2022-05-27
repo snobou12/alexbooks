@@ -104,7 +104,17 @@ const Basket = () => {
 		newBasketAlbums[needIdx] = newBasketAlbum;
 		dispatch(handleChangeBasketAlbums(newBasketAlbums));
 	};
+	const getAlbumSize=(selectedType,selectedQuadraticSize,selectedLandscapeSize)=>{
+		if(selectedType===0){
+			return size.types[selectedType].sizes[selectedQuadraticSize].size
+		}
+		else{
+			return size.types[selectedType].sizes[selectedLandscapeSize].size;
 
+		}
+		
+	}
+	
 	return (
 		<div className="basket__wrapper">
 			<div className="basket">
@@ -171,11 +181,7 @@ const Basket = () => {
 											</svg>
 											<span>
 												{
-													size.types[basketAlbum.data.mainData.selectedType]
-														.sizes[
-														size.types[basketAlbum.data.mainData.selectedType]
-															.selectedSize
-													].size
+													getAlbumSize(basketAlbum.data.mainData.selectedType,basketAlbum.data.mainData.selectedQuadraticSize,basketAlbum.data.mainData.selectedLandscapeSize)
 												}
 											</span>
 										</div>

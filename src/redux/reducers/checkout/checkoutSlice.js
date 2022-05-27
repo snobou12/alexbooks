@@ -21,7 +21,7 @@ const checkoutSlice = createSlice({
 							title: "fullname",
 							transl: "ФИО",
 							ph: "Ваше имя",
-							value: "Иванов Иван Иванович",
+							value: "",
 						},
 						{
 							id: 1,
@@ -29,8 +29,8 @@ const checkoutSlice = createSlice({
 							transl: "Телефон",
 							ph: "8 000 000 00 00",
 							value: {
-								formattedValue: "7 (999) 999-99-99",
-								value: "79999999999",
+								formattedValue: "",
+								value: "",
 							},
 						},
 						{
@@ -38,14 +38,14 @@ const checkoutSlice = createSlice({
 							title: "email",
 							transl: "Почта",
 							ph: "e-mail@mail.ru",
-							value: "mail@mail.ru",
+							value: "",
 						},
 						{
 							id: 3,
 							title: "city",
 							transl: "Город",
 							ph: "Москва",
-							value: "Москва",
+							value: "",
 						},
 					],
 				},
@@ -85,7 +85,7 @@ const checkoutSlice = createSlice({
 									transl: "Индекс",
 									type: "number",
 									ph: "188212",
-									value: "188212",
+									value: "",
 								},
 								{
 									id: 1,
@@ -93,7 +93,7 @@ const checkoutSlice = createSlice({
 									transl: "Улица",
 									type: "text",
 									ph: "Рубежная",
-									value: "Рубежная",
+									value: "",
 								},
 								{
 									id: 2,
@@ -101,7 +101,7 @@ const checkoutSlice = createSlice({
 									transl: "Дом",
 									type: "number",
 									ph: "14",
-									value: "14",
+									value: "",
 								},
 								{
 									id: 3,
@@ -109,7 +109,7 @@ const checkoutSlice = createSlice({
 									transl: "Квартира",
 									type: "number",
 									ph: "19",
-									value: "19",
+									value: "",
 								},
 							],
 						},

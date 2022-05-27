@@ -179,11 +179,15 @@ const Constructor = () => {
               let formData = new FormData();
               let basketAlbums = [];
               let prevBasketData = await dispatch(getBasketAlbumsId());
+              
               let prevBasket = prevBasketData.payload;
+              console.log(prevBasket);
               if (
                 prevBasket === "No access" ||
-                prevBasket === "Data not found"
+                prevBasket === "Data not found" ||
+                prevBasket.length === 0
               ) {
+
                 axios({
                   method: "post",
                   url: `${BASE_URL}/designer/?controller=Shop&method=new`,
@@ -201,12 +205,15 @@ const Constructor = () => {
                   (id) => id !== header_content.albumId
                 );
                 basketAlbums = [...newPrevAlbums, header_content.albumId];
+        
               }
+	              let albumIds = basketAlbums.join(",");
+
               let jsonData = JSON.stringify(basketAlbums);
               formData.append("request", jsonData);
               axios({
                 method: "post",
-                url: `${BASE_URL}/designer/?controller=Shop&method=save`,
+                url: `${BASE_URL}/designer/?controller=Shop&albums=[${albumIds}]&method=save`,
                 data: formData,
                 headers: { "Content-Type": "application/json" },
               }).then((res) => {

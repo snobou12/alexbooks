@@ -436,7 +436,6 @@ const CoverPreview = ({ stageRef, header_content }) => {
 							cover.types[0].features.decor[2].options[2].decors[0]
 								.selectedEngrave
 						];
-					console.log(ecoMetalPlateSelectedImgObj);
 					let ecoMetalPlateSelectedSizeObj =
 						cover.types[0].features.decor[2].options[1].sizes[
 							cover.types[0].features.decor[2].options[1].selectedSize

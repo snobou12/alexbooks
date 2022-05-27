@@ -20,13 +20,11 @@
 .cnsr__pages_rightside {
     flex: 0 0 300px;
     max-height: calc(100vh - 90px);
+    padding-left: 30px;
     background: #ffffff;
       overflow-y:scroll;
       
-      &--landscape{
-        padding: 32px;
-
-      }
+      
     
   }
 
@@ -135,8 +133,8 @@
       right: 0;
       bottom: 0;
       z-index: 101;
-      width: 58px;
-      height: 58px;
+      width: 62px;
+      height: 62px;
       background-color: #F3F3F3;
       cursor: pointer;
   }
@@ -186,8 +184,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    padding-left: 35px;
-    padding-right: 35px;
+    padding-left: 15px;
   }
   .pages__colors_content{
     display: flex;

@@ -18,7 +18,7 @@ import {
 import DragImage from "./DragImage";
 import PagesUploader from "./PagesUploader";
 import TmplElementBox from "./TmplElementBox";
-import { Scrollbar, Autoplay, Grid, Navigation } from "swiper";
+import { Scrollbar, Grid, Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css/grid";
@@ -149,7 +149,10 @@ const PagesPreview = ({
     dispatch(handleSwapImagesInTemplates(obj));
   }
   React.useEffect(()=>{
+    if(pageUploadRef.current){
     pageUploadRef.current.addEventListener(`wheel`,handleWheel,{passive:false});
+
+    }
   },[pageUploadRef])
  
   const [uploadImagePreview,setUploadImagePreview]=React.useState({show:false,img:{}})
@@ -164,7 +167,7 @@ setIsDraggingImage(bool);
       setDelayHandler(setTimeout(()=>{
         const img = obj.blob;
         setUploadImagePreview({show:true,img})
-      },1000))
+      },400))
 
     }
   }
@@ -183,7 +186,7 @@ setIsDraggingImage(bool);
 
 
 
- 
+
   
   //rebuild tooltip
   React.useEffect(()=>{
@@ -195,11 +198,10 @@ setIsDraggingImage(bool);
         <div className="pages__preview">
           <div className="pages__selector">
             <Swiper
-              modules={[Scrollbar, Autoplay, Grid, Navigation]}
+              modules={[Scrollbar, Grid, Navigation]}
               slidesPerView={"auto"}
               spaceBetween={20}
               grid={{ rows: 1, fill: "row" }}
-              autoplay={{ delay: 2000 }}
             >
               {pages.map((page, idx) => (
                 <SwiperSlide
@@ -397,11 +399,10 @@ setIsDraggingImage(bool);
           
           <div className="pages__selector">
             <Swiper
-              modules={[Scrollbar, Autoplay, Grid, Navigation]}
+              modules={[Scrollbar, Grid, Navigation]}
               slidesPerView={"auto"}
               spaceBetween={20}
               grid={{ rows: 1, fill: "row" }}
-              autoplay={{ delay: 2000 }}
             >
               {pages.papers.pages.map((page, idx) => (
                 <SwiperSlide
@@ -711,7 +712,7 @@ setIsDraggingImage(bool);
             />
             <Swiper
               ref={swiperRef}
-              modules={[Scrollbar, Autoplay, Grid, Navigation]}
+              modules={[Scrollbar, Grid, Navigation]}
               navigation={{
                 prevEl: ".pages__arrows_prev",
                 nextEl: ".pages__arrows_next",
@@ -720,7 +721,7 @@ setIsDraggingImage(bool);
               slidesPerView={"auto"}
               spaceBetween={20}
               grid={{ rows: 1, fill: "row" }}
-              autoplay={{ delay: 2000 }}
+              
             >
               {uploadsMap().map((img, idx) => (
                 <SwiperSlide key={`${img.id}:${idx}`}>

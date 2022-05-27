@@ -10,7 +10,8 @@ import { Provider } from 'react-redux';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <HashRouter basename='' hashType="#" >
+    <HashRouter basename="" hashType="#"  >
+    {/* basename="" hashType="#" */}
       <DndProvider  backend={HTML5Backend}> 
         <Provider store={store}>
           <App />

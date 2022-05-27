@@ -9,6 +9,7 @@ import {
 } from "../../redux/reducers/blank/blankSlice";
 import { BASE_URL } from "../../static/variables";
 import { PagesPreview } from "../Constructor/steps";
+import FullPage from "./helps/FullPage";
 import "./Blank.scss";
 const Blank = () => {
 	const dispatch = useDispatch();
@@ -65,6 +66,7 @@ const Blank = () => {
 	const handleChangePage = pageId => {
 		dispatch(handleChangeSelectedPage(pageId));
 	};
+	
 	return (
 		<>
 			{Object.keys(targetAlbum).length !== 0 ? (
@@ -166,11 +168,20 @@ const Blank = () => {
 					<div className="blank__pages">
 						<PagesPreview
 							handleChangePage={handleChangePage}
-							size={size}
+							size={{selectedType:targetAlbum.data.mainData.selectedType}}
 							pages={targetAlbum.data.pagesData.pages}
 							justPreview
 							selectedPage={targetAlbum.data.pagesData.selectedPage}
 						/>
+					</div>
+					<div className="blank__all_pages">
+                       {targetAlbum.data.pagesData.pages && targetAlbum.data.pagesData.pages.map((page,idx)=>
+					<div style={{width:"100%"}} className="blank__all_pages_page" key={idx} >
+						<span>Разворот. {idx + 1}</span>
+						<FullPage justPreview page={page} size={{selectedType:targetAlbum.data.mainData.selectedType}}   /> 
+						 </div> 
+					   )}
+					   
 					</div>
 				</div>
 			) : (

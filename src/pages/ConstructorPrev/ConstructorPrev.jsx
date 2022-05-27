@@ -35,11 +35,20 @@ const ConstructorPrev = () => {
     }
   };
   React.useEffect(() => {
-    if (!albumsId.isLoading) {
+    if(albumsId.error === "Authorization failed"){
+      toast.error("Вы не авторизованы");
+      setTimeout(()=>{
+        window.open(BASE_URL,"_self");
+      },3000)
+    }
+    else{
+if (!albumsId.isLoading) {
       if (albumsId.ids.length === 0) {
         handleCreateAlbum();
       }
     }
+    }
+    
   }, [albumsId.isLoading]);
   const handleDeleteAlbum = (albumId) => {
     dispatch(deleteAlbumById(albumId));
@@ -51,7 +60,7 @@ const ConstructorPrev = () => {
 
   return (
     <>
-      {albumsId.ids.length !== 0 && (
+      {!albumsId.error && albumsId.ids.length !== 0 && (
         <div className="constructor__prev">
           <div className="cnsr__prev_title">
             Выберите книгу для редактирования.

@@ -60,6 +60,7 @@
 
 .blank__pages{
     width: 100%;
+    border-bottom:2px solid #000;
 }
 
 .blank__meta_link{
@@ -71,4 +72,22 @@
 		font-weight: 700;
 		color: rgb(255 255 255);
 		background-color: rgb(246 145 106);
+}
+
+
+.blank__all_pages{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.blank__all_pages_page{
+    max-width: calc(100% / 4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }

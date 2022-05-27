@@ -9,12 +9,13 @@ import {
   newAlbum,
   getAlbumById,
 } from "./actionConstructorCreator";
-const constructorSlice = createSlice({
+const constructorSlice = createSlice({  
   name: "constructor",
   initialState: {
     albumsId: {
       isLoading: true,
       ids: [],
+      error:"",
     },
     header_content: {
       step: 1,
@@ -47,9 +48,7 @@ const constructorSlice = createSlice({
           title: "landscape",
           transl: "Альбомная",
           sizes: [
-            { id: 0, size: "15x22,5", price: 2490 },
-            { id: 1, size: "20x30", price: 5290 },
-            { id: 2, size: "30x40", price: 8890 },
+            { id: 0, size: "20x30", price: 5290 },
           ],
           selectedSize: 0,
         },
@@ -1120,26 +1119,26 @@ const constructorSlice = createSlice({
                 id: 14,
                 title: "template",
                 elements: [
-                  { id: 0, position: { w: "32%", h: "48%", l: "0%", t: "0%" } },
+                  { id: 0, position: { w: "32%", h: "49%", l: "0%", t: "0%" } },
                   {
                     id: 1,
-                    position: { w: "32%", h: "48%", l: "34%", t: "0%" },
+                    position: { w: "32%", h: "49%", l: "34%", t: "0%" },
                   },
                   {
                     id: 2,
-                    position: { w: "32%", h: "48%", l: "68%", t: "0%" },
+                    position: { w: "32%", h: "49%", l: "68%", t: "0%" },
                   },
                   {
                     id: 3,
-                    position: { w: "32%", h: "50%", l: "0%", t: "50%" },
+                    position: { w: "32%", h: "49%", l: "0%", t: "51%" },
                   },
                   {
                     id: 4,
-                    position: { w: "32%", h: "50%", l: "34%", t: "50%" },
+                    position: { w: "32%", h: "49%", l: "34%", t: "51%" },
                   },
                   {
                     id: 5,
-                    position: { w: "32%", h: "50%", l: "68%", t: "50%" },
+                    position: { w: "32%", h: "49%", l: "68%", t: "51%" },
                   },
                 ],
               },
@@ -1389,30 +1388,30 @@ const constructorSlice = createSlice({
                   },
                 ],
               },
-              {
+             {
                 id: 14,
                 title: "template",
                 elements: [
-                  { id: 0, position: { w: "32%", h: "48%", l: "0%", t: "0%" } },
+                  { id: 0, position: { w: "32%", h: "49%", l: "0%", t: "0%" } },
                   {
                     id: 1,
-                    position: { w: "32%", h: "48%", l: "34%", t: "0%" },
+                    position: { w: "32%", h: "49%", l: "34%", t: "0%" },
                   },
                   {
                     id: 2,
-                    position: { w: "32%", h: "48%", l: "68%", t: "0%" },
+                    position: { w: "32%", h: "49%", l: "68%", t: "0%" },
                   },
                   {
                     id: 3,
-                    position: { w: "32%", h: "50%", l: "0%", t: "50%" },
+                    position: { w: "32%", h: "49%", l: "0%", t: "51%" },
                   },
                   {
                     id: 4,
-                    position: { w: "32%", h: "50%", l: "34%", t: "50%" },
+                    position: { w: "32%", h: "49%", l: "34%", t: "51%" },
                   },
                   {
                     id: 5,
-                    position: { w: "32%", h: "50%", l: "68%", t: "50%" },
+                    position: { w: "32%", h: "49%", l: "68%", t: "51%" },
                   },
                 ],
               },
@@ -2279,9 +2278,27 @@ const constructorSlice = createSlice({
             templateIsValid: true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: {} },
+              { id: 0, title: "leftside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Правая страница
-              { id: 1, title: "rightside", template: {} },
+              { id: 1, title: "rightside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Разворот
               { id: 2, title: "centerside", template: {} },
             ],
@@ -2295,9 +2312,27 @@ const constructorSlice = createSlice({
             templateIsValid: true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: {} },
+              { id: 0, title: "leftside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Правая страница
-              { id: 1, title: "rightside", template: {} },
+              { id: 1, title: "rightside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Разворот
               { id: 2, title: "centerside", template: {} },
             ],
@@ -2311,9 +2346,27 @@ const constructorSlice = createSlice({
             templateIsValid: true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: {} },
+              { id: 0, title: "leftside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Правая страница
-              { id: 1, title: "rightside", template: {} },
+              { id: 1, title: "rightside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Разворот
               { id: 2, title: "centerside", template: {} },
             ],
@@ -2327,9 +2380,27 @@ const constructorSlice = createSlice({
             templateIsValid: true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: {} },
+              { id: 0, title: "leftside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Правая страница
-              { id: 1, title: "rightside", template: {} },
+              { id: 1, title: "rightside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Разворот
               { id: 2, title: "centerside", template: {} },
             ],
@@ -2343,9 +2414,27 @@ const constructorSlice = createSlice({
             templateIsValid: true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: {} },
+              { id: 0, title: "leftside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Правая страница
-              { id: 1, title: "rightside", template: {} },
+              { id: 1, title: "rightside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Разворот
               { id: 2, title: "centerside", template: {} },
             ],
@@ -2358,9 +2447,27 @@ const constructorSlice = createSlice({
             templateIsValid: true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: {} },
+              { id: 0, title: "leftside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Правая страница
-              { id: 1, title: "rightside", template: {} },
+              { id: 1, title: "rightside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Разворот
               { id: 2, title: "centerside", template: {} },
             ],
@@ -2374,9 +2481,27 @@ const constructorSlice = createSlice({
             templateIsValid: true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: {} },
+              { id: 0, title: "leftside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Правая страница
-              { id: 1, title: "rightside", template: {} },
+              { id: 1, title: "rightside", template:{
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Разворот
               { id: 2, title: "centerside", template: {} },
             ],
@@ -2390,9 +2515,27 @@ const constructorSlice = createSlice({
             templateIsValid: true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: {} },
+              { id: 0, title: "leftside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              }},
               //Правая страница
-              { id: 1, title: "rightside", template: {} },
+              { id: 1, title: "rightside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Разворот
               { id: 2, title: "centerside", template: {} },
             ],
@@ -2406,9 +2549,27 @@ const constructorSlice = createSlice({
             templateIsValid: true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: {} },
+              { id: 0, title: "leftside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Правая страница
-              { id: 1, title: "rightside", template: {} },
+              { id: 1, title: "rightside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Разворот
               { id: 2, title: "centerside", template: {} },
             ],
@@ -2422,9 +2583,27 @@ const constructorSlice = createSlice({
             templateIsValid: true,
             templates: [
               //Левая страница
-              { id: 0, title: "leftside", template: {} },
+              { id: 0, title: "leftside", template: {
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Правая страница
-              { id: 1, title: "rightside", template: {} },
+              { id: 1, title: "rightside", template:{
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              } },
               //Разворот
               { id: 2, title: "centerside", template: {} },
             ],
@@ -2440,7 +2619,35 @@ const constructorSlice = createSlice({
       state.size.selectedType = action.payload;
 
       let pages = [];
+      let defaultTemplate;
+      if(action.payload === 0){
+        defaultTemplate={
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              }
+      }
+      else{
+        defaultTemplate= {
+                id: 11,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "86.67%", h: "80%", l: "6.67%", t: "10%" },
+                  },
+                ],
+                
+              }
+        
+      }
       for (let i = 0; i < 10; i++) {
+
         let page = {
           id: i,
           selectedSide: "lrside",
@@ -2448,9 +2655,10 @@ const constructorSlice = createSlice({
           leftsideHex: "FFFFFF",
           rightsideHex: "FFFFFF",
           templates: [
-            { id: 0, title: "leftside", template: {} },
+            { id: 0, title: "leftside", template: {...defaultTemplate
+            } },
             //Правая страница
-            { id: 1, title: "rightside", template: {} },
+            { id: 1, title: "rightside", template: {...defaultTemplate} },
             //Разворот
             { id: 2, title: "centerside", template: {} },
           ],
@@ -2858,6 +3066,33 @@ if(newAxisX < 0){
     handleAddPageToPages(state, action) {
       let currentId = action.payload;
       let prevPages = [...current(state.pages.papers.pages)];
+      let currentTypeOfCover = state.size.selectedType;
+      let defaultTemplate;
+      if(currentTypeOfCover===0){
+defaultTemplate={
+                id: 1,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "80%", h: "80%", l: "10%", t: "10%" },
+                  },
+                ],
+              }
+      }
+      else{
+defaultTemplate={
+                id: 11,
+                title: "template",
+                elements: [
+                  {
+                    id: 0,
+                    position: { w: "86.67%", h: "80%", l: "6.67%", t: "10%" },
+                  },
+                ],
+                
+              }
+      }
       let newPage = {
         id: 0,
         selectedSide: "lrside", // centerside or leftside&rightside
@@ -2867,9 +3102,9 @@ if(newAxisX < 0){
 
         templates: [
           //Левая страница
-          { id: 0, title: "leftside", template: {} },
+          { id: 0, title: "leftside", template: {...defaultTemplate} },
           //Правая страница
-          { id: 1, title: "rightside", template: {} },
+          { id: 1, title: "rightside", template: {...defaultTemplate} },
           //Разворот
           { id: 2, title: "centerside", template: {} },
         ],
@@ -3431,7 +3666,6 @@ const { pageId, sideToChange, tmplElementId } = action.payload;
         }
       })
 
-      console.log(tmplNewElements);
       tmplTemplate.elements=tmplNewElements;
       template.template=tmplTemplate;
 
@@ -3477,8 +3711,19 @@ const { pageId, sideToChange, tmplElementId } = action.payload;
   extraReducers: {
     //Получить все id альбомов
     [getAlbumIDS.fulfilled.type]: (state, action) => {
+      if(action.payload.error){
+        if(action.payload.error === "Authorization failed"){
+          state.albumsId.error=action.payload.error;
+          state.albumsId.isLoading = false;
+
+        }
+      }
+      else{
       state.albumsId.isLoading = false;
+      state.albumsId.error="";
       state.albumsId.ids = action.payload;
+      }
+      
     },
     [getAlbumIDS.pending.type]: (state) => {
       state.albumsId.isLoading = true;

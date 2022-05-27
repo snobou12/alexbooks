@@ -6,6 +6,7 @@ import {getAlbumById} from "../../../../redux/reducers/constructor/actionConstru
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { API_URL } from "../../../../api";
 
 const PagesUploader = ({
   albumId,
@@ -56,7 +57,7 @@ const PagesUploader = ({
     );
     return axios({
       method: "post",
-      url: `https://alexbooks.bannikon.fvds.ru/designer/?controller=Album&method=image&album=${albumId}`,
+      url: `${API_URL}/?controller=Album&method=image&album=${albumId}`,
       data: data,
       onUploadProgress: (progressEvent) => {
         const { loaded, total } = progressEvent;

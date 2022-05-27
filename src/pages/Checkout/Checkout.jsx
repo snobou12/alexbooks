@@ -3,6 +3,8 @@
 import axios from "axios";
 import React from "react";
 import NumberFormat from "react-number-format";
+import cdekImage from "../../assets/checkout_services/cdek_image.png";
+import postImage from "../../assets/checkout_services/post_image.png";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -61,6 +63,14 @@ const Checkout = () => {
 			})
 		);
 	};
+
+	function getDeliveryImage(title) {
+		if (title === "cdek") {
+			return cdekImage;
+		} else {
+			return postImage;
+		}
+	}
 	function getCheckoutContent(selectedNav) {
 		switch (selectedNav) {
 			//контактные данные
@@ -118,8 +128,8 @@ const Checkout = () => {
 											<div className={`custom__checkbox`}></div>
 											{idx !== 2 ? (
 												<img
-													src={`/checkout/images/checkout_services/${service.title}_image.png`}
-													alt="service_img"
+													src={getDeliveryImage(service.title)}
+													alt="del_img"
 												/>
 											) : (
 												<span>{service.transl}</span>
@@ -204,13 +214,11 @@ const Checkout = () => {
 													<div className="checkout__album_data_name_size">
 														<span>{album.data.mainData.albumName}</span>
 														<span>
-															{
-																size.types[album.data.mainData.selectedType]
-																	.sizes[
-																	size.types[album.data.mainData.selectedType]
-																		.selectedSize
-																].size
-															}
+															{getAlbumSize(
+																album.data.mainData.selectedType,
+																album.data.mainData.selectedQuadraticSize,
+																album.data.mainData.selectedLandscapeSize
+															)}
 														</span>
 													</div>
 													<div className="checkout__album_data_preview">
@@ -426,6 +434,18 @@ const Checkout = () => {
 					});
 			}
 		});
+	};
+
+	const getAlbumSize = (
+		selectedType,
+		selectedQuadraticSize,
+		selectedLandscapeSize
+	) => {
+		if (selectedType === 0) {
+			return size.types[selectedType].sizes[selectedQuadraticSize].size;
+		} else {
+			return size.types[selectedType].sizes[selectedLandscapeSize].size;
+		}
 	};
 	return (
 		<div className="checkout">
