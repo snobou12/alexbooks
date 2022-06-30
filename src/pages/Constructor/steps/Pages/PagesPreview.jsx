@@ -35,7 +35,8 @@ const PagesPreview = ({
   handleSaveAlbum,
   handleChangePage,
   pagesValid,
-  imagesCounter
+  imagesCounter,
+  testRef
 }) => {
   const dispatch = useDispatch();
   const swiperRef = React.useRef();
@@ -448,6 +449,7 @@ setIsDraggingImage(bool);
             </Swiper>
           </div>
           <div
+          ref={testRef}
             className={`pages__paper pages__paper--${
               size.selectedType === 0 ? "quadratic" : "landscape"
             }`}
@@ -467,6 +469,7 @@ setIsDraggingImage(bool);
                     }}
                     className="pages__paper_quadratic_leftside"
                   >
+                    kek
                     <div className="pages__paper_quadratic_ls_elements">
                       {pages.papers.pages[
                         pages.papers.selectedPage

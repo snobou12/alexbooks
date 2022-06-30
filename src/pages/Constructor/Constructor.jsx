@@ -45,7 +45,7 @@ const Constructor = () => {
     );
   //ref stage preview
   let stageRef = React.useRef(null);
-  
+  let testRef = React.useRef(null);
   
   //изменить имя альбома
   const handleChangeName = (value) => {
@@ -92,6 +92,7 @@ const Constructor = () => {
       case 3:
         return (
           <PagesPreview
+          testRef={testRef}
           imagesCounter={imagesCounter}
           handleSaveAlbum={handleSaveAlbum}
             pagesValid={pagesValid}
@@ -125,6 +126,10 @@ const Constructor = () => {
     let formData = new FormData();
     if (keyImg === "cover_preview") {
       formData.append("cover_preview", file);
+    }
+    else if(keyImg === "page"){
+      formData.append("page", file);
+
     }
     axios({
       method: "post",
@@ -468,7 +473,18 @@ const Constructor = () => {
     dispatch(setAlbumId(params.albumId));
   }, [params.albumId]);
   
-  
+
+  const test = async()=>{
+    const element=testRef.current;
+            const canvasPreview =await html2canvas(element,{removeContainer:true,width:"2305.5408572077",height:"767.2537606773"});
+            console.log(canvasPreview);
+            const data=canvasPreview.toDataURL("image/jpg");
+            const pageImage = await fetchImageFromServer(
+              data,
+              "page"
+            );
+            uploadPreviewImageToServer("page", pageImage);
+  }
 
   return (
     <>
@@ -537,6 +553,7 @@ const Constructor = () => {
         <div className="cnsr__content__preview">
           {getPreview(header_content.step)}
         </div>
+        <button onClick={test}>test</button>
       </div>
     </div>}
     </>
